@@ -1,0 +1,195 @@
+[
+  {
+    "case_id": "CASE-PP-8021",
+    "case_title": "PayPal Multi-Vector Credential Harvesting Syndicate",
+    "target_brand": "PayPal",
+    "authentic_domain": "paypal.com",
+    "authentic_handle": "@PayPal",
+    "status": "ACTIVE_INVESTIGATION",
+    "primary_threat_domain": "paypal-security-login.top",
+    "associated_domains": [
+      "paypal-security-login.top",
+      "paypa1-support.xyz",
+      "secure-paypal-verify.com"
+    ],
+    "infrastructure": {
+      "ip_addresses": ["185.220.101.5", "185.220.101.6"],
+      "asn": "AS49870 - F3 Netze / Bulletproof Hosting",
+      "registrar": "NameCheap, Inc.",
+      "nameservers": ["ns1.evilcloud.top", "ns2.evilcloud.top"],
+      "ssl_issuer": "Let's Encrypt Authority X3",
+      "is_free_cert": true,
+      "country": "IS"
+    },
+    "social_impersonation": {
+      "platform": "Twitter/X",
+      "handle": "@PayPaI_OfficialSupport",
+      "display_name": "PayPal Support Official ✔️",
+      "bio": "Official 24/7 customer resolution desk. DM us directly with your email for immediate account unlocking.",
+      "followers": 14,
+      "following": 890,
+      "account_age_days": 12,
+      "is_verified": false
+    },
+    "communication_lure": {
+      "sender": "security-alert@service-paypal-center.com",
+      "subject": "CRITICAL: Your PayPal account has been temporarily restricted",
+      "message_text": "URGENT SECURITY ALERT: Unauthorized transaction of $649.99 detected. Your account has been suspended to prevent financial loss. Action required: verify your identity and enter your login credentials within 24 hours to avoid permanent closure. Click here immediately: https://paypal-security-login.top/auth"
+    },
+    "visual_asset": "paypal.png",
+    "precalculated_risk": {
+      "risk_score": 94.5,
+      "severity": "CRITICAL",
+      "domain_score": 92.0,
+      "infra_score": 85.0,
+      "visual_score": 98.0,
+      "content_score": 95.0,
+      "social_score": 88.0,
+      "graph_score": 90.0
+    }
+  },
+  {
+    "case_id": "CASE-BN-4192",
+    "case_title": "Binance Web3 Drainer & Telegram Impersonation Ring",
+    "target_brand": "Binance",
+    "authentic_domain": "binance.com",
+    "authentic_handle": "@binance",
+    "status": "TAKEDOWN_SUBMITTED",
+    "primary_threat_domain": "binance-airdrop-claim.live",
+    "associated_domains": [
+      "binance-airdrop-claim.live",
+      "binance-kyc-update.com"
+    ],
+    "infrastructure": {
+      "ip_addresses": ["194.26.29.112"],
+      "asn": "AS200000 - Offshore Host Global",
+      "registrar": "Porkbun LLC",
+      "nameservers": ["ns1.offshoredns.live", "ns2.offshoredns.live"],
+      "ssl_issuer": "ZeroSSL RSA Domain Secure",
+      "is_free_cert": true,
+      "country": "PA"
+    },
+    "crypto_wallet": "0x71C8366420A0235A0e7e47e8689539f408221bE4",
+    "social_impersonation": {
+      "platform": "Telegram",
+      "handle": "@BinanceSupportTeam_bot",
+      "display_name": "Binance Official Support ✅",
+      "bio": "Official VIP Assistance bot. Claim your token reward or resolve wallet syncing issues right away.",
+      "followers": 120,
+      "following": 0,
+      "account_age_days": 8,
+      "is_verified": false
+    },
+    "communication_lure": {
+      "sender": "airdrop@binance-vip-notice.live",
+      "subject": "Congratulations: Claim your 500 USDT Binance Anniversary Reward",
+      "message_text": "Exclusive reward opportunity! As an active trader, claim your 500 USDT reward. Connect your Web3 wallet and confirm your seed phrase at https://binance-airdrop-claim.live/reward before deadline expires in 12 hours."
+    },
+    "visual_asset": "binance.png",
+    "precalculated_risk": {
+      "risk_score": 96.0,
+      "severity": "CRITICAL",
+      "domain_score": 95.0,
+      "infra_score": 90.0,
+      "visual_score": 96.0,
+      "content_score": 98.0,
+      "social_score": 92.0,
+      "graph_score": 94.0
+    }
+  },
+  {
+    "case_id": "CASE-AP-1104",
+    "case_title": "Apple ID Lockout & iCloud Credential Harvester",
+    "target_brand": "Apple",
+    "authentic_domain": "apple.com",
+    "authentic_handle": "@AppleSupport",
+    "status": "ACTIVE_INVESTIGATION",
+    "primary_threat_domain": "apple-id-cloud-verify.info",
+    "associated_domains": [
+      "apple-id-cloud-verify.info",
+      "icloud-account-find.com"
+    ],
+    "infrastructure": {
+      "ip_addresses": ["45.154.255.89"],
+      "asn": "AS44050 - Host Europe Group",
+      "registrar": "PublicDomainRegistry",
+      "nameservers": ["ns1.cloudsafe.info", "ns2.cloudsafe.info"],
+      "ssl_issuer": "cPanel, Inc. Certification Authority",
+      "is_free_cert": true,
+      "country": "RO"
+    },
+    "social_impersonation": {
+      "platform": "Instagram",
+      "handle": "@AppleSupport_CareDesk",
+      "display_name": "Apple Care Desk Support",
+      "bio": "Apple Certified Customer Assistance. Send DM for iCloud unlocking and lost device tracking.",
+      "followers": 45,
+      "following": 1200,
+      "account_age_days": 21,
+      "is_verified": false
+    },
+    "communication_lure": {
+      "sender": "no-reply@icloud-security-center.info",
+      "subject": "Apple ID Locked: Unauthorized login in Moscow, Russia",
+      "message_text": "Your Apple ID has been locked for security reasons. A login attempt from Windows PC was detected in Moscow, Russia. To avoid permanent loss of iCloud photos and contacts, verify your password immediately: https://apple-id-cloud-verify.info"
+    },
+    "visual_asset": "apple.png",
+    "precalculated_risk": {
+      "risk_score": 85.0,
+      "severity": "CRITICAL",
+      "domain_score": 88.0,
+      "infra_score": 75.0,
+      "visual_score": 92.0,
+      "content_score": 90.0,
+      "social_score": 80.0,
+      "graph_score": 70.0
+    }
+  },
+  {
+    "case_id": "CASE-CH-6531",
+    "case_title": "Chase Bank Urgent Smishing & Wire Theft Ring",
+    "target_brand": "Chase",
+    "authentic_domain": "chase.com",
+    "authentic_handle": "@ChaseSupport",
+    "status": "UNDER_TRIAGE",
+    "primary_threat_domain": "chase-online-access.xyz",
+    "associated_domains": [
+      "chase-online-access.xyz"
+    ],
+    "infrastructure": {
+      "ip_addresses": ["198.54.117.200"],
+      "asn": "AS22612 - Namecheap Inc",
+      "registrar": "NameCheap, Inc.",
+      "nameservers": ["dns1.registrar-servers.com", "dns2.registrar-servers.com"],
+      "ssl_issuer": "Let's Encrypt Authority X3",
+      "is_free_cert": true,
+      "country": "US"
+    },
+    "social_impersonation": {
+      "platform": "Twitter/X",
+      "handle": "@ChaseBank_Care247",
+      "display_name": "Chase Bank Helpdesk",
+      "bio": "Chase Bank official customer care department. DM us to dispute pending charges.",
+      "followers": 80,
+      "following": 600,
+      "account_age_days": 45,
+      "is_verified": false
+    },
+    "communication_lure": {
+      "sender": "+1-800-555-0199 (Spoofed SMS)",
+      "subject": "CHASE FRAUD ALERT",
+      "message_text": "CHASE ALERT: Did you authorize a wire payment of $1,420.00 to merchant COINBASE? If NO, cancel right away to avoid debit: https://chase-online-access.xyz/secure"
+    },
+    "visual_asset": "chase.png",
+    "precalculated_risk": {
+      "risk_score": 89.0,
+      "severity": "CRITICAL",
+      "domain_score": 85.0,
+      "infra_score": 82.0,
+      "visual_score": 90.0,
+      "content_score": 94.0,
+      "social_score": 78.0,
+      "graph_score": 80.0
+    }
+  }
+]
