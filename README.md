@@ -2,7 +2,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.14-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/Framework-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
-[![Tests](https://img.shields.io/badge/Pytest-9%2F9%20Passing-brightgreen.svg)](#running-the-test-suite)
+[![Tests](https://img.shields.io/badge/Pytest-23%2F23%20Passing-brightgreen.svg)](#running-the-test-suite)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Standards](https://img.shields.io/badge/Forensics-NIST%20SP%20800--86-purple.svg)](https://csrc.nist.gov/pubs/sp/800/86/final)
 [![CTI](https://img.shields.io/badge/Threat%20Intel-STIX%202.1-red.svg)](https://oasis-open.github.io/cti-documentation/)
@@ -141,6 +141,14 @@ The system is grounded in a rigorous academic survey of **12 foundational peer-r
 - Compiles hosting provider cease-and-desist notices addressed to server ASNs.
 - Exports standardized **OASIS STIX 2.1 Threat Intelligence Bundles** (`Identity`, `Campaign`, `Indicator`, `Infrastructure`, `Relationship`).
 - Assembles comprehensive executive and technical investigation dossiers.
+
+### 9. OSINT Framework & 2024–2026 Elicit-Derived Threat Innovations
+- **Certificate Transparency Recon (`crt.sh` / RFC 6962)**: Passive live monitoring of Certificate Authority logs, detecting subdomains and staging infrastructure before DNS propagation.
+- **Wayback Machine CDX Archive Forensics (`web.archive.org`)**: Historical digest inspection to expose expired domain drop-catching and sudden semantic shifts.
+- **Cross-Platform Handle Recon (*Sherlock / WhatsMyName*)**: Probes 9+ major social and messaging ecosystems simultaneously to map threat actor identity footprints.
+- **Scammer Email & Burner Domain Analyzer (*Holehe / MX Recon*)**: Identifies disposable burner domains and deceptive local-part prefixes in phishing communication.
+- **Anti-Cloaking & Form Action C2 Detector (*BDI 2025/2026*)**: Analyzes `<form action="...">` destinations to uncover Telegram Bot API and Discord Webhook credential exfiltration pathways while flagging anti-bot inspection disabling.
+- **Explainable AI (XAI) Attribution Breakdown**: Mathematical factor-by-factor decomposition (*SHAP / LIME style*) providing transparent, court-admissible justification for risk classifications.
 
 ---
 

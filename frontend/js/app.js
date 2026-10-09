@@ -30,6 +30,8 @@ function switchTab(tabId) {
     setTimeout(refreshThreatGraph, 100);
   } else if (tabId === 'evidence') {
     loadEvidenceLedger();
+  } else if (tabId === 'osint') {
+    runXAIExplain();
   }
 }
 
@@ -38,6 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await fetchCases();
   await refreshThreatGraph();
   await loadEvidenceLedger();
+  runXAIExplain();
 });
 
 // 1. Fetch & Render Cases
@@ -599,3 +602,218 @@ async function populateAndTestAll() {
   await runCommunicationNLPScan();
   await generateFreshReport();
 }
+
+// 9. OSINT Framework & Deep Recon Toolkit
+async function runCTLogRecon() {
+  const query = document.getElementById('recon-ct-query').value.trim();
+  const container = document.getElementById('recon-ct-results');
+  if (!query) return;
+
+  container.innerHTML = '<span class="text-cyan-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Querying crt.sh Certificate Transparency logs...</span>';
+
+  try {
+    const res = await fetch('/api/recon/ct-logs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, limit: 12 })
+    });
+    const data = await res.json();
+    container.innerHTML = '';
+    if (data.certificates.length === 0) {
+      container.innerHTML = '<span class="text-slate-500">No public CT certificates found.</span>';
+    } else {
+      data.certificates.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'p-1.5 bg-slate-950 rounded flex justify-between items-center text-[11px] border border-slate-800';
+        div.innerHTML = `
+          <div>
+            <span class="text-cyan-300 font-bold block truncate max-w-[280px]">${c.subdomain}</span>
+            <span class="text-[10px] text-slate-500">${c.issuer_name}</span>
+          </div>
+          <span class="text-[10px] text-slate-400 font-mono">${(c.logged_at || '').substring(0, 10)}</span>
+        `;
+        container.appendChild(div);
+      });
+    }
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400">CT Log error: ${err.message}</span>`;
+  }
+}
+
+async function runWaybackRecon() {
+  const domain = document.getElementById('recon-wayback-domain').value.trim();
+  const container = document.getElementById('recon-wayback-results');
+  if (!domain) return;
+
+  container.innerHTML = '<span class="text-amber-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Querying Internet Archive CDX...</span>';
+
+  try {
+    const res = await fetch('/api/recon/wayback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ domain, limit: 10 })
+    });
+    const data = await res.json();
+    container.innerHTML = `
+      <div class="p-2 bg-slate-950 rounded border border-slate-800 text-xs mb-1">
+        <span class="font-bold ${data.is_freshly_staged_zero_history ? 'text-red-400' : 'text-amber-400'} block">
+          ${data.forensic_verdict}
+        </span>
+        <span class="text-slate-400 text-[11px]">First seen snapshot: ${data.first_seen_date} | Total archives: ${data.snapshot_count}</span>
+      </div>
+    `;
+    data.snapshots.slice(0, 4).forEach(s => {
+      const div = document.createElement('div');
+      div.className = 'p-1 bg-slate-900 rounded font-mono text-[11px] flex justify-between text-slate-300';
+      div.innerHTML = `
+        <span>${s.date} [Status: ${s.status}]</span>
+        <a href="${s.archive_view}" target="_blank" class="text-indigo-400 hover:underline">View Snapshot &rarr;</a>
+      `;
+      container.appendChild(div);
+    });
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400">Wayback error: ${err.message}</span>`;
+  }
+}
+
+async function runHandleFootprintRecon() {
+  const handle = document.getElementById('recon-handle-input').value.trim();
+  const container = document.getElementById('recon-handle-results');
+  if (!handle) return;
+
+  container.innerHTML = '<span class="text-purple-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Probing 9 target social networks...</span>';
+
+  try {
+    const res = await fetch('/api/recon/username-footprint', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ handle })
+    });
+    const data = await res.json();
+    container.innerHTML = '';
+    data.footprint.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'p-1.5 bg-slate-950 rounded flex justify-between items-center border border-slate-800 text-[11px]';
+      div.innerHTML = `
+        <div>
+          <span class="text-white font-bold">${item.platform}</span>
+          <span class="text-[10px] text-slate-500 ml-1">(${item.category})</span>
+        </div>
+        <a href="${item.profile_url}" target="_blank" class="text-purple-400 hover:underline truncate max-w-[180px]">${item.profile_url}</a>
+      `;
+      container.appendChild(div);
+    });
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400">Handle footprint error: ${err.message}</span>`;
+  }
+}
+
+async function runEmailRecon() {
+  const email = document.getElementById('recon-email-input').value.trim();
+  const container = document.getElementById('recon-email-results');
+  if (!email) return;
+
+  container.innerHTML = '<span class="text-rose-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Analyzing email provider reputation...</span>';
+
+  try {
+    const res = await fetch('/api/recon/scammer-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    container.innerHTML = `
+      <div class="p-2 bg-slate-950 rounded border border-slate-800 flex justify-between items-center mb-1">
+        <span class="text-white font-mono">${data.email}</span>
+        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${data.risk_score >= 50 ? 'bg-red-500/20 text-red-300 border border-red-500/40' : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'}">
+          ${data.risk_score} / 100 (${data.severity})
+        </span>
+      </div>
+      <div class="space-y-1">
+        ${data.indicators.map(ind => `<div class="text-[11px] text-rose-300 flex items-center space-x-1"><i class="fa-solid fa-circle-exclamation text-rose-400 text-[9px]"></i><span>${ind}</span></div>`).join('')}
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400">Email recon error: ${err.message}</span>`;
+  }
+}
+
+async function runCloakingC2Detector() {
+  const html_content = document.getElementById('recon-c2-html').value;
+  const container = document.getElementById('recon-c2-results');
+  container.innerHTML = '<span class="text-indigo-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Dissecting form actions and cloaking scripts...</span>';
+
+  try {
+    const res = await fetch('/api/recon/cloaking-form-c2', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ html_content, domain: "phishing-sample.top" })
+    });
+    const data = await res.json();
+    container.innerHTML = `
+      <div class="p-2 bg-slate-950 rounded border border-slate-800 text-xs">
+        <div class="flex justify-between items-center mb-1">
+          <span class="font-bold ${data.is_stealth_phishing_kit ? 'text-red-400' : 'text-emerald-400'}">
+            ${data.is_stealth_phishing_kit ? 'CONFIRMED STEALTH PHISHING KIT' : 'NO EVASION DETECTED'}
+          </span>
+          <span class="font-mono text-red-400 font-bold">${data.exfiltration_risk_score} / 100</span>
+        </div>
+        ${data.c2_exfiltration_threats.map(c => `
+          <div class="text-[11px] text-amber-300 mt-1">
+            <strong>Exfiltration C2:</strong> ${c.exfiltration_type} (${c.action_url})
+          </div>
+        `).join('')}
+        ${data.cloaking_evasion_tactics.map(cl => `
+          <div class="text-[11px] text-slate-400 mt-0.5">• ${cl}</div>
+        `).join('')}
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400">Cloaking detector error: ${err.message}</span>`;
+  }
+}
+
+async function runXAIExplain() {
+  const container = document.getElementById('recon-xai-results');
+  if (!container) return;
+
+  const currentWeights = currentCase ? {
+    "Domain Typosquat / Combosquat Similarity": currentCase.precalculated_risk.domain_score * 0.25,
+    "Ephemeral Certificate / Hosting ASN": currentCase.precalculated_risk.infra_score * 0.20,
+    "Cloned Logo Perceptual Hash Mimicry": currentCase.precalculated_risk.visual_score * 0.20,
+    "Psychological Coercion NLP Score": currentCase.precalculated_risk.content_score * 0.15,
+    "Social Media Impersonation / Fake Badging": currentCase.precalculated_risk.social_score * 0.10,
+    "Syndicate Graph Topological Degree Hub": currentCase.precalculated_risk.graph_score * 0.10
+  } : {
+    "Combosquat Keyword Affix": 23.5,
+    "Let's Encrypt Free Ephemeral Issuer": 18.0,
+    "pHash Hamming Distance < 8 bits": 24.0,
+    "24h Deadline / Account Lock Urgency": 14.5,
+    "Emoji Checkmark Spoofing": 9.0
+  };
+
+  try {
+    const res = await fetch('/api/recon/explain-xai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ features: currentWeights })
+    });
+    const data = await res.json();
+    container.innerHTML = '';
+    data.attributions.forEach(a => {
+      const div = document.createElement('div');
+      div.className = 'p-1.5 bg-slate-950 rounded flex justify-between items-center text-[11px] border border-slate-800';
+      div.innerHTML = `
+        <span class="text-slate-300 truncate max-w-[250px]">${a.feature}</span>
+        <div class="flex items-center space-x-2 font-mono">
+          <span class="text-emerald-400 font-bold">+${a.weight_contribution} pts</span>
+          <span class="px-1.5 py-0.2 rounded text-[9px] bg-red-500/10 text-red-400 border border-red-500/20">${a.impact_tier}</span>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400">XAI error: ${err.message}</span>`;
+  }
+}
+

@@ -347,8 +347,38 @@ To rigorously assess the operational efficacy of AegisOSINT, we define quantitat
 
 ---
 
-## 7. Conclusion
+## 8. OSINT Framework Synthesis & 2024–2026 Elicit-Derived Threat Innovations
+
+To further advance beyond the 12 classic literature survey papers, AegisOSINT synthesizes state-of-the-art tools cataloged in **OSINTFramework.com** alongside recent 2024–2026 academic literature indexed via **Elicit.com**. This integration addresses novel evasive tactics that were absent from earlier published studies:
+
+### 8.1 Certificate Transparency (CT) Stream Reconnaissance (crt.sh / RFC 6962)
+- **Gap in Classic Papers**: Prior literature (Kintis et al., Spaulding et al.) evaluated domain names strictly *after* active DNS registration and public hosting. As demonstrated by Oest et al. (*PhishFarm*), automated crawlers suffer an average 18–24 hour detection lag during which phishing campaigns harvest their peak credentials.
+- **AegisOSINT Innovation**: Leverages append-only Certificate Transparency logs (`crt.sh`) to intercept newly issued SSL/TLS certificates for brand subdomains (e.g., `login-brand.secure-portal.top`) at the exact millisecond Certificate Authorities issue them. This enables **pre-operational discovery** before DNS records propagate or lures are transmitted.
+
+### 8.2 Historical Web Archive Forensics & Domain Drop-Catching (Wayback Machine CDX)
+- **Gap in Classic Papers**: Existing studies treated domain age as a static WHOIS creation date, failing to detect **domain drop-catching**—where attackers acquire expired, aged domains with established positive reputation and immediately stage phishing kits.
+- **AegisOSINT Innovation**: Integrates the Internet Archive Wayback Machine CDX API (`web.archive.org/cdx`) to perform longitudinal time-travel analysis. By checking historical digest checksums and first-seen archive timestamps, AegisOSINT exposes sudden semantic shifts (e.g., a domain that was a regional dental clinic for 8 years suddenly deploying a cryptocurrency drainer).
+
+### 8.3 Cross-Platform Actor Footprinting (Sherlock & WhatsMyName Methodologies)
+- **Gap in Classic Papers**: Social media brand studies (e.g., Acharya et al.) examined individual platforms in isolation, primarily focusing on Twitter/X or Instagram.
+- **AegisOSINT Innovation**: Adapts the high-throughput enumeration architecture of open-source intelligence tools like *Sherlock* and *WhatsMyName*, probing 9+ disparate ecosystems simultaneously (Twitter/X, Telegram, GitHub, Reddit, TikTok, Medium, Pinterest, Steam, Instagram). This maps the threat actor's full identity constellation and uncovers cross-platform command channels.
+
+### 8.4 Scammer Email & Disposable Burner Domain Triage (Holehe & MX OSINT)
+- **Gap in Classic Papers**: Phishing literature focused heavily on the visual DOM or URL lexical tokens, largely treating the sender address as arbitrary.
+- **AegisOSINT Innovation**: Implements disposable burner email triage, verifying against known ephemeral mail backbones (Mailinator, GuerrillaMail, Yopmail) and analyzing local-part generation patterns (e.g., high-entropy random digit concatenation) to identify automated spearphishing generators.
+
+### 8.5 Anti-Cloaking & Form Action C2 Exfiltration Detection (Brand Domain Identification 2025/2026)
+- **Gap in Classic Papers**: Classic visual phishing classifiers (Afroz et al., Abdelnabi et al., Liu et al.) assumed the phishing site displays uniformly to all visitors. Modern evasive kits actively deploy anti-bot defenses, inspecting HTTP client user-agents, disabling browser DevTools/right-click inspection, and utilizing Cloudflare Turnstile CAPTCHAs to conceal malicious payloads from automated security scanners.
+- **AegisOSINT Innovation**: Incorporates heuristics from 2025/2026 Brand Domain Identification (BDI) literature. Specifically, it inspects `<form action="...">` attributes to flag **off-origin C2 exfiltration channels**—such as direct POSTs to Telegram Bot APIs (`api.telegram.org/bot...`) and Discord Webhooks—unmasking the exact data theft pathway regardless of visual cloaking.
+
+### 8.6 Explainable AI (XAI) & SHAP/LIME Transparent Attribution
+- **Gap in Classic Papers**: Deep learning architectures (Siamese CNNs, Triplet Networks) operate as opaque black boxes, producing an arbitrary similarity scalar that provides insufficient evidentiary rationale for courtroom takedowns or enterprise security audits.
+- **AegisOSINT Innovation**: Incorporates transparent factor attribution inspired by 2025/2026 XAI frameworks (e.g., *EXPLICATE*), decomposing composite risk into mathematically bounded, human-interpretable feature vectors. Every flagged incident explicitly details the weighted contribution of lexical similarity, ephemeral SSL issuance, perceptual logo distance, psychological urgency cues, and graph centrality hubs.
+
+---
+
+## 9. Conclusion
 
 Brand impersonation and online fraud have evolved from crude typo misspellings into sophisticated, multi-vector syndicates combining typosquatting, cloned visual logos, deceptive social support profiles, and high-pressure social engineering.
 
-By reviewing 12 seminal research papers and analyzing the structural gaps in existing single-modality defenses, this study established the foundation and architecture for **AegisOSINT**. AegisOSINT demonstrates that uniting multimodal detection (domain, vision, social, NLP) with heterogeneous graph link analysis and an immutable cryptographic chain-of-custody provides higher detection accuracy, lower false-positive rates, and immediate, court-ready takedown enforcement.
+By reviewing 12 seminal research papers, synthesizing modern tools from OSINTFramework.com, and incorporating recent 2024–2026 Elicit-derived academic advances (pre-DNS Certificate Transparency, Wayback historical forensics, anti-cloaking/C2 exfiltration detection, and XAI attribution), this study established the foundation and architecture for **AegisOSINT**. AegisOSINT demonstrates that uniting multimodal detection with heterogeneous graph link analysis and an immutable cryptographic chain-of-custody provides higher detection accuracy, lower false-positive rates, and immediate, court-ready takedown enforcement.

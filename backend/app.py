@@ -22,6 +22,7 @@ from .modules.entity_graph import EntityCorrelationGraph
 from .modules.risk_engine import RiskScoringEngine
 from .modules.evidence_locker import EvidenceLocker
 from .modules.report_generator import ReportGenerator
+from .modules.osint_framework_recon import OSINTFrameworkRecon
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -48,6 +49,7 @@ threat_graph = EntityCorrelationGraph()
 risk_engine = RiskScoringEngine()
 evidence_locker = EvidenceLocker()
 report_generator = ReportGenerator()
+osint_recon = OSINTFrameworkRecon()
 
 # Load sample cases into graph on startup
 BASE_DIR = os.path.dirname(__file__)
@@ -470,6 +472,65 @@ def generate_forensic_report(req: GenerateReportRequest):
         "dossier": dossier,
         "stix21_bundle": stix_bundle
     }
+
+
+# Advanced OSINT Framework & Reconnaissance Endpoints (osintframework.com & Elicit research)
+class CTLogRequest(BaseModel):
+    query: str
+    limit: Optional[int] = 20
+
+class WaybackRequest(BaseModel):
+    domain: str
+    limit: Optional[int] = 15
+
+class UsernameFootprintRequest(BaseModel):
+    handle: str
+
+class ScammerEmailRequest(BaseModel):
+    email: str
+
+class CloakingC2Request(BaseModel):
+    html_content: str
+    domain: str
+
+class XAIExplainRequest(BaseModel):
+    features: Dict[str, float]
+
+
+@app.post("/api/recon/ct-logs")
+def query_ct_logs(req: CTLogRequest):
+    """Queries Certificate Transparency logs (crt.sh / RFC 6962) for newly issued certificates and subdomains."""
+    return osint_recon.query_certificate_transparency(req.query, req.limit or 20)
+
+
+@app.post("/api/recon/wayback")
+def query_wayback_archives(req: WaybackRequest):
+    """Queries Internet Archive Wayback Machine CDX API for temporal mutation and drop-catching forensics."""
+    return osint_recon.query_wayback_machine(req.domain, req.limit or 15)
+
+
+@app.post("/api/recon/username-footprint")
+def probe_username_footprint(req: UsernameFootprintRequest):
+    """Enumerates cross-platform username presence across major social and messaging networks."""
+    return osint_recon.probe_username_footprint(req.handle)
+
+
+@app.post("/api/recon/scammer-email")
+def analyze_scammer_email(req: ScammerEmailRequest):
+    """Performs email address OSINT, checking disposable burner providers and local-part deception."""
+    return osint_recon.analyze_scammer_email(req.email)
+
+
+@app.post("/api/recon/cloaking-form-c2")
+def detect_cloaking_and_c2(req: CloakingC2Request):
+    """Detects anti-bot cloaking tactics and form action exfiltration destinations (Telegram/Discord C2)."""
+    return osint_recon.detect_cloaking_and_form_c2(req.html_content, req.domain)
+
+
+@app.post("/api/recon/explain-xai")
+def explain_threat_attribution(req: XAIExplainRequest):
+    """Computes transparent SHAP/LIME-style feature impact breakdown for threat explainability."""
+    return {"attributions": osint_recon.explain_threat_attribution(req.features)}
 
 
 # Static Frontend Mounting
