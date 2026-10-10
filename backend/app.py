@@ -122,6 +122,10 @@ class SocialScanRequest(BaseModel):
     authentic_handle: str = "@PayPal"
     is_verified: bool = False
 
+class LiveDeepScanRequest(BaseModel):
+    target: str
+    brand: Optional[str] = "PayPal"
+
 class CommunicationScanRequest(BaseModel):
     text: str
     sender: Optional[str] = None
@@ -273,6 +277,96 @@ def scan_single_domain(req: SingleDomainCheckRequest):
         "dns": dns_info,
         "ssl": ssl_info,
         "rdap": rdap_info,
+        "risk": risk_info,
+        "evidence_receipt": evidence
+    }
+
+
+@app.post("/api/scan/live-deep")
+def scan_live_deep(req: LiveDeepScanRequest):
+    """
+    100% REAL LIVE INTERNET OSINT TARGET SCANNER:
+    Performs complete real live network reconnaissance on any arbitrary domain/URL:
+    - Live DNS queries (A, MX, NS, TXT)
+    - Live ICANN RDAP protocol queries (Real Registrar, Creation/Expiration dates, Age)
+    - Live SSL/TLS handshake & X.509 cert extraction (Issuer, SANs, SHA-256 fingerprint)
+    - Live HTTP probe (Status code, redirect URL, server header, page title, login forms)
+    - Live Certificate Transparency queries (Real subdomains from Certspotter/HackerTarget)
+    - Live Wayback Machine archive queries (Real snapshot history)
+    - Live Web page logo extraction & perceptual hash comparison
+    - Live Calibrated Risk Evaluation & NIST SP 800-86 cryptographic evidence preservation
+    """
+    clean_target = req.target.strip().replace("http://", "").replace("https://", "").split("/")[0]
+    brand = req.brand or "PayPal"
+
+    # 1. Live DNS
+    dns_info = domain_scanner.resolve_dns(clean_target)
+
+    # 2. Live RDAP / WHOIS
+    rdap_info = domain_scanner.inspect_whois_rdap(clean_target)
+
+    # 3. Live SSL/TLS
+    ssl_info = domain_scanner.inspect_ssl(clean_target)
+
+    # 4. Live HTTP Web Probe
+    http_info = domain_scanner.probe_http(clean_target)
+
+    # 5. Live Certificate Transparency
+    ct_info = osint_recon.query_certificate_transparency(clean_target, limit=12)
+
+    # 6. Live Wayback Machine Archive
+    wayback_info = osint_recon.query_wayback_machine(clean_target, limit=5)
+
+    # 7. Live Logo Extraction & Matching
+    logo_info = visual_matcher.fetch_and_match_url_logo(clean_target, target_brand=brand)
+
+    # 8. Live Risk Scoring
+    risk_info = domain_scanner.evaluate_domain_risk(
+        domain=clean_target,
+        brand=brand,
+        dns_info=dns_info,
+        ssl_info=ssl_info,
+        rdap_info=rdap_info,
+        http_info=http_info
+    )
+
+    # 9. Ingest into live entity graph
+    threat_graph.ingest_domain_intelligence(
+        domain=clean_target,
+        target_brand=brand,
+        ip_addresses=dns_info.get("ip_addresses", []),
+        registrar=rdap_info.get("registrar"),
+        nameservers=dns_info.get("name_servers") or rdap_info.get("nameservers", []),
+        ssl_issuer=ssl_info.get("issuer")
+    )
+
+    # 10. Cryptographically seal in immutable evidence ledger
+    evidence = evidence_locker.record_evidence(
+        target_uri=f"live://{clean_target}",
+        artifact_type="REAL_WORLD_LIVE_SCAN_RECEIPT",
+        content={
+            "target": clean_target,
+            "brand": brand,
+            "dns": dns_info,
+            "rdap": rdap_info,
+            "ssl": ssl_info,
+            "http": http_info,
+            "risk": risk_info,
+            "ct_subdomains_count": ct_info.get("total_certificates_found", 0)
+        }
+    )
+
+    return {
+        "target": clean_target,
+        "brand": brand,
+        "is_real_live_scan": True,
+        "dns": dns_info,
+        "rdap": rdap_info,
+        "ssl": ssl_info,
+        "http": http_info,
+        "certificate_transparency": ct_info,
+        "wayback_archive": wayback_info,
+        "logo_matching": logo_info,
         "risk": risk_info,
         "evidence_receipt": evidence
     }

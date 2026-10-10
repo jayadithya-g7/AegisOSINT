@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+backend/data/evidence_vault/*.dat

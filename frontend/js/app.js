@@ -43,6 +43,201 @@ document.addEventListener('DOMContentLoaded', async () => {
   runXAIExplain();
 });
 
+// REAL-WORLD LIVE TARGET INTELLIGENCE SCANNER (100% Real Internet Recon)
+async function executeRealLiveScan() {
+  const targetInput = document.getElementById('live-target-input');
+  const brandInput = document.getElementById('live-brand-input');
+  const scanBtn = document.getElementById('btn-live-scan');
+  const resultsBox = document.getElementById('live-scan-results-box');
+
+  const target = targetInput ? targetInput.value.trim() : '';
+  const brand = brandInput ? brandInput.value.trim() : 'PayPal';
+
+  if (!target) {
+    alert("Please enter a domain or URL to scan (e.g., github.com or paypal.com)");
+    return;
+  }
+
+  // Update button to loading state
+  const origBtnHtml = scanBtn.innerHTML;
+  scanBtn.disabled = true;
+  scanBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Probing Live Net...`;
+
+  try {
+    const res = await fetch('/api/scan/live-deep', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ target, brand })
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP error ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    // Reveal results box
+    if (resultsBox) resultsBox.classList.remove('hidden');
+
+    // Header info
+    const domEl = document.getElementById('live-result-domain');
+    if (domEl) domEl.innerText = data.target;
+
+    const sevEl = document.getElementById('live-result-severity');
+    if (sevEl) {
+      const isCritical = data.risk.severity === 'CRITICAL';
+      const isHigh = data.risk.severity === 'HIGH';
+      const isSuspicious = data.risk.severity === 'SUSPICIOUS';
+      const badgeClass = isCritical
+        ? 'bg-red-500/20 text-red-300 border-red-500/40'
+        : isHigh
+        ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+        : isSuspicious
+        ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/40'
+        : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
+      sevEl.className = `px-2.5 py-0.5 rounded text-xs font-bold border ${badgeClass}`;
+      sevEl.innerText = `${data.risk.severity} (${data.risk.risk_score}/100)`;
+    }
+
+    // Card 1: DNS
+    const dnsIps = document.getElementById('live-dns-ips');
+    if (dnsIps) {
+      dnsIps.innerText = data.dns.resolved && data.dns.ip_addresses && data.dns.ip_addresses.length > 0
+        ? data.dns.ip_addresses.join(', ')
+        : 'Unresolved / No A Records';
+    }
+    const dnsMx = document.getElementById('live-dns-mx');
+    if (dnsMx) {
+      dnsMx.innerText = data.dns.mx_records && data.dns.mx_records.length > 0
+        ? data.dns.mx_records.slice(0, 2).join(', ')
+        : 'No MX Records';
+    }
+    const dnsNs = document.getElementById('live-dns-ns');
+    if (dnsNs) {
+      dnsNs.innerText = data.dns.name_servers && data.dns.name_servers.length > 0
+        ? data.dns.name_servers.slice(0, 2).join(', ')
+        : 'Unknown NS';
+    }
+
+    // Card 2: RDAP
+    const rdapReg = document.getElementById('live-rdap-registrar');
+    if (rdapReg) rdapReg.innerText = data.rdap.registrar || 'Redacted / ICANN Protected';
+
+    const rdapCreated = document.getElementById('live-rdap-created');
+    if (rdapCreated) {
+      rdapCreated.innerText = data.rdap.creation_date
+        ? data.rdap.creation_date.replace('T', ' ').substring(0, 19)
+        : 'Not Disclosed';
+    }
+
+    const rdapAge = document.getElementById('live-rdap-age');
+    if (rdapAge) {
+      rdapAge.innerText = (data.rdap.domain_age_days !== null && data.rdap.domain_age_days !== undefined)
+        ? `${data.rdap.domain_age_days} days`
+        : 'Unknown';
+    }
+
+    // Card 3: SSL
+    const sslIssuer = document.getElementById('live-ssl-issuer');
+    if (sslIssuer) {
+      sslIssuer.innerText = data.ssl.has_ssl
+        ? (data.ssl.issuer || 'Valid SSL')
+        : 'No Active SSL Certificate';
+    }
+    const sslSubj = document.getElementById('live-ssl-subject');
+    if (sslSubj) {
+      sslSubj.innerText = data.ssl.has_ssl
+        ? (data.ssl.subject || data.target)
+        : 'N/A';
+    }
+    const sslFp = document.getElementById('live-ssl-fp');
+    if (sslFp) {
+      sslFp.innerText = data.ssl.sha256_fingerprint || 'N/A';
+      sslFp.title = data.ssl.sha256_fingerprint || '';
+    }
+
+    // Card 4: HTTP
+    const httpStat = document.getElementById('live-http-status');
+    if (httpStat) {
+      httpStat.innerText = data.http.reachable
+        ? `HTTP ${data.http.status_code}`
+        : 'Unreachable';
+      httpStat.className = data.http.reachable
+        ? 'font-mono font-bold text-emerald-400'
+        : 'font-mono font-bold text-red-400';
+    }
+    const httpServer = document.getElementById('live-http-server');
+    if (httpServer) {
+      httpServer.innerText = data.http.server ? `(${data.http.server})` : '';
+    }
+    const httpTitle = document.getElementById('live-http-title');
+    if (httpTitle) {
+      httpTitle.innerText = data.http.title || 'No Title Found';
+      httpTitle.title = data.http.title || '';
+    }
+    const httpSec = document.getElementById('live-http-security');
+    if (httpSec) {
+      httpSec.innerText = data.http.has_login_form
+        ? '⚠️ Credential Form Detected'
+        : 'Standard Web Application';
+    }
+
+    // Card 5: CT Logs & Wayback
+    const ctCount = document.getElementById('live-ct-count');
+    if (ctCount) {
+      const ctFound = data.certificate_transparency
+        ? (data.certificate_transparency.total_certificates_found || 0)
+        : 0;
+      ctCount.innerText = `${ctFound} subdomains discovered`;
+    }
+    const wbFirst = document.getElementById('live-wb-first');
+    if (wbFirst) {
+      wbFirst.innerText = data.wayback_archive && data.wayback_archive.first_snapshot_timestamp
+        ? data.wayback_archive.first_snapshot_timestamp.substring(0, 8)
+        : 'Never Archived';
+    }
+    const wbVerdict = document.getElementById('live-wb-verdict');
+    if (wbVerdict) {
+      wbVerdict.innerText = data.wayback_archive
+        ? (data.wayback_archive.threat_verdict || 'Active')
+        : 'Live';
+    }
+
+    // Card 6: Evidence
+    const evId = document.getElementById('live-ev-id');
+    if (evId && data.evidence_receipt) {
+      evId.innerText = data.evidence_receipt.evidence_id;
+    }
+    const evHash = document.getElementById('live-ev-hash');
+    if (evHash && data.evidence_receipt) {
+      evHash.innerText = data.evidence_receipt.sha256_hash || data.evidence_receipt.sha256_digest || '';
+      evHash.title = data.evidence_receipt.sha256_hash || '';
+    }
+    const evTs = document.getElementById('live-ev-ts');
+    if (evTs && data.evidence_receipt) {
+      evTs.innerText = (data.evidence_receipt.timestamp_utc || '').replace('T', ' ').substring(0, 19);
+    }
+
+    // Refresh graph and evidence tables with newly ingested real data
+    await refreshThreatGraph();
+    await loadEvidenceLedger();
+
+  } catch (err) {
+    alert("Live Reconnaissance Error: " + err.message);
+  } finally {
+    scanBtn.disabled = false;
+    scanBtn.innerHTML = origBtnHtml;
+  }
+}
+
+function quickRealScan(domain, brand) {
+  const targetInput = document.getElementById('live-target-input');
+  const brandInput = document.getElementById('live-brand-input');
+  if (targetInput) targetInput.value = domain;
+  if (brandInput) brandInput.value = brand;
+  executeRealLiveScan();
+}
+
 // 1. Fetch & Render Cases
 async function fetchCases() {
   try {

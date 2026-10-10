@@ -24,7 +24,7 @@ def test_certificate_transparency_recon(recon):
     res = recon.query_certificate_transparency("paypal", limit=5)
     assert res["total_certificates_found"] > 0
     assert "certificates" in res
-    assert "crt.sh" in res["source"]
+    assert "Certificate Transparency" in res["source"] or "crt.sh" in res["source"] or "Certspotter" in res["source"]
 
 
 def test_wayback_machine_recon(recon):

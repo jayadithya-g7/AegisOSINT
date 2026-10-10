@@ -84,3 +84,19 @@ def test_api_report_generation(client):
     assert "dossier" in data
     assert "stix21_bundle" in data
     assert data["stix21_bundle"]["type"] == "bundle"
+
+
+def test_api_live_deep_scan(client):
+    payload = {
+        "target": "github.com",
+        "brand": "GitHub"
+    }
+    res = client.post("/api/scan/live-deep", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["is_real_live_scan"] is True
+    assert "dns" in data
+    assert "rdap" in data
+    assert "ssl" in data
+    assert "http" in data
+    assert "evidence_receipt" in data
