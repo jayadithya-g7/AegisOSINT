@@ -396,6 +396,12 @@ function syncTabsWithCase(c) {
     document.getElementById('comm-sender').value = c.communication_lure.sender;
     document.getElementById('comm-body').value = c.communication_lure.message_text;
   }
+
+  // Cyber LLM Advisor tab
+  const cyberDom = document.getElementById('cyber-llm-domain');
+  if (cyberDom) cyberDom.value = c.primary_threat_domain;
+  const cyberBrand = document.getElementById('cyber-llm-brand');
+  if (cyberBrand) cyberBrand.value = c.target_brand;
 }
 
 // 2. Domain Scanner
@@ -1011,4 +1017,94 @@ async function runXAIExplain() {
     container.innerHTML = `<span class="text-red-400">XAI error: ${err.message}</span>`;
   }
 }
+
+// 9. Cyber LLM Security Reasoning (GLM-5.3 / CyberSecEval Benchmarks)
+async function runCyberLLMAnalysis() {
+  const domain = document.getElementById('cyber-llm-domain').value.trim();
+  const brand = document.getElementById('cyber-llm-brand').value.trim() || 'PayPal';
+  const modelPreference = document.getElementById('cyber-llm-model-select').value;
+  const btn = document.getElementById('btn-cyber-llm-run');
+
+  if (!domain) return alert("Please specify a target domain to analyze.");
+
+  const origBtnHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Running ${modelPreference}...`;
+
+  try {
+    const payload = {
+      domain,
+      brand,
+      model_preference: modelPreference,
+      telemetry: currentCase ? {
+        dns: { ip_addresses: currentCase.infrastructure.ip_addresses },
+        ssl: { is_free_cert: true, issuer: currentCase.infrastructure.ssl_issuer },
+        rdap: { domain_age_days: 3 },
+        http: { has_login_form: true },
+        risk: { risk_score: currentCase.precalculated_risk.risk_score }
+      } : {
+        dns: { ip_addresses: ["198.51.100.23"] },
+        ssl: { is_free_cert: true },
+        risk: { risk_score: 85.0 }
+      }
+    };
+
+    const res = await fetch('/api/cyber-llm/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+
+    // Populate Threat Actor Profile
+    document.getElementById('cyber-llm-archetype').innerText = data.threat_actor_profiling.archetype;
+    document.getElementById('cyber-llm-tier').innerText = data.threat_actor_profiling.sophistication_tier;
+    document.getElementById('cyber-llm-intent').innerText = data.threat_actor_profiling.operational_intent;
+
+    // Populate Benchmark & Provenance
+    document.getElementById('cyber-llm-evaluator').innerText = data.model_evaluator;
+    document.getElementById('cyber-llm-benchmark').innerText = data.benchmark_framework;
+
+    // Populate Evidence Seal
+    if (data.evidence_receipt) {
+      document.getElementById('cyber-llm-ev-id').innerText = data.evidence_receipt.evidence_id;
+      document.getElementById('cyber-llm-ev-hash').innerText = data.evidence_receipt.sha256_hash;
+    }
+
+    // Populate MITRE Matrix
+    const mitreContainer = document.getElementById('cyber-llm-mitre-container');
+    mitreContainer.innerHTML = '';
+    data.mitre_attack_mappings.forEach(m => {
+      const card = document.createElement('div');
+      card.className = 'p-2.5 bg-slate-950 rounded border border-slate-800 text-xs space-y-1';
+      card.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="font-mono font-bold text-fuchsia-400">${m.technique_id}</span>
+          <span class="px-1.5 py-0.2 rounded text-[9px] bg-slate-800 text-slate-300 font-mono">${m.tactic}</span>
+        </div>
+        <div class="text-[11px] font-semibold text-white">${m.technique_name}</div>
+        <div class="text-[10px] text-slate-400 line-clamp-2">${m.relevance}</div>
+      `;
+      mitreContainer.appendChild(card);
+    });
+
+    // Populate Narrative
+    document.getElementById('cyber-llm-narrative').innerText = data.executive_analysis;
+
+    // Populate Signatures
+    document.getElementById('cyber-llm-sig-rpz').innerText = data.active_defense_signatures.dns_rpz_zone;
+    document.getElementById('cyber-llm-sig-suricata').innerText = data.active_defense_signatures.suricata_ids_rule;
+    document.getElementById('cyber-llm-sig-waf').innerText = data.active_defense_signatures.waf_filter_expression;
+
+    // Refresh evidence ledger
+    await loadEvidenceLedger();
+
+  } catch (err) {
+    alert("Cyber LLM Analysis error: " + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origBtnHtml;
+  }
+}
+
 

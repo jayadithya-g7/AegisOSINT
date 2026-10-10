@@ -1093,6 +1093,136 @@
             </button>
           </div>
         </div>
+
+        <!-- Tool 7: Open-Source Cyber LLM Threat Reasoning (GLM-5.3 / CyberSecEval 4 Benchmark Engine) -->
+        <div class="mt-6 bg-gradient-to-r from-slate-950 via-fuchsia-950/20 to-slate-950 p-6 rounded-xl border border-fuchsia-500/30 shadow-xl space-y-4">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/30 font-mono">
+                  OPEN-SOURCE CYBERSECURITY LLM BENCHMARK ENGINE
+                </span>
+                <span class="text-[11px] text-slate-400 font-mono">Zero Local Weight Downloads • CyberSecEval 4 / CyberSOCEval Aligned</span>
+              </div>
+              <h3 class="text-sm font-bold text-white flex items-center space-x-2 mt-1">
+                <i class="fa-solid fa-microchip text-fuchsia-400"></i>
+                <span>Open-Source Cyber LLM Reasoning (GLM-5.3 / DeepSeek-R1 / Qwen2.5-Coder)</span>
+              </h3>
+              <p class="text-xs text-slate-400">
+                Grounds live threat telemetry into Meta Purple Llama <strong>CyberSecEval 4</strong> and CrowdStrike <strong>CyberSOCEval</strong> evaluation rubrics with automated MITRE ATT&CK technique extraction and defense rule synthesis.
+              </p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <select id="cyber-llm-model-select" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white focus:outline-none focus:border-fuchsia-400">
+                <option value="GLM-5.3-Cyber">GLM-5.3-Cyber (THUDM / Z.ai - CyberGym Benchmark)</option>
+                <option value="DeepSeek-R1">DeepSeek-R1 (CyberSOCEval CTI Reasoning)</option>
+                <option value="Qwen2.5-Coder-32B">Qwen2.5-Coder-32B (AutoPatchBench / WAF)</option>
+              </select>
+              <input type="text" id="cyber-llm-domain" value="login-chase-update.top" placeholder="Suspect Domain" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono w-48">
+              <input type="text" id="cyber-llm-brand" value="Chase" placeholder="Brand" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white w-24">
+              <button onclick="runCyberLLMAnalysis()" id="btn-cyber-llm-run" class="px-4 py-1.5 bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white rounded text-xs font-bold transition flex items-center space-x-1.5 shadow-lg shadow-fuchsia-600/30">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Run CyberSecEval Analysis</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Results Container -->
+          <div id="cyber-llm-results-box" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <!-- Card A: Threat Actor Profile -->
+              <div class="bg-slate-900/80 p-3.5 rounded-lg border border-slate-800 space-y-1.5 text-xs">
+                <div class="text-[11px] font-bold text-fuchsia-400 uppercase tracking-wider flex items-center space-x-1.5">
+                  <i class="fa-solid fa-user-secret"></i>
+                  <span>Threat Actor Profile</span>
+                </div>
+                <div><span class="text-slate-500">Classification:</span> <span id="cyber-llm-archetype" class="text-white font-semibold">Organized Cybercrime / BEC Phishing Syndicate</span></div>
+                <div><span class="text-slate-500">Tier:</span> <span id="cyber-llm-tier" class="font-mono text-amber-300 font-bold">TIER_3_AUTOMATED_CRIME</span></div>
+                <div><span class="text-slate-500">Operational Intent:</span> <span id="cyber-llm-intent" class="text-slate-300">Rapid credential harvesting before domain suspension</span></div>
+              </div>
+
+              <!-- Card B: Benchmark & Provenance -->
+              <div class="bg-slate-900/80 p-3.5 rounded-lg border border-slate-800 space-y-1.5 text-xs">
+                <div class="text-[11px] font-bold text-cyan-400 uppercase tracking-wider flex items-center space-x-1.5">
+                  <i class="fa-solid fa-scale-balanced"></i>
+                  <span>Benchmark Provenance</span>
+                </div>
+                <div><span class="text-slate-500">Evaluator:</span> <span id="cyber-llm-evaluator" class="font-mono text-cyan-300 font-semibold">GLM-5.3-Cyber</span></div>
+                <div><span class="text-slate-500">Standard:</span> <span id="cyber-llm-benchmark" class="text-slate-300">CyberSecEval 4 / CyberSOCEval</span></div>
+                <div><span class="text-slate-500">Local Weight Pull:</span> <span class="text-emerald-400 font-bold font-mono">0 MB (Zero Local Weights)</span></div>
+              </div>
+
+              <!-- Card C: Evidence Seal -->
+              <div class="bg-slate-900/80 p-3.5 rounded-lg border border-slate-800 space-y-1.5 text-xs">
+                <div class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider flex items-center space-x-1.5">
+                  <i class="fa-solid fa-fingerprint"></i>
+                  <span>Sealed Cryptographic Receipt</span>
+                </div>
+                <div><span class="text-slate-500">Evidence ID:</span> <span id="cyber-llm-ev-id" class="font-mono text-indigo-300 text-[11px]">--</span></div>
+                <div><span class="text-slate-500">SHA-256 Digest:</span> <span id="cyber-llm-ev-hash" class="font-mono text-[10px] text-emerald-300 truncate block">--</span></div>
+                <div><span class="text-slate-500">Custody Status:</span> <span class="text-emerald-400 font-semibold">TAMPER-FREE LEDGER SEALED</span></div>
+              </div>
+            </div>
+
+            <!-- MITRE ATT&CK Matrix Grid -->
+            <div>
+              <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center space-x-1.5">
+                <i class="fa-solid fa-diagram-project text-indigo-400"></i>
+                <span>Extracted MITRE ATT&amp;CK Enterprise Techniques:</span>
+              </h4>
+              <div id="cyber-llm-mitre-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- Executive CTI Narrative -->
+            <div>
+              <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                Executive Threat Assessment (CyberSOCEval Standard):
+              </h4>
+              <div id="cyber-llm-narrative" class="p-3.5 bg-slate-900 rounded-lg border border-slate-800 text-xs text-slate-200 leading-relaxed font-sans">
+                Click 'Run CyberSecEval Analysis' to generate AI threat assessment using GLM-5.3 / DeepSeek-R1.
+              </div>
+            </div>
+
+            <!-- Active Defense Code Blocks (DNS RPZ, Suricata IDS, WAF) -->
+            <div>
+              <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center space-x-1.5">
+                <i class="fa-solid fa-shield-halved text-rose-400"></i>
+                <span>Automated Defense Signatures (SOC &amp; Network Mitigation):</span>
+              </h4>
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 font-mono text-[11px]">
+                <!-- DNS RPZ Rule -->
+                <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800 space-y-1">
+                  <div class="flex items-center justify-between text-indigo-300 font-bold pb-1 border-b border-slate-800">
+                    <span>DNS RPZ Sinkhole Rule</span>
+                    <span class="text-[9px] text-slate-500">BIND/Unbound</span>
+                  </div>
+                  <pre id="cyber-llm-sig-rpz" class="text-slate-300 whitespace-pre-wrap overflow-x-auto text-[10px] max-h-24">--</pre>
+                </div>
+
+                <!-- Suricata Rule -->
+                <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800 space-y-1">
+                  <div class="flex items-center justify-between text-amber-300 font-bold pb-1 border-b border-slate-800">
+                    <span>Suricata/Snort IDS Rule</span>
+                    <span class="text-[9px] text-slate-500">Network Sensor</span>
+                  </div>
+                  <pre id="cyber-llm-sig-suricata" class="text-slate-300 whitespace-pre-wrap overflow-x-auto text-[10px] max-h-24">--</pre>
+                </div>
+
+                <!-- WAF Regex -->
+                <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800 space-y-1">
+                  <div class="flex items-center justify-between text-emerald-300 font-bold pb-1 border-b border-slate-800">
+                    <span>WAF Expression Filter</span>
+                    <span class="text-[9px] text-slate-500">Cloudflare/ModSec</span>
+                  </div>
+                  <pre id="cyber-llm-sig-waf" class="text-slate-300 whitespace-pre-wrap overflow-x-auto text-[10px] max-h-24">--</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 

@@ -23,6 +23,7 @@ from .modules.risk_engine import RiskScoringEngine
 from .modules.evidence_locker import EvidenceLocker
 from .modules.report_generator import ReportGenerator
 from .modules.osint_framework_recon import OSINTFrameworkRecon
+from .modules.cyber_llm_advisor import CyberLLMAdvisor
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -50,6 +51,7 @@ risk_engine = RiskScoringEngine()
 evidence_locker = EvidenceLocker()
 report_generator = ReportGenerator()
 osint_recon = OSINTFrameworkRecon()
+cyber_llm = CyberLLMAdvisor()
 
 # Load sample cases into graph on startup
 BASE_DIR = os.path.dirname(__file__)
@@ -187,7 +189,8 @@ def get_system_status():
             "entity_graph": "ACTIVE (Heterogeneous Correlation, Centrality, Syndicates)",
             "risk_engine": "ACTIVE (Calibrated Multi-Vector Formula, Synergy Bonus)",
             "evidence_locker": "ACTIVE (SHA-256/SHA-3, Immutable Hash-Chained Ledger)",
-            "report_generator": "ACTIVE (Courtroom Dossiers, ICANN Takedowns, STIX 2.1)"
+            "report_generator": "ACTIVE (Courtroom Dossiers, ICANN Takedowns, STIX 2.1)",
+            "cyber_llm": "ACTIVE (GLM-5.3, DeepSeek-R1, Qwen2.5-Coder CyberSecEval 4 Engine)"
         },
         "telemetry": {
             "graph_nodes": metrics.get("total_nodes", 0),
@@ -625,6 +628,42 @@ def detect_cloaking_and_c2(req: CloakingC2Request):
 def explain_threat_attribution(req: XAIExplainRequest):
     """Computes transparent SHAP/LIME-style feature impact breakdown for threat explainability."""
     return {"attributions": osint_recon.explain_threat_attribution(req.features)}
+
+
+class CyberLLMAnalyzeRequest(BaseModel):
+    domain: str
+    brand: Optional[str] = "PayPal"
+    telemetry: Optional[Dict[str, Any]] = None
+    model_preference: Optional[str] = "GLM-5.3-Cyber"
+
+
+@app.get("/api/cyber-llm/models")
+def get_cyber_llm_models():
+    """Returns supported open-source cybersecurity benchmark models (GLM-5.3, DeepSeek, Qwen)."""
+    return cyber_llm.get_supported_models()
+
+
+@app.post("/api/cyber-llm/analyze")
+def analyze_cyber_threat(req: CyberLLMAnalyzeRequest):
+    """
+    Executes CyberSecEval 4 / CyberSOCEval benchmark threat reasoning with GLM-5.3 / DeepSeek / Qwen.
+    Zero local model weight download - mediated via cloud inference & deterministic benchmark engine.
+    """
+    analysis = cyber_llm.analyze_threat(
+        domain=req.domain,
+        brand=req.brand or "PayPal",
+        telemetry=req.telemetry,
+        model_preference=req.model_preference or "GLM-5.3-Cyber"
+    )
+
+    # Cryptographically seal analysis in evidence vault
+    evidence = evidence_locker.record_evidence(
+        target_uri=f"llm-intel://{req.domain}",
+        artifact_type="CYBER_LLM_ADVISORY_REPORT",
+        content=analysis
+    )
+    analysis["evidence_receipt"] = evidence
+    return analysis
 
 
 # Static Frontend Mounting
