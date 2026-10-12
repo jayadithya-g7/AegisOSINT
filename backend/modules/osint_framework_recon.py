@@ -34,11 +34,17 @@ DISPOSABLE_EMAIL_PROVIDERS = [
 
 PLATFORMS = [
     {"platform": "GitHub", "type": "api", "check_url": "https://api.github.com/users/{u}", "profile_url": "https://github.com/{u}", "category": "Code Repository"},
+    {"platform": "GitLab", "type": "api", "check_url": "https://gitlab.com/api/v4/users?username={u}", "profile_url": "https://gitlab.com/{u}", "category": "Code Repository"},
     {"platform": "Reddit", "type": "api", "check_url": "https://www.reddit.com/user/{u}/about.json", "profile_url": "https://reddit.com/user/{u}", "category": "Community Forum"},
     {"platform": "Telegram", "type": "web", "check_url": "https://t.me/s/{u}", "profile_url": "https://t.me/{u}", "category": "Instant Messaging"},
     {"platform": "Twitter/X", "type": "link", "check_url": None, "profile_url": "https://x.com/{u}", "category": "Social Media"},
     {"platform": "Instagram", "type": "link", "check_url": None, "profile_url": "https://instagram.com/{u}", "category": "Social Media"},
     {"platform": "TikTok", "type": "link", "check_url": None, "profile_url": "https://tiktok.com/@{u}", "category": "Video Sharing"},
+    {"platform": "Keybase", "type": "api", "check_url": "https://keybase.io/_/api/1.0/user/lookup.json?usernames={u}", "profile_url": "https://keybase.io/{u}", "category": "Cryptographic Identity"},
+    {"platform": "HackerNews", "type": "api", "check_url": "https://hacker-news.firebaseio.com/v0/user/{u}.json", "profile_url": "https://news.ycombinator.com/user?id={u}", "category": "Tech Forum"},
+    {"platform": "Pinterest", "type": "link", "check_url": None, "profile_url": "https://pinterest.com/{u}", "category": "Visual Bookmarking"},
+    {"platform": "Steam", "type": "link", "check_url": None, "profile_url": "https://steamcommunity.com/id/{u}", "category": "Gaming Platform"},
+    {"platform": "Mastodon", "type": "link", "check_url": None, "profile_url": "https://mastodon.social/@{u}", "category": "Decentralized Social"},
     {"platform": "Medium", "type": "link", "check_url": None, "profile_url": "https://medium.com/@{u}", "category": "Publishing"}
 ]
 

@@ -88,6 +88,91 @@ class VisualMatcher:
                 return fallback
         raise ValueError("Unsupported image input format.")
 
+    @staticmethod
+    def compute_favicon_murmur3(image_input: Any) -> Dict[str, Any]:
+        """
+        Computes standard Shodan / Censys MurmurHash3 and MD5 for favicon threat hunting.
+        Synthesizes capabilities from sharsil/favicorn and eremit4/favihunter.
+        """
+        import codecs
+        import hashlib
+        import struct
+
+        raw_bytes: bytes = b""
+        if isinstance(image_input, (bytes, bytearray)):
+            raw_bytes = bytes(image_input)
+        elif isinstance(image_input, Image.Image):
+            buf = io.BytesIO()
+            image_input.save(buf, format="PNG")
+            raw_bytes = buf.getvalue()
+        elif isinstance(image_input, str) and os.path.exists(image_input):
+            try:
+                with open(image_input, "rb") as f:
+                    raw_bytes = f.read()
+            except Exception:
+                raw_bytes = b""
+
+        if not raw_bytes or len(raw_bytes) < 4:
+            return {
+                "shodan_hash": 0,
+                "md5": "",
+                "shodan_search_url": "",
+                "censys_search_url": "",
+                "dork": ""
+            }
+
+        # Shodan standards encode bytes as base64 with RFC 2045 line wrapping
+        b64 = codecs.encode(raw_bytes, "base64")
+        md5_digest = hashlib.md5(raw_bytes).hexdigest()
+
+        # MurmurHash3 32-bit x86 on base64 bytes
+        length = len(b64)
+        nblocks = length // 4
+        h1 = 0
+        c1 = 0xcc9e2d51
+        c2 = 0x1b873593
+
+        for i in range(nblocks):
+            k1 = struct.unpack_from('<I', b64, i * 4)[0]
+            k1 = (k1 * c1) & 0xFFFFFFFF
+            k1 = ((k1 << 15) | (k1 >> 17)) & 0xFFFFFFFF
+            k1 = (k1 * c2) & 0xFFFFFFFF
+            h1 ^= k1
+            h1 = ((h1 << 13) | (h1 >> 19)) & 0xFFFFFFFF
+            h1 = (h1 * 5 + 0xe6546b64) & 0xFFFFFFFF
+
+        tail = b64[nblocks * 4:]
+        k1 = 0
+        tail_len = len(tail)
+        if tail_len == 3:
+            k1 ^= tail[2] << 16
+        if tail_len >= 2:
+            k1 ^= tail[1] << 8
+        if tail_len >= 1:
+            k1 ^= tail[0]
+            k1 = (k1 * c1) & 0xFFFFFFFF
+            k1 = ((k1 << 15) | (k1 >> 17)) & 0xFFFFFFFF
+            k1 = (k1 * c2) & 0xFFFFFFFF
+            h1 ^= k1
+
+        h1 ^= length
+        h1 ^= (h1 >> 16)
+        h1 = (h1 * 0x85ebca6b) & 0xFFFFFFFF
+        h1 ^= (h1 >> 13)
+        h1 = (h1 * 0xc2b2ae35) & 0xFFFFFFFF
+        h1 ^= (h1 >> 16)
+
+        signed_h1 = h1 - 0x100000000 if h1 >= 0x80000000 else h1
+
+        return {
+            "shodan_hash": signed_h1,
+            "md5": md5_digest,
+            "shodan_search_url": f"https://www.shodan.io/search?query=http.favicon.hash%3A{signed_h1}",
+            "censys_search_url": f"https://search.censys.io/search?q=services.http.response.favicons.shodan_hash%3A{signed_h1}",
+            "zoomeye_search_url": f"https://www.zoomeye.org/searchResult?q=iconhash%3A%22{signed_h1}%22",
+            "dork": f"http.favicon.hash:{signed_h1}"
+        }
+
     def compute_hashes(self, image: Image.Image) -> Dict[str, str]:
         """Calculates perceptual, difference, average, and wavelet hashes."""
         if IMAGEHASH_AVAILABLE:
@@ -202,7 +287,8 @@ class VisualMatcher:
             "hashes": {
                 "suspect": hashes_suspect,
                 "reference": hashes_ref
-            }
+            },
+            "favicon_murmur3": self.compute_favicon_murmur3(suspect_image_input)
         }
 
     def _calculate_color_similarity(self, img1: Image.Image, img2: Image.Image) -> float:
@@ -307,6 +393,7 @@ class VisualMatcher:
                     "image_byte_size": len(image_bytes),
                     "visual_library_matches": match_results,
                     "direct_brand_comparison": brand_comparison,
+                    "favicon_telemetry": self.compute_favicon_murmur3(image_bytes),
                     "status": "SUCCESS_EXTRACTED_LIVE"
                 }
         except Exception:
@@ -330,6 +417,7 @@ class VisualMatcher:
                             "image_byte_size": len(image_bytes),
                             "visual_library_matches": match_results,
                             "direct_brand_comparison": None,
+                            "favicon_telemetry": self.compute_favicon_murmur3(image_bytes),
                             "status": "SUCCESS_EXTRACTED_VIA_CDN_FALLBACK"
                         }
                 except Exception:

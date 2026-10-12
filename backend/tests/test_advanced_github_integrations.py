@@ -152,3 +152,16 @@ def test_api_endpoints_advanced_integrations(client):
     })
     assert r_misp.status_code == 200
     assert "Event" in r_misp.json()
+
+
+def test_favicon_murmur3_hash_calculation():
+    from backend.modules.visual_matcher import VisualMatcher
+    matcher = VisualMatcher()
+
+    fav = matcher.compute_favicon_murmur3(b"test-favicon-bytes-for-shodan-hash")
+    assert fav["shodan_hash"] != 0
+    assert len(fav["md5"]) == 32
+    assert "http.favicon.hash" in fav["dork"]
+    assert "https://www.shodan.io/search" in fav["shodan_search_url"]
+    assert "https://search.censys.io/search" in fav["censys_search_url"]
+

@@ -518,6 +518,23 @@ async function runVisualMatchScan() {
     document.getElementById('hash-hamming-val').innerText = `${match.hamming_distances.phash} bits / 64`;
     document.getElementById('hash-color-val').innerText = `${match.color_palette_similarity_pct}%`;
 
+    const fav = match.favicon_murmur3 || {};
+    const murmurEl = document.getElementById('hash-murmur3-val');
+    const murmurLinks = document.getElementById('hash-murmur3-links');
+    if (murmurEl) murmurEl.innerText = fav.shodan_hash ? `${fav.shodan_hash}` : 'Not Calculated';
+    if (murmurLinks && fav.shodan_search_url) {
+      murmurLinks.innerHTML = `
+        <a href="${fav.shodan_search_url}" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 bg-red-600/30 hover:bg-red-600 text-red-300 hover:text-white rounded text-[10px] font-semibold flex items-center space-x-1">
+          <span>Shodan</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+        </a>
+        <a href="${fav.censys_search_url}" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white rounded text-[10px] font-semibold flex items-center space-x-1">
+          <span>Censys</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+        </a>
+      `;
+    }
+
     loadEvidenceLedger();
   } catch (err) {
     alert("Visual matching error: " + err.message);
