@@ -309,7 +309,32 @@ class VisualMatcher:
                     "direct_brand_comparison": brand_comparison,
                     "status": "SUCCESS_EXTRACTED_LIVE"
                 }
-        except Exception as e:
+        except Exception:
+            pass
+
+        # Multi-Tier CDN Favicon Service Fallback (DuckDuckGo & Google Favicons)
+        try:
+            parsed_netloc = urllib.parse.urlparse(target_url).netloc or target_url.split('/')[0]
+            cdn_fallbacks = [
+                f"https://icons.duckduckgo.com/ip3/{parsed_netloc}.ico",
+                f"https://www.google.com/s2/favicons?domain={parsed_netloc}&sz=128"
+            ]
+            for cdn_url in cdn_fallbacks:
+                try:
+                    c_resp = requests.get(cdn_url, timeout=2.5, headers=headers, verify=False)
+                    if c_resp.status_code == 200 and len(c_resp.content) > 100:
+                        image_bytes = c_resp.content
+                        match_results = self.match_against_brand_library(image_bytes)
+                        return {
+                            "extracted_image_url": cdn_url,
+                            "image_byte_size": len(image_bytes),
+                            "visual_library_matches": match_results,
+                            "direct_brand_comparison": None,
+                            "status": "SUCCESS_EXTRACTED_VIA_CDN_FALLBACK"
+                        }
+                except Exception:
+                    continue
+        except Exception:
             pass
 
         # Fallback to authentic reference logo of target brand for matching demo if remote host offline

@@ -113,3 +113,89 @@ def test_recon_api_endpoints(client):
     res_xai = client.post("/api/recon/explain-xai", json={"features": {"Domain": 20.0, "Visual": 15.0}})
     assert res_xai.status_code == 200
     assert len(res_xai.json()["attributions"]) == 2
+
+
+def test_osint_framework_taxonomy_and_search(recon, client):
+    # Test taxonomy loading
+    cats = recon.get_framework_categories()
+    assert len(cats) >= 30
+    assert any(c["category"] == "Domain Name" for c in cats)
+    assert any(c["category"] == "IP & MAC Address" for c in cats)
+
+    # Test search
+    res = recon.search_framework(query="shodan", limit=10)
+    assert res["total_matches"] >= 1
+    assert any("shodan" in t["url"].lower() or "shodan" in t["name"].lower() for t in res["tools"])
+
+    # Test API endpoints
+    r_cat = client.get("/api/recon/osint-framework/categories")
+    assert r_cat.status_code == 200
+    assert len(r_cat.json()["categories"]) >= 30
+
+    r_search = client.get("/api/recon/osint-framework/search?q=whois&limit=5")
+    assert r_search.status_code == 200
+    assert r_search.json()["total_matches"] > 0
+
+
+def test_ip_infrastructure_and_shodan_recon(recon, client):
+    # Direct method test
+    res = recon.recon_ip_infrastructure("8.8.8.8")
+    assert res["resolved_ip"] == "8.8.8.8"
+    assert "geolocation" in res
+    assert "shodan_telemetry" in res
+    assert res["status"] != "UNRESOLVABLE"
+
+    # API endpoint test
+    r_api = client.post("/api/recon/ip-infrastructure", json={"target": "1.1.1.1"})
+    assert r_api.status_code == 200
+    data = r_api.json()
+    assert data["resolved_ip"] == "1.1.1.1"
+    assert "severity" in data
+
+
+def test_threat_intelligence_alienvault(recon, client):
+    res = recon.query_threat_intelligence("paypal.com")
+    assert res["indicator"] == "paypal.com"
+    assert "threat_level" in res
+    assert "osint_intel_links" in res
+    assert len(res["osint_intel_links"]) >= 4
+
+    r_api = client.post("/api/recon/threat-intel", json={"indicator": "github.com"})
+    assert r_api.status_code == 200
+    assert "threat_level" in r_api.json()
+
+
+def test_crypto_wallet_auditor(recon, client):
+    # Test BTC wallet
+    btc_addr = "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
+    res_btc = recon.analyze_crypto_wallet(btc_addr)
+    assert res_btc["currency"] == "BITCOIN (BTC)"
+    assert res_btc["is_valid_syntax"] is True
+    assert len(res_btc["osint_forensic_links"]) >= 3
+
+    # Test ETH wallet
+    eth_addr = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+    res_eth = recon.analyze_crypto_wallet(eth_addr)
+    assert res_eth["currency"] == "ETHEREUM (ETH / ERC-20)"
+    assert res_eth["is_valid_syntax"] is True
+
+    # API endpoint test
+    r_api = client.post("/api/recon/crypto-wallet", json={"address": btc_addr})
+    assert r_api.status_code == 200
+    assert r_api.json()["currency"] == "BITCOIN (BTC)"
+
+
+def test_brand_dorks_generator(recon, client):
+    res = recon.generate_brand_dorks("Microsoft", "microsoft.com")
+    assert res["dorks_generated"] >= 6
+    assert len(res["dorks"]) >= 6
+    for d in res["dorks"]:
+        assert "google_url" in d
+        assert "duckduckgo_url" in d
+        assert "bing_url" in d
+
+    # API endpoint test
+    r_api = client.post("/api/recon/brand-dorks", json={"brand_name": "Apple", "legitimate_domain": "apple.com"})
+    assert r_api.status_code == 200
+    assert r_api.json()["dorks_generated"] >= 6
+

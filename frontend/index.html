@@ -430,6 +430,50 @@
           </div>
         </div>
 
+        <!-- openSquat & urlinsane Lookalike Threat Engine -->
+        <div class="mt-4 p-5 bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950/30 rounded-xl border border-indigo-500/30 space-y-3">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono">
+                  atenreiro/opensquat + urlinsane ENGINE
+                </span>
+                <span class="text-xs text-slate-400 font-mono">Levenshtein Edit Distance &bull; Live DoH Probes</span>
+              </div>
+              <h3 class="text-sm font-bold text-white mt-1 flex items-center space-x-2">
+                <i class="fa-solid fa-radar text-indigo-400"></i>
+                <span>openSquat Predictive Lookalike &amp; Homoglyph Hunter</span>
+              </h3>
+              <p class="text-xs text-slate-400">
+                Calculates string edit distance, homoglyphs, bitsquatting, combosquatting, and tests DoH resolution across Cloudflare/Quad9.
+              </p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="opensquat-brand-input" value="paypal" placeholder="Brand (e.g. paypal)" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono w-28">
+              <input type="text" id="opensquat-tld-input" value="com" placeholder="TLD" class="px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono w-16">
+              <label class="flex items-center space-x-1.5 text-xs text-slate-400">
+                <input type="checkbox" id="opensquat-live-dns" checked class="rounded border-slate-700 text-indigo-600 focus:ring-0">
+                <span>Live DoH</span>
+              </label>
+              <button onclick="runOpenSquatAudit()" id="btn-opensquat-run" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-semibold shadow-md transition flex items-center space-x-1.5">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Hunt Lookalikes</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- openSquat Results Panel -->
+          <div id="opensquat-results-panel" class="hidden space-y-3 pt-1">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span id="opensquat-summary-badge" class="text-indigo-300 font-semibold">Generated 25 permutations</span>
+              <span id="opensquat-resolving-badge" class="text-amber-400">-- Resolving Live</span>
+            </div>
+            <div class="max-h-60 overflow-y-auto rounded-lg border border-slate-800 bg-slate-950/70 p-2.5 space-y-1.5 font-mono text-xs" id="opensquat-results-list">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+
         <!-- Domain Results Table -->
         <div class="mt-6">
           <div class="flex items-center justify-between mb-3">
@@ -870,14 +914,22 @@
             </p>
           </div>
 
-          <div class="flex items-center space-x-2">
+          <div class="flex flex-wrap items-center gap-2">
             <button onclick="generateFreshReport()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg shadow-md transition flex items-center space-x-1.5">
               <i class="fa-solid fa-bolt"></i>
               <span>Generate Dossier</span>
             </button>
             <button onclick="downloadSTIX()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-lg transition flex items-center space-x-1.5">
               <i class="fa-solid fa-download"></i>
-              <span>Export STIX 2.1 JSON</span>
+              <span>Export STIX 2.1</span>
+            </button>
+            <button onclick="exportOpenCTIBundle()" class="px-3.5 py-2 bg-cyan-700/80 hover:bg-cyan-600 text-white text-xs font-medium rounded-lg transition flex items-center space-x-1.5">
+              <i class="fa-solid fa-share-nodes"></i>
+              <span>OpenCTI STIX 2.1</span>
+            </button>
+            <button onclick="exportMISPEventJson()" class="px-3.5 py-2 bg-red-800/80 hover:bg-red-700 text-white text-xs font-medium rounded-lg transition flex items-center space-x-1.5">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <span>MISP 2.4 JSON</span>
             </button>
           </div>
         </div>
@@ -937,6 +989,98 @@
             </div>
           </div>
         </div>
+
+        <!-- Active SIEM Defense Rules: Sigma & YARA Signatures -->
+        <div class="mt-6 bg-slate-950/80 p-5 rounded-xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-shield-virus text-indigo-400"></i>
+                <span>Automated SIEM &amp; Mail Gateway Rules (SigmaHQ &amp; VirusTotal YARA)</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">
+                Instant defensive signatures for enterprise SIEM (Splunk, Microsoft Sentinel, Elastic) and email gateways to detect adversary infrastructure.
+              </p>
+            </div>
+            <button onclick="loadSigmaYaraRules()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-semibold transition flex items-center space-x-1">
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>Regenerate Rules</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <!-- Sigma Rule -->
+            <div class="bg-slate-900 p-4 rounded-lg space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-indigo-300 font-mono">Sigma Rule (SIEM / EDR Windows Event 4688)</span>
+                <button onclick="copySigmaText()" class="text-[11px] text-indigo-400 hover:text-indigo-300 flex items-center space-x-1">
+                  <i class="fa-solid fa-copy"></i>
+                  <span>Copy Sigma</span>
+                </button>
+              </div>
+              <textarea id="report-sigma-textarea" rows="12" readonly class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded text-xs text-slate-300 font-mono focus:outline-none"></textarea>
+            </div>
+
+            <!-- YARA Rule -->
+            <div class="bg-slate-900 p-4 rounded-lg space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-amber-300 font-mono">YARA Phishing Kit Signature (Mail &amp; Gateway)</span>
+                <button onclick="copyYaraText()" class="text-[11px] text-amber-400 hover:text-amber-300 flex items-center space-x-1">
+                  <i class="fa-solid fa-copy"></i>
+                  <span>Copy YARA</span>
+                </button>
+              </div>
+              <textarea id="report-yara-textarea" rows="12" readonly class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded text-xs text-slate-300 font-mono focus:outline-none"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- OpenCTI & MISP Threat Intelligence Hub -->
+        <div class="mt-6 bg-slate-950/80 p-5 rounded-xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-diagram-project text-cyan-400"></i>
+                <span>OpenCTI (STIX 2.1) &amp; MISP 2.4 Threat Intelligence Export Hub</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">
+                Generate industry-standard CTI packages for OpenCTI Platform and MISP threat sharing instances.
+              </p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="exportOpenCTIBundle()" class="px-3 py-1.5 bg-cyan-700/80 hover:bg-cyan-600 text-white rounded text-xs font-semibold transition flex items-center space-x-1">
+                <i class="fa-solid fa-share-nodes"></i>
+                <span>Export OpenCTI STIX 2.1</span>
+              </button>
+              <button onclick="exportMISPEventJson()" class="px-3 py-1.5 bg-red-800/80 hover:bg-red-700 text-white rounded text-xs font-semibold transition flex items-center space-x-1">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Export MISP 2.4 JSON</span>
+              </button>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="bg-slate-900 p-4 rounded-lg space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-cyan-300 font-mono">OpenCTI STIX 2.1 Bundle Preview</span>
+                <button onclick="copyOpenCTIText()" class="text-[11px] text-cyan-400 hover:text-cyan-300 flex items-center space-x-1">
+                  <i class="fa-solid fa-copy"></i>
+                  <span>Copy STIX</span>
+                </button>
+              </div>
+              <textarea id="report-opencti-textarea" rows="10" readonly placeholder="Click 'Export OpenCTI STIX 2.1' to serialize case into STIX 2.1 bundle..." class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded text-xs text-slate-300 font-mono focus:outline-none"></textarea>
+            </div>
+            <div class="bg-slate-900 p-4 rounded-lg space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-red-300 font-mono">MISP 2.4 Event JSON Preview</span>
+                <button onclick="copyMISPText()" class="text-[11px] text-red-400 hover:text-red-300 flex items-center space-x-1">
+                  <i class="fa-solid fa-copy"></i>
+                  <span>Copy MISP</span>
+                </button>
+              </div>
+              <textarea id="report-misp-textarea" rows="10" readonly placeholder="Click 'Export MISP 2.4 JSON' to generate MISP event structure..." class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded text-xs text-slate-300 font-mono focus:outline-none"></textarea>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -953,8 +1097,64 @@
             <span>Certificate Transparency, Archive Forensics &amp; Anti-Cloaking Reconnaissance</span>
           </h2>
           <p class="text-xs text-slate-400 mt-1">
-            Features tools from OSINTFramework.com (crt.sh, Wayback CDX, Sherlock footprinting) and recent 2024-2026 Elicit-synthesized research (Anti-Cloaking, Form C2 Exfiltration, and XAI Feature Attribution).
+            Features complete integration of lockfale/OSINT-Framework (1,167 tools, 33 categories) and recent 2024-2026 Elicit-synthesized research (Anti-Cloaking, Form C2 Exfiltration, and XAI Feature Attribution).
           </p>
+        </div>
+
+        <!-- INTERACTIVE OSINT FRAMEWORK 1,167-TOOL NAVIGATOR & SEARCH HUB -->
+        <div class="mt-6 bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950/40 p-5 rounded-xl border border-indigo-500/30 shadow-2xl space-y-4">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono flex items-center space-x-1.5">
+                  <i class="fa-solid fa-tree"></i>
+                  <span>OSINTFRAMEWORK.COM COMPLETE DIRECTORY (1,167 TOOLS • 33 CATEGORIES)</span>
+                </span>
+                <span class="text-xs text-slate-400 font-mono">Live Search &amp; Direct Tool Execution</span>
+              </div>
+              <h3 class="text-base font-bold text-white mt-1 flex items-center space-x-2">
+                <i class="fa-solid fa-compass text-indigo-400"></i>
+                <span>Interactive OSINT Framework Explorer &amp; Tool Launcher</span>
+              </h3>
+              <p class="text-xs text-slate-400">
+                Search and launch across all 1,167 curated reconnaissance tools across Domain, IP, Threat Intel, Cryptocurrency, Search Dorks, and Public Records.
+              </p>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-2">
+              <select id="osint-cat-filter" onchange="filterOSINTFramework()" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white focus:outline-none focus:border-indigo-400 font-mono">
+                <option value="ALL">All 33 Categories (1,167 Tools)</option>
+              </select>
+              <input type="text" id="osint-tool-search" oninput="filterOSINTFramework()" placeholder="Search tools (e.g. shodan, whois, dork, dns, btc)..." class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono w-64 focus:outline-none focus:border-indigo-400">
+              <button onclick="filterOSINTFramework()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-semibold transition">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Category Filter Pills -->
+          <div class="flex flex-wrap items-center gap-1.5 text-xs text-slate-300">
+            <span class="text-[11px] text-slate-500 mr-1 font-mono">Quick Filters:</span>
+            <button onclick="setOSINTCategoryFilter('Domain Name')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[11px] font-mono">🌐 Domain (146)</button>
+            <button onclick="setOSINTCategoryFilter('IP & MAC Address')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[11px] font-mono">📡 IP/ASN (56)</button>
+            <button onclick="setOSINTCategoryFilter('Cyber Threat Intelligence')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[11px] font-mono">🛡️ Threat Intel (62)</button>
+            <button onclick="setOSINTCategoryFilter('Search Engines')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[11px] font-mono">🔍 Search/Dorks (77)</button>
+            <button onclick="setOSINTCategoryFilter('Blockchain & Cryptocurrency')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[11px] font-mono">₿ Crypto (33)</button>
+            <button onclick="setOSINTCategoryFilter('Email Address')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[11px] font-mono">📧 Email (30)</button>
+            <button onclick="setOSINTCategoryFilter('Business Records')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[11px] font-mono">🏢 Business (32)</button>
+            <button onclick="setOSINTCategoryFilter('Social Networks')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[11px] font-mono">👥 Social (70)</button>
+          </div>
+
+          <!-- Results Scroll Area -->
+          <div class="max-h-64 overflow-y-auto border border-slate-800 rounded-lg bg-slate-950/70 p-3 space-y-2" id="osint-framework-results">
+            <div class="text-center py-4 text-slate-500 text-xs">
+              <i class="fa-solid fa-spinner fa-spin mr-2"></i> Loading OSINT Framework tool library...
+            </div>
+          </div>
+          <div class="flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-800/60 pt-2 font-mono">
+            <span id="osint-framework-status">Showing 50 of 1,167 tools</span>
+            <span>Taxonomy Source: lockfale/OSINT-Framework (GitHub)</span>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
@@ -1050,7 +1250,123 @@
             </div>
           </div>
 
-          <!-- Tool 5: Anti-Cloaking & Form Action C2 Exfiltration Detector -->
+          <!-- Tool 4b: Domain Email Authentication & DMARC/SPF/BIMI Spoofing Auditor (checkdmarc Standard) -->
+          <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-envelope-circle-check text-emerald-400"></i>
+                <span>Email Anti-Spoofing &amp; DMARC/SPF/BIMI Auditor</span>
+              </h3>
+              <span class="text-[10px] text-slate-500 font-mono">checkdmarc / RFC 7489</span>
+            </div>
+            <p class="text-xs text-slate-400">
+              Audits domain susceptibility to Business Email Compromise (BEC) and unauthorized spoofing with multi-tier DoH fallbacks.
+            </p>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="recon-dmarc-domain" value="paypal.com" placeholder="Domain to audit" class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono">
+              <button onclick="runDmarcSpfAudit()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-semibold transition">
+                Audit Security
+              </button>
+            </div>
+            <div class="max-h-44 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2 text-xs space-y-1" id="recon-dmarc-results">
+              <span class="text-slate-500 text-[11px]">Click 'Audit Security' to verify SPF, DMARC, and BIMI records.</span>
+            </div>
+          </div>
+
+          <!-- Tool 5: IP Infrastructure & Shodan Host Reconnaissance -->
+          <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-network-wired text-blue-400"></i>
+                <span>IP Infrastructure &amp; Shodan Host Recon</span>
+              </h3>
+              <span class="text-[10px] text-slate-500 font-mono">Shodan InternetDB / IP-API</span>
+            </div>
+            <p class="text-xs text-slate-400">
+              Resolve IP, Geolocation, ASN, ISP, PTR records, open ports (80, 443, 22, 3389), and Shodan CVE vulnerabilities in real time.
+            </p>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="recon-ip-input" value="1.1.1.1" placeholder="IP address or domain" class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono">
+              <button onclick="runIPInfrastructureRecon()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs font-semibold transition">
+                Scan Host
+              </button>
+            </div>
+            <div class="max-h-44 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2 text-xs space-y-1 font-mono" id="recon-ip-results">
+              <span class="text-slate-500 text-[11px]">Click 'Scan Host' to query live Shodan &amp; IP-API telemetry.</span>
+            </div>
+          </div>
+
+          <!-- Tool 6: Cyber Threat Intelligence & AlienVault OTX Reputation -->
+          <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-shield-virus text-amber-400"></i>
+                <span>AlienVault OTX &amp; Threat Intelligence</span>
+              </h3>
+              <span class="text-[10px] text-slate-500 font-mono">Open Threat Exchange IOCs</span>
+            </div>
+            <p class="text-xs text-slate-400">
+              Cross-reference domains against AlienVault OTX threat pulses, adversary campaigns, and generate instant multi-source IOC investigation links.
+            </p>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="recon-threat-input" value="paypal.com" placeholder="Domain or IP indicator" class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono">
+              <button onclick="runThreatIntelRecon()" class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded text-xs font-semibold transition">
+                Query CTI
+              </button>
+            </div>
+            <div class="max-h-44 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2 text-xs space-y-1" id="recon-threat-results">
+              <span class="text-slate-500 text-[11px]">Click 'Query CTI' to inspect active global threat pulses.</span>
+            </div>
+          </div>
+
+          <!-- Tool 7: Scam Cryptocurrency Wallet Auditor -->
+          <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                <i class="fa-brands fa-bitcoin text-yellow-400"></i>
+                <span>Scam Cryptocurrency Wallet Auditor</span>
+              </h3>
+              <span class="text-[10px] text-slate-500 font-mono">Blockchain.info / Abuse DB</span>
+            </div>
+            <p class="text-xs text-slate-400">
+              Audit Bitcoin, Ethereum, and TRON wallet addresses harvested from scam emails, extortion lures, and investment fraud kits.
+            </p>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="recon-crypto-input" value="1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa" placeholder="BTC / ETH / TRX wallet address" class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono">
+              <button onclick="runCryptoWalletRecon()" class="px-3.5 py-1.5 bg-yellow-600 hover:bg-yellow-500 text-white rounded text-xs font-semibold transition">
+                Audit Wallet
+              </button>
+            </div>
+            <div class="max-h-44 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2 text-xs space-y-1 font-mono" id="recon-crypto-results">
+              <span class="text-slate-500 text-[11px]">Click 'Audit Wallet' to inspect on-chain ledger activity.</span>
+            </div>
+          </div>
+
+          <!-- Tool 8: Automated Brand Impersonation Google Dorking Generator -->
+          <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-magnifying-glass-chart text-emerald-400"></i>
+                <span>Brand Impersonation Google Dork Hunter</span>
+              </h3>
+              <span class="text-[10px] text-slate-500 font-mono">GHDB / OSINT Search Dorks</span>
+            </div>
+            <p class="text-xs text-slate-400">
+              Auto-generate 8 precision search dorks to unmask fake logins, leaked configs, cloned assets, and giveaways across Google, DDG, and Bing.
+            </p>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="recon-dork-brand" value="PayPal" placeholder="Brand Name" class="w-1/3 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white">
+              <input type="text" id="recon-dork-domain" value="paypal.com" placeholder="Legitimate domain" class="w-1/2 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono">
+              <button onclick="runBrandDorksRecon()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-semibold transition">
+                Build Dorks
+              </button>
+            </div>
+            <div class="max-h-44 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2 text-xs space-y-1.5" id="recon-dork-results">
+              <span class="text-slate-500 text-[11px]">Click 'Build Dorks' to generate 1-click passive search queries.</span>
+            </div>
+          </div>
+
+          <!-- Tool 9: Anti-Cloaking & Form Action C2 Exfiltration Detector -->
           <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
             <div class="flex items-center justify-between">
               <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
@@ -1071,7 +1387,7 @@
             </div>
           </div>
 
-          <!-- Tool 6: Explainable AI (XAI) Attribution Breakdown -->
+          <!-- Tool 10: Explainable AI (XAI) Attribution Breakdown -->
           <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3 flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between">
@@ -1094,7 +1410,7 @@
           </div>
         </div>
 
-        <!-- Tool 7: Open-Source Cyber LLM Threat Reasoning (GLM-5.3 / CyberSecEval 4 Benchmark Engine) -->
+        <!-- Tool 11: Open-Source Cyber LLM Threat Reasoning (GLM-5.3 / CyberSecEval 4 Benchmark Engine) -->
         <div class="mt-6 bg-gradient-to-r from-slate-950 via-fuchsia-950/20 to-slate-950 p-6 rounded-xl border border-fuchsia-500/30 shadow-xl space-y-4">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-4">
             <div>
@@ -1221,6 +1537,90 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- TOOL 12 & 14 GRID: Holehe Email Identity & Robofinder Robots Forensics -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <!-- Tool 12: Holehe & Mailcat Email Identity Profiler -->
+          <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-envelope-open-text text-pink-400"></i>
+                <span>Holehe &amp; Mailcat Email Identity Profiler</span>
+              </h3>
+              <span class="text-[10px] text-slate-500 font-mono">megadose/holehe &bull; Gravatar OSINT</span>
+            </div>
+            <p class="text-xs text-slate-400">
+              Probes target email address across Gravatar profiles (MD5/SHA256 avatars, full names), GitHub public commits, burner domains, and account password recovery targets.
+            </p>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="recon-holehe-input" value="phishing-admin@chase-support.top" placeholder="actor@domain.com" class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono">
+              <button onclick="runHoleheEmailScan()" id="btn-holehe-run" class="px-3.5 py-1.5 bg-pink-600 hover:bg-pink-500 text-white rounded text-xs font-semibold transition flex items-center space-x-1">
+                <i class="fa-solid fa-user-secret"></i>
+                <span>Probe Identity</span>
+              </button>
+            </div>
+            <div class="max-h-48 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2 text-xs space-y-1.5" id="recon-holehe-results">
+              <span class="text-slate-500 text-[11px]">Click 'Probe Identity' to scan Gravatar, GitHub commits, and recovery endpoints.</span>
+            </div>
+          </div>
+
+          <!-- Tool 14: Robofinder Historical Robots.txt & Phish Kit Path Probe -->
+          <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-folder-tree text-amber-400"></i>
+                <span>Robofinder Historical Robots &amp; Phish Kit Staging Probe</span>
+              </h3>
+              <span class="text-[10px] text-slate-500 font-mono">Spix0r/robofinder &bull; Disallow Forensics</span>
+            </div>
+            <p class="text-xs text-slate-400">
+              Crawls live &amp; historical Wayback Machine robots.txt to discover hidden staging directories, phish kit ZIP drops, and admin control panels.
+            </p>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="recon-robofinder-input" value="paypal-security-login.top" placeholder="Domain name (e.g. target.com)" class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono">
+              <button onclick="runRobofinder()" id="btn-robofinder-run" class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded text-xs font-semibold transition flex items-center space-x-1">
+                <i class="fa-solid fa-spider"></i>
+                <span>Inspect Robots</span>
+              </button>
+            </div>
+            <div class="max-h-48 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2 text-xs space-y-1.5" id="recon-robofinder-results">
+              <span class="text-slate-500 text-[11px]">Click 'Inspect Robots' to audit live and historical disallow directives.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tool 13: Pagodo & Dorkify 12-Category Brand Defense Search Matrix -->
+        <div class="mt-6 bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono">
+                  opsdisk/pagodo + Dorkify GHDB MATRIX
+                </span>
+                <span class="text-xs text-slate-400 font-mono">12 Targeted Google Dork Categories &bull; Multi-Engine Execution</span>
+              </div>
+              <h3 class="text-sm font-bold text-white mt-1 flex items-center space-x-2">
+                <i class="fa-solid fa-magnifying-glass-arrow-right text-emerald-400"></i>
+                <span>Pagodo Automated Brand Defense &amp; Phishing Search Matrix</span>
+              </h3>
+              <p class="text-xs text-slate-400">
+                Generates 12 precision GHDB queries for credentials, phish kits, leaked configs, subdomains, and fake portals with 1-click execution across Google, Bing, DuckDuckGo, and Yandex.
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <input type="text" id="pagodo-brand-input" value="PayPal" placeholder="Brand" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white w-24">
+              <input type="text" id="pagodo-legit-domain-input" value="paypal.com" placeholder="Legitimate domain" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono w-32">
+              <input type="text" id="pagodo-target-domain-input" value="paypal-security-login.top" placeholder="Suspect domain" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono w-44">
+              <button onclick="runPagodoDorks()" id="btn-pagodo-run" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-semibold transition flex items-center space-x-1">
+                <i class="fa-solid fa-list-check"></i>
+                <span>Generate 12 Dorks</span>
+              </button>
+            </div>
+          </div>
+          <div class="max-h-72 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2.5 text-xs space-y-2" id="recon-pagodo-results">
+            <span class="text-slate-500 text-[11px]">Click 'Generate 12 Dorks' to build multi-engine passive recon queries.</span>
           </div>
         </div>
       </div>

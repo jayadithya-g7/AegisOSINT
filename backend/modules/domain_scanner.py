@@ -116,6 +116,17 @@ def calculate_similarity_ratio(s1: str, s2: str) -> float:
     return round(1.0 - (dist / max_len), 4)
 
 
+def calculate_shannon_entropy(domain: str) -> float:
+    """Computes Shannon entropy of domain label to detect high-randomness DGAs (Domain Generation Algorithms)."""
+    clean = domain.split('.')[0]
+    if not clean:
+        return 0.0
+    import math
+    prob = [float(clean.count(c)) / len(clean) for c in dict.fromkeys(list(clean))]
+    entropy = -sum([p * math.log(p) / math.log(2.0) for p in prob])
+    return round(entropy, 3)
+
+
 class DomainScanner:
     """Live internet network scanner, RDAP inspector, and domain generator."""
 
@@ -169,6 +180,25 @@ class DomainScanner:
                 if len(permutations) < max_per_type * 3:
                     variant = brand_clean[:i] + n + brand_clean[i + 1:]
                     add_perm(f"{variant}.{base_tld}", "Typosquatting", "QWERTY Substitution", f"Substituted '{char}' with neighboring '{n}'")
+
+        # 3b. dnstwist Bitsquatting (Single Bit-Flips in binary ASCII)
+        for i, char in enumerate(brand_clean):
+            char_code = ord(char)
+            for bit in range(8):
+                flipped_code = char_code ^ (1 << bit)
+                flipped_char = chr(flipped_code)
+                if flipped_char.isalnum() and flipped_char != char and flipped_char.islower():
+                    if len(permutations) < max_per_type * 4:
+                        variant = brand_clean[:i] + flipped_char + brand_clean[i + 1:]
+                        add_perm(f"{variant}.{base_tld}", "Bitsquatting", "Single Bit-Flip",
+                                 f"Hardware bit-flip: byte {i} bit {bit} ('{char}' -> '{flipped_char}')")
+
+        # 3c. Typosquatting - Transposition (Adjacent character swapping)
+        for i in range(len(brand_clean) - 1):
+            if len(permutations) < max_per_type * 5:
+                variant = brand_clean[:i] + brand_clean[i + 1] + brand_clean[i] + brand_clean[i + 2:]
+                add_perm(f"{variant}.{base_tld}", "Typosquatting", "Transposition",
+                         f"Transposed adjacent characters '{brand_clean[i]}' and '{brand_clean[i+1]}'")
 
         # 4. Combosquatting
         for kw in COMBOSQUAT_KEYWORDS:
@@ -267,6 +297,31 @@ class DomainScanner:
             except Exception:
                 pass
 
+        # Multi-Tier Public DNS-over-HTTPS (DoH) Fallback if unresolved
+        if not result["resolved"]:
+            doh_endpoints = [
+                ("https://1.1.1.1/dns-query", {"accept": "application/dns-json"}, "Cloudflare DoH"),
+                ("https://dns.google/resolve", {"accept": "application/json"}, "Google DoH"),
+                ("https://dns.quad9.net/dns-query", {"accept": "application/dns-json"}, "Quad9 DoH")
+            ]
+            for doh_url, doh_hdrs, doh_name in doh_endpoints:
+                try:
+                    r = self.http_session.get(doh_url, params={"name": clean_domain, "type": "A"}, headers=doh_hdrs, timeout=2.5)
+                    if r.status_code == 200:
+                        data = r.json()
+                        answers = data.get("Answer", [])
+                        for ans in answers:
+                            if ans.get("type") == 1:  # A record
+                                ip_val = ans.get("data")
+                                if ip_val and ip_val not in result["ip_addresses"]:
+                                    result["ip_addresses"].append(ip_val)
+                                    result["resolved"] = True
+                        if result["resolved"]:
+                            result["error"] = None
+                            break
+                except Exception:
+                    continue
+
         return result
 
     def inspect_whois_rdap(self, domain: str) -> Dict[str, Any]:
@@ -342,6 +397,81 @@ class DomainScanner:
                 res["error"] = f"RDAP endpoint returned HTTP {r.status_code}"
         except Exception as e:
             res["error"] = f"Live RDAP query timeout or error: {str(e)}"
+
+        # Multi-Tier Fallback 1: Direct Verisign Registry RDAP for .com and .net
+        if not res["is_registered"] and (clean_domain.endswith(".com") or clean_domain.endswith(".net")):
+            try:
+                v_url = f"https://rdap.verisign.com/com/v1/domain/{clean_domain}"
+                vr = self.http_session.get(v_url, timeout=3.5)
+                if vr.status_code == 200:
+                    vdata = vr.json()
+                    res["is_registered"] = True
+                    res["source"] = "Verisign Authoritative Registry RDAP"
+                    for ent in vdata.get("entities", []):
+                        if "registrar" in ent.get("roles", []):
+                            vcard = ent.get("vcardArray", [])
+                            if len(vcard) > 1:
+                                for item in vcard[1]:
+                                    if item[0] == "fn":
+                                        res["registrar"] = item[3]
+                                        break
+                    for ev in vdata.get("events", []):
+                        if ev.get("eventAction") == "registration":
+                            res["created_date"] = ev.get("eventDate", "")[:10]
+                            try:
+                                c_dt = datetime.datetime.fromisoformat(ev.get("eventDate", "").replace("Z", "+00:00"))
+                                n_dt = datetime.datetime.now(datetime.timezone.utc)
+                                res["age_days"] = max(0, (n_dt - c_dt).days)
+                            except Exception:
+                                pass
+                        elif ev.get("eventAction") == "expiration":
+                            res["expiration_date"] = ev.get("eventDate", "")[:10]
+                    res["error"] = None
+            except Exception:
+                pass
+
+        # Multi-Tier Fallback 2: Direct RFC 3912 Port 43 WHOIS Socket Query
+        if not res["is_registered"]:
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(3.0)
+                sock.connect(("whois.iana.org", 43))
+                sock.send(f"{clean_domain}\r\n".encode("utf-8"))
+                raw_iana = b""
+                while True:
+                    chunk = sock.recv(2048)
+                    if not chunk:
+                        break
+                    raw_iana += chunk
+                sock.close()
+                iana_txt = raw_iana.decode("utf-8", errors="ignore")
+                refer_match = re.search(r"refer:\s*([^\s]+)", iana_txt, re.I)
+                if refer_match:
+                    refer_server = refer_match.group(1).strip()
+                    sock2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    sock2.settimeout(3.0)
+                    sock2.connect((refer_server, 43))
+                    sock2.send(f"{clean_domain}\r\n".encode("utf-8"))
+                    raw_tld = b""
+                    while True:
+                        c2 = sock2.recv(2048)
+                        if not c2:
+                            break
+                        raw_tld += c2
+                    sock2.close()
+                    tld_txt = raw_tld.decode("utf-8", errors="ignore")
+                    reg_m = re.search(r"Registrar:\s*([^\r\n]+)", tld_txt, re.I)
+                    cr_m = re.search(r"Creation Date:\s*([^\r\n]+)", tld_txt, re.I)
+                    if reg_m or cr_m:
+                        res["is_registered"] = True
+                        res["source"] = f"RFC 3912 Port 43 Socket ({refer_server})"
+                        if reg_m:
+                            res["registrar"] = reg_m.group(1).strip()
+                        if cr_m:
+                            res["created_date"] = cr_m.group(1).strip()[:10]
+                        res["error"] = None
+            except Exception:
+                pass
 
         return res
 

@@ -24,6 +24,12 @@ from .modules.evidence_locker import EvidenceLocker
 from .modules.report_generator import ReportGenerator
 from .modules.osint_framework_recon import OSINTFrameworkRecon
 from .modules.cyber_llm_advisor import CyberLLMAdvisor
+from .modules.email_security_dmarc import EmailSecurityDmarcAnalyzer
+from .modules.opensquat_engine import OpenSquatEngine
+from .modules.holehe_email_scanner import HoleheEmailScanner
+from .modules.opencti_stix2_bridge import OpenCTISTIX2Bridge
+from .modules.pagodo_dork_engine import PagodoDorkEngine
+from .modules.robofinder_forensics import RobofinderForensics
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -52,6 +58,12 @@ evidence_locker = EvidenceLocker()
 report_generator = ReportGenerator()
 osint_recon = OSINTFrameworkRecon()
 cyber_llm = CyberLLMAdvisor()
+dmarc_analyzer = EmailSecurityDmarcAnalyzer()
+opensquat_engine = OpenSquatEngine()
+holehe_scanner = HoleheEmailScanner()
+opencti_bridge = OpenCTISTIX2Bridge()
+pagodo_engine = PagodoDorkEngine()
+robofinder = RobofinderForensics()
 
 # Load sample cases into graph on startup
 BASE_DIR = os.path.dirname(__file__)
@@ -190,13 +202,16 @@ def get_system_status():
             "risk_engine": "ACTIVE (Calibrated Multi-Vector Formula, Synergy Bonus)",
             "evidence_locker": "ACTIVE (SHA-256/SHA-3, Immutable Hash-Chained Ledger)",
             "report_generator": "ACTIVE (Courtroom Dossiers, ICANN Takedowns, STIX 2.1)",
-            "cyber_llm": "ACTIVE (GLM-5.3, DeepSeek-R1, Qwen2.5-Coder CyberSecEval 4 Engine)"
+            "cyber_llm": "ACTIVE (GLM-5.3, DeepSeek-R1, Qwen2.5-Coder CyberSecEval 4 Engine)",
+            "email_security": "ACTIVE (SPF RFC 7208, DMARC RFC 7489, BIMI, DoH Fallbacks)",
+            "osint_framework": "ACTIVE (1,167 tools, 33 categories from lockfale/OSINT-Framework; Live IP/Shodan/AlienVault/Crypto/Dorks)"
         },
         "telemetry": {
             "graph_nodes": metrics.get("total_nodes", 0),
             "graph_edges": metrics.get("total_edges", 0),
             "active_syndicates_tracked": metrics.get("syndicates_count", 0),
-            "evidence_records_sealed": len(evidence_locker.list_evidence())
+            "evidence_records_sealed": len(evidence_locker.list_evidence()),
+            "osint_framework_tools": len(osint_recon.get_framework_categories())
         }
     }
 
@@ -323,6 +338,9 @@ def scan_live_deep(req: LiveDeepScanRequest):
     # 7. Live Logo Extraction & Matching
     logo_info = visual_matcher.fetch_and_match_url_logo(clean_target, target_brand=brand)
 
+    # 7b. Live Email Security (DMARC, SPF, BIMI) Audit with DoH Fallbacks
+    dmarc_info = dmarc_analyzer.audit_domain_email_security(clean_target, brand=brand)
+
     # 8. Live Risk Scoring
     risk_info = domain_scanner.evaluate_domain_risk(
         domain=clean_target,
@@ -355,6 +373,7 @@ def scan_live_deep(req: LiveDeepScanRequest):
             "ssl": ssl_info,
             "http": http_info,
             "risk": risk_info,
+            "dmarc": dmarc_info,
             "ct_subdomains_count": ct_info.get("total_certificates_found", 0)
         }
     )
@@ -370,6 +389,7 @@ def scan_live_deep(req: LiveDeepScanRequest):
         "certificate_transparency": ct_info,
         "wayback_archive": wayback_info,
         "logo_matching": logo_info,
+        "email_security_dmarc": dmarc_info,
         "risk": risk_info,
         "evidence_receipt": evidence
     }
@@ -630,6 +650,62 @@ def explain_threat_attribution(req: XAIExplainRequest):
     return {"attributions": osint_recon.explain_threat_attribution(req.features)}
 
 
+# OSINT Framework (lockfale/OSINT-Framework) Interactive Explorer & Live Threat Engines
+class IPInfrastructureRequest(BaseModel):
+    target: str
+
+class ThreatIntelRequest(BaseModel):
+    indicator: str
+
+class CryptoWalletRequest(BaseModel):
+    address: str
+
+class BrandDorksRequest(BaseModel):
+    brand_name: str
+    legitimate_domain: Optional[str] = ""
+    target_domain: Optional[str] = ""
+
+
+@app.get("/api/recon/osint-framework/categories")
+def get_osint_framework_categories():
+    """Returns all 33 categories from the lockfale/OSINT-Framework taxonomy (1,167 tools)."""
+    return {"categories": osint_recon.get_framework_categories()}
+
+
+@app.get("/api/recon/osint-framework/search")
+def search_osint_framework(q: Optional[str] = "", category: Optional[str] = "", limit: Optional[int] = 50):
+    """Searches through the 1,167 tools in OSINT Framework by name, tag, category, or URL."""
+    return osint_recon.search_framework(query=q or "", category=category or "", limit=limit or 50)
+
+
+@app.post("/api/recon/ip-infrastructure")
+def recon_ip_infrastructure(req: IPInfrastructureRequest):
+    """Queries live IP Geolocation, ASN, Shodan InternetDB open ports & CVEs, and reverse DNS."""
+    return osint_recon.recon_ip_infrastructure(req.target)
+
+
+@app.post("/api/recon/threat-intel")
+def query_threat_intelligence(req: ThreatIntelRequest):
+    """Queries AlienVault OTX live threat intelligence pulses, tags, and generates IOC links."""
+    return osint_recon.query_threat_intelligence(req.indicator)
+
+
+@app.post("/api/recon/crypto-wallet")
+def analyze_crypto_wallet(req: CryptoWalletRequest):
+    """Queries live Blockchain.info transaction volume and generates BitcoinAbuse investigation links."""
+    return osint_recon.analyze_crypto_wallet(req.address)
+
+
+@app.post("/api/recon/brand-dorks")
+def generate_brand_dorks(req: BrandDorksRequest):
+    """Generates 8 tactical OSINT Google Dorks with clickable live search links for brand hunting."""
+    return osint_recon.generate_brand_dorks(
+        brand_name=req.brand_name,
+        legitimate_domain=req.legitimate_domain or "",
+        target_domain=req.target_domain or ""
+    )
+
+
 class CyberLLMAnalyzeRequest(BaseModel):
     domain: str
     brand: Optional[str] = "PayPal"
@@ -664,6 +740,136 @@ def analyze_cyber_threat(req: CyberLLMAnalyzeRequest):
     )
     analysis["evidence_receipt"] = evidence
     return analysis
+
+
+class DmarcAuditRequest(BaseModel):
+    domain: str
+    brand: Optional[str] = None
+
+
+@app.post("/api/scan/dmarc-spf")
+def audit_domain_dmarc_spf(req: DmarcAuditRequest):
+    """
+    Audits domain for SPF, DMARC, and BIMI spoofing vulnerabilities with multi-tier DoH fallback.
+    Inspired by domainaware/checkdmarc and RFC 7489 standards.
+    """
+    return dmarc_analyzer.audit_domain_email_security(req.domain, req.brand)
+
+
+class SigmaYaraRequest(BaseModel):
+    domain: str
+    brand: str
+    ip_addresses: Optional[List[str]] = None
+
+
+@app.post("/api/recon/sigma-yara")
+def generate_sigma_and_yara_rules(req: SigmaYaraRequest):
+    """
+    Generates open-source Sigma SIEM detection rules and YARA mail filtering signatures.
+    """
+    return cyber_llm.generate_defense_signatures(
+        domain=req.domain,
+        brand=req.brand,
+        ip_addresses=req.ip_addresses
+    )
+
+
+# Advanced GitHub Repositories Integration Endpoints (openSquat, Holehe, Pagodo, OpenCTI, MISP, Robofinder)
+class OpenSquatRequest(BaseModel):
+    brand: str
+    tld: Optional[str] = "com"
+    check_live: Optional[bool] = True
+    limit: Optional[int] = 25
+
+class HoleheEmailRequest(BaseModel):
+    email: str
+
+class PagodoDorksRequest(BaseModel):
+    brand: str
+    legitimate_domain: Optional[str] = ""
+    target_domain: Optional[str] = ""
+
+class RobofinderRequest(BaseModel):
+    domain: str
+
+class OpenCTIExportRequest(BaseModel):
+    case_id: str
+    brand_name: str
+    target_domain: str
+    resolved_ips: Optional[List[str]] = None
+    threat_score: Optional[int] = 85
+    threat_actor_type: Optional[str] = "Organized BEC Phishing Syndicate"
+
+
+@app.post("/api/recon/opensquat")
+def audit_opensquat_lookalikes(req: OpenSquatRequest):
+    """
+    Executes openSquat & urlinsane lookalike domain audit with Levenshtein metrics and DoH resolution.
+    """
+    return opensquat_engine.audit_brand(
+        brand=req.brand,
+        tld=req.tld or "com",
+        check_live_dns=req.check_live if req.check_live is not None else True,
+        limit=req.limit or 25
+    )
+
+
+@app.post("/api/recon/holehe-email")
+def scan_holehe_email_identity(req: HoleheEmailRequest):
+    """
+    Executes Holehe & MailAccess email presence probe (Gravatar, GitHub, recovery targets).
+    """
+    return holehe_scanner.scan_email_identity(req.email)
+
+
+@app.post("/api/recon/pagodo-dorks")
+def generate_pagodo_brand_dorks(req: PagodoDorksRequest):
+    """
+    Generates 12 precision GHDB Google Dorks customized for brand defense with 1-click execution URLs.
+    """
+    return pagodo_engine.generate_dorks(
+        brand_name=req.brand,
+        legitimate_domain=req.legitimate_domain or "",
+        target_domain=req.target_domain or ""
+    )
+
+
+@app.post("/api/recon/robofinder")
+def inspect_robofinder_directories(req: RobofinderRequest):
+    """
+    Uncovers hidden and disallowed directories (phish kits, admin panels) via live & historical robots.txt.
+    """
+    return robofinder.analyze_domain_robots(req.domain)
+
+
+@app.post("/api/export/opencti-stix2")
+def export_opencti_stix2_bundle(req: OpenCTIExportRequest):
+    """
+    Serializes threat investigation into OASIS STIX 2.1 Bundle for OpenCTI ingestion.
+    """
+    return opencti_bridge.export_stix21_bundle(
+        case_id=req.case_id,
+        brand_name=req.brand_name,
+        target_domain=req.target_domain,
+        resolved_ips=req.resolved_ips,
+        threat_score=req.threat_score or 85,
+        threat_actor_type=req.threat_actor_type or "Organized BEC Phishing Syndicate"
+    )
+
+
+@app.post("/api/export/misp-event")
+def export_misp_event_json(req: OpenCTIExportRequest):
+    """
+    Exports threat investigation into MISP 2.4 Event JSON structure with categorized attributes.
+    """
+    return opencti_bridge.export_misp_event(
+        case_id=req.case_id,
+        brand_name=req.brand_name,
+        target_domain=req.target_domain,
+        resolved_ips=req.resolved_ips,
+        threat_score=req.threat_score or 85
+    )
+
 
 
 # Static Frontend Mounting

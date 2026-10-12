@@ -100,10 +100,63 @@ class CyberLLMAdvisor:
             f'(lower(http.request.body) contains "{brand.lower()}" and not ssl)'
         )
 
+        # 4. Sigma Rule for SIEM/EDR Detection (SigmaHQ Standard)
+        import uuid
+        rule_uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, clean_dom))
+        today_str = time.strftime("%Y/%m/%d")
+        sigma_rule = (
+            f"title: Potential Network Connection to {brand} Impersonation Domain\n"
+            f"id: {rule_uuid}\n"
+            f"status: experimental\n"
+            f"description: Detects endpoint DNS lookup or network beaconing to confirmed brand impersonation domain {clean_dom}\n"
+            f"references:\n"
+            f"    - https://attack.mitre.org/techniques/T1566/002/\n"
+            f"author: AegisOSINT CTI Defense Engine\n"
+            f"date: {today_str}\n"
+            f"logsource:\n"
+            f"    category: dns\n"
+            f"    product: windows\n"
+            f"detection:\n"
+            f"    selection:\n"
+            f"        query_name|contains: '{clean_dom}'\n"
+            f"    condition: selection\n"
+            f"falsepositives:\n"
+            f"    - Legitimate administrative investigation\n"
+            f"level: high\n"
+            f"tags:\n"
+            f"    - attack.initial_access\n"
+            f"    - attack.t1566.002\n"
+            f"    - attack.t1656"
+        )
+
+        # 5. YARA Rule for Phishing Kit and Email Gateway Detection (VirusTotal/YARA Standard)
+        safe_ident = re.sub(r'[^a-zA-Z0-9_]', '_', f"{brand}_{clean_dom}")
+        yara_rule = (
+            f"rule Phishing_Kit_{safe_ident} {{\n"
+            f"    meta:\n"
+            f"        description = \"Detects web phishing kits or email lures mimicking {brand}\"\n"
+            f"        author = \"AegisOSINT CTI Rule Engine\"\n"
+            f"        reference = \"MITRE ATT&CK T1566.002\"\n"
+            f"        threat_level = \"High\"\n"
+            f"        date = \"{today_str}\"\n"
+            f"    strings:\n"
+            f"        $target_domain = \"{clean_dom}\" ascii wide nocase\n"
+            f"        $brand_name = \"{brand}\" ascii wide nocase\n"
+            f"        $lure_phrase1 = \"verify your account\" ascii wide nocase\n"
+            f"        $lure_phrase2 = \"account suspended\" ascii wide nocase\n"
+            f"        $lure_phrase3 = \"confirm your identity\" ascii wide nocase\n"
+            f"        $lure_phrase4 = \"unauthorized login attempt\" ascii wide nocase\n"
+            f"    condition:\n"
+            f"        $target_domain or ($brand_name and 1 of ($lure_phrase*))\n"
+            f"}}"
+        )
+
         return {
             "dns_rpz_zone": dns_rpz,
             "suricata_ids_rule": suricata_rule,
-            "waf_filter_expression": waf_expression
+            "waf_filter_expression": waf_expression,
+            "sigma_rule_yaml": sigma_rule,
+            "yara_rule": yara_rule
         }
 
     def analyze_with_remote_llm(

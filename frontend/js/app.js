@@ -32,6 +32,7 @@ function switchTab(tabId) {
     loadEvidenceLedger();
   } else if (tabId === 'osint') {
     runXAIExplain();
+    loadOSINTFrameworkExplorer();
   }
 }
 
@@ -41,6 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await refreshThreatGraph();
   await loadEvidenceLedger();
   runXAIExplain();
+  loadOSINTFrameworkExplorer();
 });
 
 // REAL-WORLD LIVE TARGET INTELLIGENCE SCANNER (100% Real Internet Recon)
@@ -402,6 +404,10 @@ function syncTabsWithCase(c) {
   if (cyberDom) cyberDom.value = c.primary_threat_domain;
   const cyberBrand = document.getElementById('cyber-llm-brand');
   if (cyberBrand) cyberBrand.value = c.target_brand;
+
+  // DMARC & Email security tab
+  const dmarcDom = document.getElementById('recon-dmarc-domain');
+  if (dmarcDom) dmarcDom.value = c.primary_threat_domain;
 }
 
 // 2. Domain Scanner
@@ -768,6 +774,7 @@ async function generateFreshReport() {
     `;
 
     switchTab('report');
+    await loadSigmaYaraRules();
   } catch (err) {
     alert("Dossier generation error: " + err.message);
   }
@@ -778,6 +785,48 @@ function copyTakedownText() {
   ta.select();
   document.execCommand('copy');
   alert("ICANN Takedown Notice copied to clipboard!");
+}
+
+async function loadSigmaYaraRules() {
+  if (!currentCase) return;
+  const sigmaTa = document.getElementById('report-sigma-textarea');
+  const yaraTa = document.getElementById('report-yara-textarea');
+  if (sigmaTa) sigmaTa.value = "Generating Sigma SIEM detection rule...";
+  if (yaraTa) yaraTa.value = "Generating YARA phishing signature...";
+
+  try {
+    const res = await fetch('/api/recon/sigma-yara', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        domain: currentCase.primary_threat_domain,
+        brand: currentCase.target_brand,
+        ip_addresses: currentCase.infrastructure.ip_addresses
+      })
+    });
+    const data = await res.json();
+    if (sigmaTa) sigmaTa.value = data.sigma_rule_yaml;
+    if (yaraTa) yaraTa.value = data.yara_rule;
+  } catch (err) {
+    if (sigmaTa) sigmaTa.value = "Error generating Sigma rule: " + err.message;
+    if (yaraTa) yaraTa.value = "Error generating YARA rule: " + err.message;
+  }
+}
+
+function copySigmaText() {
+  const ta = document.getElementById('report-sigma-textarea');
+  if (!ta) return;
+  ta.select();
+  document.execCommand('copy');
+  alert("Sigma SIEM Rule copied to clipboard!");
+}
+
+function copyYaraText() {
+  const ta = document.getElementById('report-yara-textarea');
+  if (!ta) return;
+  ta.select();
+  document.execCommand('copy');
+  alert("YARA Phishing Signature copied to clipboard!");
 }
 
 function downloadSTIX() {
@@ -1107,4 +1156,723 @@ async function runCyberLLMAnalysis() {
   }
 }
 
+// 10. Email Authentication (DMARC, SPF, BIMI) Auditor
+async function runDmarcSpfAudit() {
+  const domain = document.getElementById('recon-dmarc-domain').value.trim();
+  const container = document.getElementById('recon-dmarc-results');
+  if (!domain) return alert("Please enter a domain to audit email authentication.");
 
+  container.innerHTML = '<span class="text-indigo-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Querying SPF, DMARC, and BIMI records across DoH resolvers...</span>';
+
+  try {
+    const res = await fetch('/api/scan/dmarc-spf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ domain })
+    });
+    const data = await res.json();
+
+    const isCritical = data.threat_severity === 'CRITICAL';
+    const isHigh = data.threat_severity === 'HIGH';
+    const isSecure = data.threat_severity === 'SECURE';
+    const badgeColor = isCritical
+      ? 'bg-red-500/20 text-red-300 border-red-500/40'
+      : (isHigh
+      ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+      : (isSecure
+      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+      : 'bg-yellow-500/20 text-yellow-300 border-yellow-500/40'));
+
+    container.innerHTML = `
+      <div class="p-2 bg-slate-950 rounded border border-slate-800 space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-white font-mono">${data.domain}</span>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">
+            ${data.threat_severity} (Spoof Score: ${data.spoofing_vulnerability_score}/100)
+          </span>
+        </div>
+        <div class="text-[11px] grid grid-cols-2 gap-1 pt-1 border-t border-slate-800/60 font-mono">
+          <div><span class="text-slate-500">SPF Mechanism:</span> <span class="${data.spf_audit.is_spoofable ? 'text-red-400' : 'text-emerald-400'} font-bold">${data.spf_audit.all_mechanism || 'None'}</span></div>
+          <div><span class="text-slate-500">DMARC Policy:</span> <span class="${data.dmarc_audit.is_enforced ? 'text-emerald-400' : 'text-red-400'} font-bold">${data.dmarc_audit.policy} (pct: ${data.dmarc_audit.percentage}%)</span></div>
+        </div>
+        <div class="text-[10px] text-slate-400">${data.dmarc_audit.explanation}</div>
+        ${data.remediation_actions && data.remediation_actions.length > 0 ? `
+          <div class="pt-1 border-t border-slate-800/60 text-[10px] text-amber-300">
+            <strong>Remediation:</strong> ${data.remediation_actions.join(' | ')}
+          </div>
+        ` : ''}
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400">DMARC audit error: ${err.message}</span>`;
+  }
+}
+
+// ==========================================
+// OSINT FRAMEWORK (osintframework.com) EXPLORER & SUITE
+// ==========================================
+
+let osintFrameworkCategoriesLoaded = false;
+
+async function loadOSINTFrameworkExplorer() {
+  if (osintFrameworkCategoriesLoaded) return;
+  try {
+    const res = await fetch('/api/recon/osint-framework/categories');
+    const data = await res.json();
+    const select = document.getElementById('osint-cat-filter');
+    if (select && data.categories) {
+      select.innerHTML = '<option value="ALL">All 33 Categories (1,167 Tools)</option>';
+      data.categories.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.category;
+        opt.innerText = `${c.category} (${c.tool_count} tools)`;
+        select.appendChild(opt);
+      });
+      osintFrameworkCategoriesLoaded = true;
+    }
+    await filterOSINTFramework();
+  } catch (err) {
+    console.error("Failed to load OSINT Framework categories:", err);
+  }
+}
+
+async function filterOSINTFramework() {
+  const query = document.getElementById('osint-tool-search')?.value.trim() || '';
+  const category = document.getElementById('osint-cat-filter')?.value || 'ALL';
+  const container = document.getElementById('osint-framework-results');
+  const statusEl = document.getElementById('osint-framework-status');
+
+  if (!container) return;
+
+  try {
+    const url = `/api/recon/osint-framework/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(category === 'ALL' ? '' : category)}&limit=60`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data.tools || data.tools.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-6 text-slate-500 text-xs">
+          <i class="fa-solid fa-circle-exclamation text-amber-400 mr-1.5"></i>
+          No tools found matching "${query}" in category "${category}".
+        </div>
+      `;
+      if (statusEl) statusEl.innerText = `Showing 0 tools`;
+      return;
+    }
+
+    if (statusEl) statusEl.innerText = `Showing ${data.tools.length} tools ${query ? `matching "${query}"` : ''} in ${category}`;
+
+    container.innerHTML = data.tools.map(t => {
+      const tagsHtml = (t.tags || []).map(tag => {
+        let tagColor = 'bg-slate-800 text-slate-300 border-slate-700';
+        if (tag.includes('Tool')) tagColor = 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+        if (tag.includes('Dork')) tagColor = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
+        if (tag.includes('Registration')) tagColor = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+        if (tag.includes('Malicious')) tagColor = 'bg-red-500/20 text-red-300 border-red-500/30';
+        return `<span class="px-1.5 py-0.5 rounded text-[9px] font-mono border ${tagColor}">${tag}</span>`;
+      }).join(' ');
+
+      return `
+        <div class="p-2.5 bg-slate-900/80 hover:bg-slate-850 rounded-lg border border-slate-800/80 hover:border-indigo-500/40 transition flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+          <div class="space-y-0.5">
+            <div class="flex items-center space-x-2">
+              <span class="font-bold text-white">${t.name}</span>
+              <div class="flex items-center space-x-1">${tagsHtml}</div>
+            </div>
+            <div class="text-[11px] text-slate-400 flex items-center space-x-1.5 font-mono">
+              <span class="text-indigo-400 font-semibold">${t.category}</span>
+              <span>&rsaquo;</span>
+              <span class="text-slate-300">${t.subcategory}</span>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2 shrink-0">
+            <a href="${t.url}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-indigo-600/30 hover:bg-indigo-600/60 text-indigo-300 hover:text-white rounded border border-indigo-500/40 text-[11px] font-semibold transition flex items-center space-x-1">
+              <span>Launch</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </a>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400 text-xs">Error querying OSINT Framework: ${err.message}</span>`;
+  }
+}
+
+function setOSINTCategoryFilter(catName) {
+  const select = document.getElementById('osint-cat-filter');
+  if (select) {
+    select.value = catName;
+    filterOSINTFramework();
+  }
+}
+
+// 11. IP Infrastructure & Shodan Host Reconnaissance
+async function runIPInfrastructureRecon() {
+  const target = document.getElementById('recon-ip-input')?.value.trim();
+  const container = document.getElementById('recon-ip-results');
+  if (!target) return alert("Please enter an IP address or hostname to probe.");
+
+  container.innerHTML = '<span class="text-blue-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Probing live IP geolocation, ASN, and Shodan InternetDB...</span>';
+
+  try {
+    const res = await fetch('/api/recon/ip-infrastructure', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ target })
+    });
+    const data = await res.json();
+
+    const isCritical = data.severity === 'CRITICAL';
+    const isHigh = data.severity === 'HIGH';
+    const badgeColor = isCritical ? 'bg-red-500/20 text-red-300 border-red-500/40' : (isHigh ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40');
+
+    const openPorts = (data.shodan_telemetry?.open_ports || []).map(p => `<span class="px-1.5 py-0.2 bg-slate-800 text-blue-300 rounded font-mono text-[10px]">${p}</span>`).join(' ') || '<span class="text-slate-500">None detected / firewalled</span>';
+    const vulns = (data.shodan_telemetry?.vulnerabilities || []).map(v => `<span class="px-1.5 py-0.2 bg-red-950 text-red-300 rounded font-mono text-[10px] border border-red-800/40">${v}</span>`).join(' ') || '<span class="text-emerald-400 text-[10px]">Zero known CVEs</span>';
+
+    container.innerHTML = `
+      <div class="p-2.5 bg-slate-950 rounded border border-slate-800 space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-white font-mono">${data.resolved_ip || data.target}</span>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">
+            ${data.severity} (${data.risk_score}/100)
+          </span>
+        </div>
+        <div class="text-[11px] grid grid-cols-2 gap-1 text-slate-300 font-mono">
+          <div><span class="text-slate-500">Location:</span> ${data.geolocation?.city || 'Unknown'}, ${data.geolocation?.country || 'XX'}</div>
+          <div><span class="text-slate-500">ASN:</span> ${data.geolocation?.asn || 'AS0'}</div>
+          <div><span class="text-slate-500">ISP / Org:</span> ${data.geolocation?.isp || 'Unknown'}</div>
+          <div><span class="text-slate-500">PTR Host:</span> ${data.reverse_ptr || 'N/A'}</div>
+        </div>
+        <div class="pt-1 border-t border-slate-800/60 text-[11px]">
+          <span class="text-slate-500 font-mono">Shodan Open Ports:</span> ${openPorts}
+        </div>
+        <div class="pt-0.5 text-[11px]">
+          <span class="text-slate-500 font-mono">Shodan CVEs:</span> ${vulns}
+        </div>
+        <div class="pt-1 border-t border-slate-800/60 text-[10px] text-slate-400">
+          ${data.tactical_assessment}
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400">IP Recon error: ${err.message}</span>`;
+  }
+}
+
+// 12. Cyber Threat Intelligence & AlienVault OTX Pulse Recon
+async function runThreatIntelRecon() {
+  const indicator = document.getElementById('recon-threat-input')?.value.trim();
+  const container = document.getElementById('recon-threat-results');
+  if (!indicator) return alert("Please enter a domain or IP to query AlienVault OTX.");
+
+  container.innerHTML = '<span class="text-amber-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Querying AlienVault OTX global threat pulses and IOC database...</span>';
+
+  try {
+    const res = await fetch('/api/recon/threat-intel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ indicator })
+    });
+    const data = await res.json();
+
+    const isMal = data.threat_level === 'MALICIOUS';
+    const isSusp = data.threat_level === 'SUSPICIOUS';
+    const badgeColor = isMal ? 'bg-red-500/20 text-red-300 border-red-500/40' : (isSusp ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40');
+
+    const pulsesHtml = (data.active_pulses || []).slice(0, 3).map(p => `
+      <div class="p-1.5 bg-slate-900 rounded text-[11px] space-y-0.5">
+        <div class="font-semibold text-white truncate">${p.name}</div>
+        <div class="text-[10px] text-slate-400 flex items-center justify-between">
+          <span>By: ${p.author}</span>
+          <span>${p.created}</span>
+        </div>
+      </div>
+    `).join('') || '<div class="text-[10px] text-slate-500">No active adversary pulses recorded.</div>';
+
+    const linksHtml = (data.osint_intel_links || []).map(l => `
+      <a href="${l.url}" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 bg-slate-900 hover:bg-slate-800 text-[10px] text-indigo-300 rounded border border-slate-700">
+        ${l.source}
+      </a>
+    `).join(' ');
+
+    container.innerHTML = `
+      <div class="p-2.5 bg-slate-950 rounded border border-slate-800 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-white font-mono">${data.indicator}</span>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">
+            ${data.threat_level} (${data.alienvault_pulse_count} Pulses)
+          </span>
+        </div>
+        <div class="text-[10px] text-slate-400">${data.tactical_assessment}</div>
+        <div class="space-y-1">
+          <span class="text-[10px] text-slate-500 uppercase font-mono font-bold">Recent Threat Pulses:</span>
+          ${pulsesHtml}
+        </div>
+        <div class="pt-1 border-t border-slate-800/60 flex flex-wrap gap-1">
+          <span class="text-[10px] text-slate-500 font-mono self-center mr-1">Direct IOC Lookups:</span>
+          ${linksHtml}
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400">Threat Intel error: ${err.message}</span>`;
+  }
+}
+
+// 13. Scam Cryptocurrency Wallet Auditor
+async function runCryptoWalletRecon() {
+  const address = document.getElementById('recon-crypto-input')?.value.trim();
+  const container = document.getElementById('recon-crypto-results');
+  if (!address) return alert("Please enter a cryptocurrency wallet address to audit.");
+
+  container.innerHTML = '<span class="text-yellow-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Querying on-chain blockchain records and abuse databases...</span>';
+
+  try {
+    const res = await fetch('/api/recon/crypto-wallet', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address })
+    });
+    const data = await res.json();
+
+    const isCritical = data.severity === 'CRITICAL';
+    const isHigh = data.severity === 'HIGH';
+    const badgeColor = isCritical ? 'bg-red-500/20 text-red-300 border-red-500/40' : (isHigh ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40');
+
+    const linksHtml = (data.osint_forensic_links || []).map(l => `
+      <a href="${l.url}" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 bg-slate-900 hover:bg-slate-800 text-[10px] text-yellow-300 rounded border border-slate-700">
+        ${l.service}
+      </a>
+    `).join(' ');
+
+    container.innerHTML = `
+      <div class="p-2.5 bg-slate-950 rounded border border-slate-800 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-white font-mono text-[11px] truncate max-w-[200px]">${data.address}</span>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">
+            ${data.currency}
+          </span>
+        </div>
+        <div class="grid grid-cols-3 gap-1 text-[11px] font-mono pt-1 border-t border-slate-800/60">
+          <div><span class="text-slate-500">Transactions:</span> <span class="text-white font-bold">${data.transaction_count}</span></div>
+          <div><span class="text-slate-500">Received:</span> <span class="text-yellow-400 font-bold">${data.total_received}</span></div>
+          <div><span class="text-slate-500">Balance:</span> <span class="text-emerald-400 font-bold">${data.final_balance}</span></div>
+        </div>
+        <div class="text-[10px] text-slate-400">${data.tactical_assessment}</div>
+        <div class="pt-1 border-t border-slate-800/60 flex flex-wrap gap-1">
+          <span class="text-[10px] text-slate-500 font-mono self-center mr-1">Forensics:</span>
+          ${linksHtml}
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400">Crypto Audit error: ${err.message}</span>`;
+  }
+}
+
+// 14. Brand Impersonation Google Dorking Hunter
+async function runBrandDorksRecon() {
+  const brand_name = document.getElementById('recon-dork-brand')?.value.trim();
+  const legitimate_domain = document.getElementById('recon-dork-domain')?.value.trim();
+  const container = document.getElementById('recon-dork-results');
+
+  if (!brand_name) return alert("Please enter a Brand Name to generate targeted Google Dorks.");
+
+  container.innerHTML = '<span class="text-emerald-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Generating targeted brand defense and phishing hunter dorks...</span>';
+
+  try {
+    const res = await fetch('/api/recon/brand-dorks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ brand_name, legitimate_domain })
+    });
+    const data = await res.json();
+
+    container.innerHTML = data.dorks.map((d, idx) => `
+      <div class="p-2 bg-slate-950 rounded border border-slate-800 space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] font-bold text-emerald-400">${idx + 1}. ${d.category}</span>
+          <div class="flex items-center space-x-1">
+            <a href="${d.google_url}" target="_blank" rel="noopener noreferrer" class="px-1.5 py-0.5 bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white rounded text-[9px] font-semibold">Google</a>
+            <a href="${d.duckduckgo_url}" target="_blank" rel="noopener noreferrer" class="px-1.5 py-0.5 bg-amber-600/30 hover:bg-amber-600 text-amber-300 hover:text-white rounded text-[9px] font-semibold">DDG</a>
+            <a href="${d.bing_url}" target="_blank" rel="noopener noreferrer" class="px-1.5 py-0.5 bg-cyan-600/30 hover:bg-cyan-600 text-cyan-300 hover:text-white rounded text-[9px] font-semibold">Bing</a>
+          </div>
+        </div>
+        <div class="font-mono text-[10px] text-slate-300 bg-slate-900 p-1 rounded overflow-x-auto select-all">${d.dork}</div>
+        <div class="text-[9px] text-slate-500">${d.description}</div>
+      </div>
+    `).join('');
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400">Dork Generator error: ${err.message}</span>`;
+  }
+}
+
+// 15. openSquat & urlinsane Lookalike Hunter Controller
+async function runOpenSquatAudit() {
+  const brandInput = document.getElementById('opensquat-brand-input');
+  const tldInput = document.getElementById('opensquat-tld-input');
+  const liveDnsCheckbox = document.getElementById('opensquat-live-dns');
+  const btn = document.getElementById('btn-opensquat-run');
+  const panel = document.getElementById('opensquat-results-panel');
+  const listContainer = document.getElementById('opensquat-results-list');
+  const summaryBadge = document.getElementById('opensquat-summary-badge');
+  const resolvingBadge = document.getElementById('opensquat-resolving-badge');
+
+  const brand = brandInput?.value.trim() || 'paypal';
+  const tld = tldInput?.value.trim() || 'com';
+  const check_live = liveDnsCheckbox ? liveDnsCheckbox.checked : true;
+
+  if (!brand) return alert("Please specify a brand name to audit.");
+
+  const origBtnHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Running openSquat...`;
+
+  if (panel) panel.classList.remove('hidden');
+  if (listContainer) listContainer.innerHTML = '<span class="text-indigo-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Synthesizing Levenshtein permutations & probing live DoH...</span>';
+
+  try {
+    const res = await fetch('/api/recon/opensquat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ brand, tld, check_live, limit: 25 })
+    });
+    const data = await res.json();
+
+    if (summaryBadge) summaryBadge.innerText = `Generated ${data.total_lookalikes_generated} permutations (Levenshtein d &le; 2)`;
+    if (resolvingBadge) resolvingBadge.innerText = `${data.active_resolving_count} Resolving Live (DoH)`;
+
+    if (!data.high_risk_lookalikes || data.high_risk_lookalikes.length === 0) {
+      listContainer.innerHTML = `<span class="text-slate-400 text-xs">No high risk lookalikes identified for "${brand}".</span>`;
+      return;
+    }
+
+    listContainer.innerHTML = data.high_risk_lookalikes.map((item, idx) => {
+      const isCritical = item.threat_score >= 80;
+      const isHigh = item.threat_score >= 60;
+      const badgeColor = isCritical ? 'bg-red-500/20 text-red-300 border-red-500/40' : (isHigh ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-slate-800 text-slate-300 border-slate-700');
+      const dnsBadge = item.resolved && item.ip_addresses?.length > 0
+        ? `<span class="px-1.5 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">RESOLVES: ${item.ip_addresses[0]}</span>`
+        : `<span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-500">Unregistered / Dormant</span>`;
+
+      return `
+        <div class="p-2 bg-slate-900 rounded border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px]">
+          <div class="space-y-0.5">
+            <div class="flex items-center space-x-2">
+              <span class="text-slate-500 font-bold">${idx + 1}.</span>
+              <span class="text-white font-bold font-mono">${item.domain}</span>
+              <span class="px-1.5 py-0.2 rounded text-[9px] bg-indigo-500/20 text-indigo-300 font-sans border border-indigo-500/30">${item.attack_category}</span>
+            </div>
+            <div class="text-[10px] text-slate-400">
+              Levenshtein Dist: <strong class="text-slate-200">${item.levenshtein_distance}</strong> | Sim: <strong class="text-slate-200">${Math.round(item.similarity_ratio * 100)}%</strong>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2">
+            ${dnsBadge}
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">
+              Risk: ${item.threat_score}/100
+            </span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+  } catch (err) {
+    listContainer.innerHTML = `<span class="text-red-400">openSquat error: ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origBtnHtml;
+  }
+}
+
+// 16. Holehe & Mailcat Email Identity & Presence Controller
+async function runHoleheEmailScan() {
+  const emailInput = document.getElementById('recon-holehe-input');
+  const container = document.getElementById('recon-holehe-results');
+  const btn = document.getElementById('btn-holehe-run');
+
+  const email = emailInput?.value.trim();
+  if (!email) return alert("Please enter an email address to probe.");
+
+  const origBtnHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Probing...`;
+  container.innerHTML = '<span class="text-pink-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Probing Gravatar, GitHub commit records, and password recovery endpoints...</span>';
+
+  try {
+    const res = await fetch('/api/recon/holehe-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+
+    const isCritical = data.severity === 'CRITICAL';
+    const isHigh = data.severity === 'HIGH';
+    const badgeColor = isCritical ? 'bg-red-500/20 text-red-300 border-red-500/40' : (isHigh ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40');
+
+    const recoveryLinks = (data.recovery_lookup_targets || []).map(r => `
+      <a href="${r.lookup_url}" target="_blank" rel="noopener noreferrer" class="px-1.5 py-0.5 bg-slate-900 hover:bg-slate-800 text-pink-300 rounded border border-slate-700 text-[10px]">
+        ${r.service}
+      </a>
+    `).join(' ');
+
+    const indicatorsHtml = (data.indicators || []).map(ind => `
+      <div class="text-[11px] text-pink-300 flex items-center space-x-1.5">
+        <i class="fa-solid fa-triangle-exclamation text-[9px] text-amber-400"></i>
+        <span>${ind}</span>
+      </div>
+    `).join('');
+
+    container.innerHTML = `
+      <div class="p-2.5 bg-slate-950 rounded border border-slate-800 space-y-2 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-white font-mono">${data.email}</span>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">
+            ${data.severity} (${data.risk_score}/100)
+          </span>
+        </div>
+        <div class="grid grid-cols-2 gap-1 text-[11px] font-mono text-slate-300 pt-1 border-t border-slate-800/60">
+          <div><span class="text-slate-500">Burner Domain:</span> <strong class="${data.is_burner_domain ? 'text-red-400' : 'text-emerald-400'}">${data.is_burner_domain ? 'YES (Disposable)' : 'No (Standard)'}</strong></div>
+          <div><span class="text-slate-500">Gravatar:</span> <strong class="${data.gravatar?.registered ? 'text-indigo-300' : 'text-slate-400'}">${data.gravatar?.registered ? 'Found Profile' : 'Not Registered'}</strong></div>
+          <div><span class="text-slate-500">GitHub Activity:</span> <strong class="${data.github?.associated ? 'text-purple-300' : 'text-slate-400'}">${data.github?.associated ? 'Commits Present' : 'None Detected'}</strong></div>
+          <div><span class="text-slate-500">Local Part:</span> <strong class="text-white">${data.local_part}</strong></div>
+        </div>
+        ${data.gravatar?.registered ? `
+          <div class="p-2 bg-slate-900 rounded flex items-center space-x-3 border border-slate-800">
+            <img src="${data.gravatar.avatar_url}" alt="Avatar" class="w-8 h-8 rounded-full border border-pink-400/50">
+            <div class="text-[11px]">
+              <div class="font-bold text-white">${data.gravatar.display_name || 'Gravatar User'}</div>
+              <a href="${data.gravatar.profile_url}" target="_blank" class="text-pink-400 hover:underline text-[10px]">${data.gravatar.profile_url}</a>
+            </div>
+          </div>
+        ` : ''}
+        <div class="space-y-0.5">${indicatorsHtml}</div>
+        <div class="pt-1 border-t border-slate-800/60">
+          <div class="text-[10px] text-slate-500 uppercase font-mono font-bold mb-1">Password Recovery Lookups:</div>
+          <div class="flex flex-wrap gap-1">${recoveryLinks}</div>
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400">Holehe error: ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origBtnHtml;
+  }
+}
+
+// 17. Robofinder Historical Robots & Phish Kit Path Controller
+async function runRobofinder() {
+  const domainInput = document.getElementById('recon-robofinder-input');
+  const container = document.getElementById('recon-robofinder-results');
+  const btn = document.getElementById('btn-robofinder-run');
+
+  const domain = domainInput?.value.trim();
+  if (!domain) return alert("Please enter a domain name to inspect robots.txt.");
+
+  const origBtnHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Crawling...`;
+  container.innerHTML = '<span class="text-amber-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Fetching live robots.txt and Wayback Machine CDX snapshots...</span>';
+
+  try {
+    const res = await fetch('/api/recon/robofinder', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ domain })
+    });
+    const data = await res.json();
+
+    const isCritical = data.severity === 'CRITICAL';
+    const isHigh = data.severity === 'HIGH';
+    const badgeColor = isCritical ? 'bg-red-500/20 text-red-300 border-red-500/40' : (isHigh ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40');
+
+    const suspPathsHtml = (data.suspicious_phishing_paths || []).map(p => `
+      <span class="px-1.5 py-0.2 bg-red-950/80 text-red-300 rounded font-mono text-[10px] border border-red-800/50">${p}</span>
+    `).join(' ') || '<span class="text-emerald-400 text-[10px]">Zero high-risk staging endpoints</span>';
+
+    const findingsHtml = (data.findings || []).map(f => `
+      <div class="text-[11px] text-amber-300 flex items-center space-x-1">
+        <i class="fa-solid fa-circle-exclamation text-[9px] text-amber-400"></i>
+        <span>${f}</span>
+      </div>
+    `).join('');
+
+    container.innerHTML = `
+      <div class="p-2.5 bg-slate-950 rounded border border-slate-800 space-y-2 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-white font-mono">${data.domain}</span>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">
+            ${data.severity} (${data.risk_score}/100)
+          </span>
+        </div>
+        <div class="grid grid-cols-2 gap-1 text-[11px] font-mono text-slate-300 pt-1 border-t border-slate-800/60">
+          <div><span class="text-slate-500">Robots.txt Present:</span> <strong class="${data.robots_found ? 'text-white' : 'text-slate-500'}">${data.robots_found ? 'Yes' : 'Not Found'}</strong></div>
+          <div><span class="text-slate-500">Live Disallowed:</span> <strong class="text-amber-400">${data.live_disallow_count} paths</strong></div>
+          <div><span class="text-slate-500">Wayback Snapshots:</span> <strong class="text-cyan-400">${data.historical_snapshot_count}</strong></div>
+          <div><span class="text-slate-500">Historical Disallows:</span> <strong class="text-white">${data.historical_disallow_paths?.length || 0} paths</strong></div>
+        </div>
+        <div class="pt-1 border-t border-slate-800/60">
+          <span class="text-[10px] text-slate-500 font-mono font-bold block mb-1">Suspicious Hidden &amp; Phishing Endpoints:</span>
+          <div class="flex flex-wrap gap-1">${suspPathsHtml}</div>
+        </div>
+        <div class="space-y-0.5">${findingsHtml}</div>
+        <div class="text-[10px] text-slate-400 pt-1 border-t border-slate-800/60 italic">
+          ${data.forensic_assessment}
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400">Robofinder error: ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origBtnHtml;
+  }
+}
+
+// 18. Pagodo & Dorkify 12-Category Brand Defense Matrix Controller
+async function runPagodoDorks() {
+  const brandInput = document.getElementById('pagodo-brand-input');
+  const legitDomainInput = document.getElementById('pagodo-legit-domain-input');
+  const targetDomainInput = document.getElementById('pagodo-target-domain-input');
+  const container = document.getElementById('recon-pagodo-results');
+  const btn = document.getElementById('btn-pagodo-run');
+
+  const brand = brandInput?.value.trim() || 'PayPal';
+  const legitimate_domain = legitDomainInput?.value.trim() || 'paypal.com';
+  const target_domain = targetDomainInput?.value.trim() || '';
+
+  const origBtnHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Generating...`;
+  container.innerHTML = '<span class="text-emerald-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Generating 12 precision GHDB queries...</span>';
+
+  try {
+    const res = await fetch('/api/recon/pagodo-dorks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ brand, legitimate_domain, target_domain })
+    });
+    const data = await res.json();
+
+    container.innerHTML = (data.dorks || []).map((d, idx) => `
+      <div class="p-2.5 bg-slate-950 rounded border border-slate-800 space-y-1 text-xs">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-1.5">
+            <span class="text-[11px] font-bold text-emerald-400">${idx + 1}. ${d.category}</span>
+            <span class="px-1.5 py-0.2 rounded text-[9px] bg-slate-800 text-slate-300 font-mono">${d.threat_focus}</span>
+          </div>
+          <div class="flex items-center space-x-1">
+            <a href="${d.google_url}" target="_blank" rel="noopener noreferrer" class="px-1.5 py-0.5 bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white rounded text-[9px] font-semibold">Google</a>
+            <a href="${d.duckduckgo_url}" target="_blank" rel="noopener noreferrer" class="px-1.5 py-0.5 bg-amber-600/30 hover:bg-amber-600 text-amber-300 hover:text-white rounded text-[9px] font-semibold">DDG</a>
+            <a href="${d.bing_url}" target="_blank" rel="noopener noreferrer" class="px-1.5 py-0.5 bg-cyan-600/30 hover:bg-cyan-600 text-cyan-300 hover:text-white rounded text-[9px] font-semibold">Bing</a>
+            <a href="${d.yandex_url}" target="_blank" rel="noopener noreferrer" class="px-1.5 py-0.5 bg-red-600/30 hover:bg-red-600 text-red-300 hover:text-white rounded text-[9px] font-semibold">Yandex</a>
+          </div>
+        </div>
+        <div class="font-mono text-[10px] text-slate-200 bg-slate-900 p-1.5 rounded overflow-x-auto select-all border border-slate-800">${d.dork}</div>
+        <div class="text-[10px] text-slate-400">${d.description}</div>
+      </div>
+    `).join('');
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400">Pagodo error: ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origBtnHtml;
+  }
+}
+
+// 19. OpenCTI STIX 2.1 Bundle & MISP Event Exporters
+let currentOpenCTIBundle = null;
+let currentMISPEvent = null;
+
+async function exportOpenCTIBundle() {
+  const ta = document.getElementById('report-opencti-textarea');
+  if (ta) ta.value = "Generating OASIS STIX 2.1 Bundle for OpenCTI ingestion...";
+
+  const payload = {
+    case_id: currentCase ? currentCase.case_id : "CASE-PP-8021",
+    brand_name: currentCase ? currentCase.target_brand : "PayPal",
+    target_domain: currentCase ? currentCase.primary_threat_domain : "paypal-security-login.top",
+    resolved_ips: currentCase ? currentCase.infrastructure.ip_addresses : ["185.220.101.5"],
+    threat_score: currentCase ? Math.round(currentCase.precalculated_risk.risk_score) : 94,
+    threat_actor_type: "Organized BEC Phishing Syndicate"
+  };
+
+  try {
+    const res = await fetch('/api/export/opencti-stix2', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    currentOpenCTIBundle = data;
+
+    if (ta) ta.value = JSON.stringify(data, null, 2);
+
+    // Trigger file download
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `OpenCTI_STIX21_${payload.case_id}.json`;
+    a.click();
+  } catch (err) {
+    if (ta) ta.value = "Error generating OpenCTI STIX 2.1 bundle: " + err.message;
+    alert("OpenCTI Export error: " + err.message);
+  }
+}
+
+function copyOpenCTIText() {
+  const ta = document.getElementById('report-opencti-textarea');
+  if (!ta) return;
+  ta.select();
+  document.execCommand('copy');
+  alert("OpenCTI STIX 2.1 Bundle JSON copied to clipboard!");
+}
+
+async function exportMISPEventJson() {
+  const ta = document.getElementById('report-misp-textarea');
+  if (ta) ta.value = "Generating MISP 2.4 Event JSON format...";
+
+  const payload = {
+    case_id: currentCase ? currentCase.case_id : "CASE-PP-8021",
+    brand_name: currentCase ? currentCase.target_brand : "PayPal",
+    target_domain: currentCase ? currentCase.primary_threat_domain : "paypal-security-login.top",
+    resolved_ips: currentCase ? currentCase.infrastructure.ip_addresses : ["185.220.101.5"],
+    threat_score: currentCase ? Math.round(currentCase.precalculated_risk.risk_score) : 94
+  };
+
+  try {
+    const res = await fetch('/api/export/misp-event', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    currentMISPEvent = data;
+
+    if (ta) ta.value = JSON.stringify(data, null, 2);
+
+    // Trigger file download
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `MISP_Event_${payload.case_id}.json`;
+    a.click();
+  } catch (err) {
+    if (ta) ta.value = "Error generating MISP Event JSON: " + err.message;
+    alert("MISP Export error: " + err.message);
+  }
+}
+
+function copyMISPText() {
+  const ta = document.getElementById('report-misp-textarea');
+  if (!ta) return;
+  ta.select();
+  document.execCommand('copy');
+  alert("MISP 2.4 Event JSON copied to clipboard!");
+}
