@@ -1893,3 +1893,352 @@ function copyMISPText() {
   document.execCommand('copy');
   alert("MISP 2.4 Event JSON copied to clipboard!");
 }
+
+// ==========================================
+// 20. LIVE PHISHING FEEDS (OpenPhish & Phishunt) CONTROLLER
+// ==========================================
+async function runPhishingFeedCheck() {
+  const targetInput = document.getElementById('phishfeed-target-input');
+  const container = document.getElementById('phishfeed-results');
+  const btn = document.getElementById('btn-phishfeed-run');
+
+  const target = targetInput?.value.trim() || 'paypal-security-login.top';
+  const brand = currentCase ? currentCase.target_brand : 'PayPal';
+
+  const origBtnHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Checking Feeds...`;
+  container.innerHTML = '<span class="text-red-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Querying live OpenPhish & Phishunt zero-day threat feeds...</span>';
+
+  try {
+    const res = await fetch('/api/recon/live-phishing-feeds', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ target, brand })
+    });
+    const data = await res.json();
+
+    const isConfirmed = data.overall_verdict?.is_confirmed_phishing;
+    const severity = data.overall_verdict?.threat_severity || 'CLEAN';
+    const badgeColor = isConfirmed
+      ? 'bg-red-500/20 text-red-300 border-red-500/40'
+      : (severity === 'HIGH' ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40');
+
+    const openphishCount = data.openphish?.total_feed_entries || 0;
+    const phishuntCount = data.phishunt?.total_feed_entries || 0;
+    const matchedSources = (data.overall_verdict?.sources_confirming || []).join(', ') || 'None (Clean)';
+
+    container.innerHTML = `
+      <div class="p-2 bg-slate-950 rounded border border-slate-800 space-y-1.5 font-mono text-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-white">${data.target}</span>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">
+            ${severity} (${data.overall_verdict?.confidence_score || 0}% Conf)
+          </span>
+        </div>
+        <div class="text-[11px] grid grid-cols-2 gap-1 text-slate-300 pt-1 border-t border-slate-800/60">
+          <div><span class="text-slate-500">OpenPhish Entries:</span> <strong class="text-white">${openphishCount.toLocaleString()}</strong></div>
+          <div><span class="text-slate-500">Phishunt Entries:</span> <strong class="text-white">${phishuntCount.toLocaleString()}</strong></div>
+          <div><span class="text-slate-500">Match Found:</span> <strong class="${isConfirmed ? 'text-red-400' : 'text-emerald-400'}">${isConfirmed ? 'YES' : 'NO'}</strong></div>
+          <div><span class="text-slate-500">Confirmed By:</span> <strong class="text-white">${matchedSources}</strong></div>
+        </div>
+        <div class="text-[10px] text-slate-400 pt-1 border-t border-slate-800/60 font-sans">
+          ${data.tactical_guidance}
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400 text-xs">Phishing feed query error: ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origBtnHtml;
+  }
+}
+
+// ==========================================
+// 21. WEB TECHNOLOGY & PHISHING KIT STACK FINGERPRINTER
+// ==========================================
+async function runWebTechFingerprint() {
+  const urlInput = document.getElementById('webtech-url-input');
+  const container = document.getElementById('webtech-results');
+  const btn = document.getElementById('btn-webtech-run');
+
+  const url = urlInput?.value.trim() || 'https://paypal-security-login.top';
+
+  const origBtnHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Probing...`;
+  container.innerHTML = '<span class="text-cyan-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Probing HTTP headers, server banners, and phish kit signatures...</span>';
+
+  try {
+    const res = await fetch('/api/recon/web-technology', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url })
+    });
+    const data = await res.json();
+
+    const techs = (data.technologies_detected || []).map(t => `
+      <span class="px-1.5 py-0.2 bg-cyan-950/80 text-cyan-300 rounded font-mono text-[10px] border border-cyan-800/50">${t}</span>
+    `).join(' ') || '<span class="text-slate-500 text-[10px]">None identified</span>';
+
+    const markers = (data.phishing_kit_markers || []).map(m => `
+      <span class="px-1.5 py-0.2 bg-red-950/80 text-red-300 rounded font-mono text-[10px] border border-red-800/50">${m}</span>
+    `).join(' ') || '<span class="text-emerald-400 text-[10px]">Zero explicit kit tokens</span>';
+
+    const secHeaders = data.security_headers || {};
+    const hstsText = secHeaders.strict_transport_security ? '<span class="text-emerald-400">Yes</span>' : '<span class="text-red-400">Missing</span>';
+    const cspText = secHeaders.content_security_policy ? '<span class="text-emerald-400">Yes</span>' : '<span class="text-red-400">Missing</span>';
+    const xfoText = secHeaders.x_frame_options ? '<span class="text-emerald-400">Yes</span>' : '<span class="text-red-400">Missing</span>';
+
+    container.innerHTML = `
+      <div class="p-2 bg-slate-950 rounded border border-slate-800 space-y-1.5 font-mono text-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-white truncate max-w-[200px]">${data.url}</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300">
+            HTTP ${data.status_code || 200}
+          </span>
+        </div>
+        <div class="text-[11px] grid grid-cols-2 gap-1 text-slate-300 pt-1 border-t border-slate-800/60">
+          <div><span class="text-slate-500">Server:</span> <strong class="text-cyan-300">${data.server || 'Generic/Cloudflare'}</strong></div>
+          <div><span class="text-slate-500">HSTS / CSP:</span> <strong>${hstsText} / ${cspText}</strong></div>
+        </div>
+        <div class="pt-0.5 text-[10px]">
+          <span class="text-slate-500 block mb-0.5">Stack Components:</span>
+          <div class="flex flex-wrap gap-1">${techs}</div>
+        </div>
+        <div class="pt-0.5 text-[10px]">
+          <span class="text-slate-500 block mb-0.5">Phishing Kit / C2 Markers:</span>
+          <div class="flex flex-wrap gap-1">${markers}</div>
+        </div>
+        <div class="text-[10px] text-slate-400 pt-1 border-t border-slate-800/60 font-sans">
+          ${data.tactical_assessment}
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400 text-xs">Web tech fingerprint error: ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origBtnHtml;
+  }
+}
+
+// ==========================================
+// 22. REVERSE IMAGE SEARCH DISPATCHER (TinEye, Yandex, Google Lens, Bing)
+// ==========================================
+async function dispatchReverseSearch(engine) {
+  let imgUrl = '';
+  const suspectImg = document.getElementById('visual-suspect-img');
+  if (suspectImg && suspectImg.src && !suspectImg.src.startsWith('data:') && !suspectImg.src.includes('placeholder')) {
+    imgUrl = suspectImg.src;
+  } else if (currentCase && currentCase.primary_threat_domain) {
+    imgUrl = `https://${currentCase.primary_threat_domain}/favicon.ico`;
+  } else {
+    imgUrl = 'https://paypal-security-login.top/logo.png';
+  }
+
+  try {
+    const res = await fetch('/api/recon/reverse-image-search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image_url: imgUrl })
+    });
+    const data = await res.json();
+    const targetUrl = data.search_engines?.[engine]?.url;
+    if (targetUrl) {
+      window.open(targetUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      alert(`Search engine ${engine} not found in response.`);
+    }
+  } catch (err) {
+    alert("Reverse image search error: " + err.message);
+  }
+}
+
+// ==========================================
+// 23. PHONEINFOGA FRAUDULENT PHONE OSINT CONTROLLER
+// ==========================================
+async function runFraudPhoneScan() {
+  const phoneInput = document.getElementById('fraud-phone-input');
+  const container = document.getElementById('fraud-phone-results');
+  const btn = document.getElementById('btn-fraud-phone-run');
+
+  const phone_number = phoneInput?.value.trim() || '+1-800-442-1234';
+
+  const origBtnHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Auditing...`;
+  container.innerHTML = '<span class="text-purple-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Parsing E.164, detecting toll-free fraud risk, and generating scam dossiers...</span>';
+
+  try {
+    const res = await fetch('/api/recon/fraud-phone', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone_number })
+    });
+    const data = await res.json();
+
+    const severity = data.severity || 'LOW';
+    const isCritical = severity === 'CRITICAL';
+    const isHigh = severity === 'HIGH';
+    const badgeColor = isCritical
+      ? 'bg-red-500/20 text-red-300 border-red-500/40'
+      : (isHigh ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40');
+
+    const indicatorsHtml = (data.fraud_indicators || []).map(ind => `
+      <div class="text-[11px] text-amber-300 flex items-center space-x-1.5">
+        <i class="fa-solid fa-triangle-exclamation text-[9px] text-amber-400"></i>
+        <span>${ind}</span>
+      </div>
+    `).join('') || '<span class="text-emerald-400 text-[11px]">No immediate toll-free exploitation flags</span>';
+
+    const rep = data.reputation_searches || {};
+
+    container.innerHTML = `
+      <div class="p-2.5 bg-slate-950 rounded border border-slate-800 space-y-2 text-xs">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="font-bold text-white font-mono text-sm">${data.international_format || data.e164}</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] bg-slate-800 text-purple-300 font-mono">${data.line_type}</span>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">
+            ${severity} (Fraud Risk: ${data.fraud_risk_score}/100)
+          </span>
+        </div>
+
+        <div class="text-[11px] grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-slate-300 font-mono pt-1 border-t border-slate-800/60">
+          <div><span class="text-slate-500">E.164:</span> <strong class="text-white">${data.e164}</strong></div>
+          <div><span class="text-slate-500">Country:</span> <strong class="text-white">${data.probable_country} (${data.country_code})</strong></div>
+          <div><span class="text-slate-500">National:</span> <strong class="text-white">${data.national_format}</strong></div>
+          <div><span class="text-slate-500">Risk Profile:</span> <strong class="${isCritical ? 'text-red-400' : 'text-emerald-400'}">${severity}</strong></div>
+        </div>
+
+        <div class="pt-1 border-t border-slate-800/60 space-y-1">
+          <span class="text-[10px] text-slate-500 font-mono font-bold block">Fraud &amp; Vishing Threat Signals:</span>
+          ${indicatorsHtml}
+        </div>
+
+        <div class="pt-1.5 border-t border-slate-800/60">
+          <span class="text-[10px] text-slate-500 font-mono font-bold block mb-1">1-Click Public Complaint &amp; Lookup Dossiers:</span>
+          <div class="flex flex-wrap gap-1.5">
+            <a href="${rep.whocalledme}" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white rounded text-[10px] font-semibold flex items-center space-x-1">
+              <span>WhoCalledMe</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+            </a>
+            <a href="${rep['800notes']}" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 bg-amber-600/30 hover:bg-amber-600 text-amber-300 hover:text-white rounded text-[10px] font-semibold flex items-center space-x-1">
+              <span>800notes</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+            </a>
+            <a href="${rep.scampulse}" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 bg-red-600/30 hover:bg-red-600 text-red-300 hover:text-white rounded text-[10px] font-semibold flex items-center space-x-1">
+              <span>ScamPulse</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+            </a>
+            <a href="${rep.truecaller}" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 bg-cyan-600/30 hover:bg-cyan-600 text-cyan-300 hover:text-white rounded text-[10px] font-semibold flex items-center space-x-1">
+              <span>Truecaller</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+            </a>
+            <a href="${rep.google_dork}" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 bg-emerald-600/30 hover:bg-emerald-600 text-emerald-300 hover:text-white rounded text-[10px] font-semibold flex items-center space-x-1">
+              <span>Google Dork</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="text-[10px] text-slate-400 pt-1 border-t border-slate-800/60 font-sans italic">
+          ${data.tactical_assessment}
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400 text-xs">Fraud phone audit error: ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origBtnHtml;
+  }
+}
+
+// ==========================================
+// 24. ONIONSEARCH & AHMIA.FI DARK WEB BRAND HUNTER CONTROLLER
+// ==========================================
+async function runDarkwebSearch() {
+  const brandInput = document.getElementById('darkweb-brand-input');
+  const domainInput = document.getElementById('darkweb-domain-input');
+  const container = document.getElementById('darkweb-search-results');
+  const btn = document.getElementById('btn-darkweb-run');
+
+  const brand = brandInput?.value.trim() || 'PayPal';
+  const domain = domainInput?.value.trim() || 'paypal.com';
+
+  const origBtnHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Searching...`;
+  container.innerHTML = '<span class="text-violet-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Generating Tor hidden service brand queries via OnionSearch methodology...</span>';
+
+  try {
+    const res = await fetch('/api/recon/darkweb-search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ brand, domain })
+    });
+    const data = await res.json();
+
+    const gateways = data.darkweb_gateways || {};
+
+    container.innerHTML = `
+      <div class="p-2.5 bg-slate-950 rounded border border-slate-800 space-y-2 text-xs">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="font-bold text-white text-sm">${data.brand}</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] bg-slate-800 text-violet-300 font-mono">Dark Web Brand Abuse</span>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-violet-500/20 text-violet-300 border border-violet-500/40 font-mono">
+            TOR HIDDEN SERVICES
+          </span>
+        </div>
+
+        <div class="pt-1 border-t border-slate-800/60">
+          <span class="text-[10px] text-slate-500 font-mono font-bold block mb-1">1-Click Tor Search Gateways (Live Clearnet Bridges):</span>
+          <div class="flex flex-wrap gap-2">
+            ${gateways.ahmia_fi ? `
+              <a href="${gateways.ahmia_fi.url}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-violet-600/30 hover:bg-violet-600 text-violet-300 hover:text-white rounded text-[11px] font-semibold flex items-center space-x-1.5">
+                <i class="fa-solid fa-magnifying-glass text-[10px]"></i>
+                <span>Ahmia.fi (Recommended)</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+              </a>
+            ` : ''}
+            ${gateways.onionland ? `
+              <a href="${gateways.onionland.url}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white rounded text-[11px] font-semibold flex items-center space-x-1.5">
+                <i class="fa-solid fa-onion text-[10px]"></i>
+                <span>OnionLand Engine</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+              </a>
+            ` : ''}
+            ${gateways.torlink ? `
+              <a href="${gateways.torlink.url}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-amber-600/30 hover:bg-amber-600 text-amber-300 hover:text-white rounded text-[11px] font-semibold flex items-center space-x-1.5">
+                <i class="fa-solid fa-link text-[10px]"></i>
+                <span>Tor.link</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+              </a>
+            ` : ''}
+          </div>
+        </div>
+
+        <div class="pt-1 border-t border-slate-800/60 font-mono text-[10px]">
+          <span class="text-slate-500 block mb-0.5">OnionSearch CLI Command (Terminal / Tor SOCKS5):</span>
+          <div class="bg-slate-900 p-1.5 rounded text-violet-300 select-all border border-slate-800">${data.onionsearch_cli_command}</div>
+        </div>
+
+        <div class="text-[10px] text-slate-400 pt-1 border-t border-slate-800/60 font-sans italic">
+          ${data.tactical_guidance}
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-400 text-xs">Dark web search error: ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origBtnHtml;
+  }
+}
+

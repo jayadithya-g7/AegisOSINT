@@ -452,6 +452,33 @@ A rigorous architectural survey of over 1,700 public repositories across GitHub 
    - **STIX 2.1 Standard**: Generates valid OASIS STIX 2.1 JSON Bundles comprising `identity` (victim brand), `threat-actor` (campaign syndicate), `indicator` (domain & IP IoCs), `infrastructure` (bulletproof ASN and nameservers), `attack-pattern` (MITRE ATT&CK techniques), and directional `relationship` objects.
    - **MISP 2.4 Standard**: Generates standard MISP Event JSON (`{"Event": { ... "Attribute": [...] }}`) with categorized network activity, payload delivery, and attribution tags ready for instantaneous import into enterprise MISP instances and SOAR playbooks.
 
+### 8.12 Synthesis of Open-Source Online Threat Feeds & Ground-Truth OSINT Engines
+To fulfill the Problem Statement requirements across all 4 core vectors (Suspicious Domains, Cloned Logos, Fraudulent Communication, and Cybercrime Link Analysis), AegisOSINT incorporates live open-source feeds and web-scale search dispatchers:
+
+1. **Live Community Phishing Feeds (`OpenPhish` & `Phishunt`)**:
+   - **Ground-Truth Verification**: Queries live, community-vetted phishing feeds (`https://openphish.com/feed.txt` and `https://phishunt.io/feed.txt`) containing tens of thousands of active zero-day phishing URLs.
+   - **Zero-Key Ingestion**: Direct HTTPS port 443 stream parsing with sub-second lookups, instantly confirming known phishing campaigns before executing downstream heuristic scans.
+
+2. **`sundowndev/PhoneInfoga` Fraudulent Communication & Smishing Phone OSINT**:
+   - **Helpline & Smishing Triage**: Addresses fraudulent customer support helplines, bank vishing lures, and smishing SMS sender headers.
+   - **ITU-T E.164 Parsing**: Normalizes international dialing codes, extracts national prefixes, and classifies carrier line types (`TOLL_FREE`, `PREMIUM_RATE`, `MOBILE`, `LANDLINE`).
+   - **Scam Risk Quantification**: Flags toll-free VoIP exploitation (1-800, 1-888, 1-877) commonly provisioned by tech support impersonators, and links directly to verified consumer complaint registries: *WhoCalledMe*, *800notes*, *ScamPulse*, *Truecaller*, and precision Google Fraud Dorks.
+
+3. **Reverse Image Search Engine Dispatchers (`TinEye`, `Yandex Images`, `Google Lens`, `Bing Visual`)**:
+   - **Global Visual Footprinting**: Generates precision encoded query URLs across 4 premier global reverse image search engines.
+   - **Zero-Failure CAPTCHA Bypass**: Dispatches the investigator directly to search engine results without encountering headless bot protections or cloud anti-scraping blockers, mapping unauthorized brand logo re-hosting across the entire open web.
+
+4. **`sharsil/favicorn` & `eremit4/favihunter` Shodan Favicon MurmurHash3 Engine**:
+   - **Global IPv4 Search**: Computes pure-Python 32-bit x86 MurmurHash3 hashes across RFC 2045 base64 favicon byte streams matching the exact implementation used by Shodan (`http.favicon.hash:<hash>`) and Censys.
+   - **C2 Phishing Server Unmasking**: Discovers hidden, unindexed origin IP servers and phishing hosting clusters sharing identical cryptographic brand favicons regardless of DNS masking.
+
+5. **`megadose/OnionSearch` & `Ahmia.fi` Tor Hidden Service Brand Intelligence**:
+   - **Dark Web Infiltration**: Maps brand impersonation across Tor .onion hidden services using Ahmia.fi, OnionLand Engine, and Tor.link clearnet bridges.
+   - **Command-Line Reproducibility**: Generates direct `onionsearch` CLI commands for darknet terminal investigations over SOCKS5 proxy routing.
+
+6. **`Wappalyzer` & `WebTech` Phishing Kit Stack Fingerprinter**:
+   - **Passive Web Server & Kit Inspection**: Probes remote HTTP response headers, server banners, runtime frameworks, and DOM indicators to identify hosting setups (`cPanel/WHM`, `WordPress`) and detect embedded phishing kit exfiltration endpoints (Telegram Bot API, Discord Webhooks).
+
 ---
 
 ## 9. Conclusion

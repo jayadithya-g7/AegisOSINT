@@ -474,6 +474,65 @@
           </div>
         </div>
 
+        <!-- Live Open-Source Phishing Feeds & WebTech Analyzer Grid -->
+        <div class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <!-- Card A: Live Phishing Feeds (OpenPhish & Phishunt) -->
+          <div class="p-4 bg-slate-950/60 rounded-xl border border-slate-800 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/20 text-red-300 border border-red-500/30 font-mono">
+                  OPENPHISH &bull; PHISHUNT &bull; URLHAUS
+                </span>
+                <h4 class="text-xs font-bold text-white mt-1 flex items-center space-x-1.5">
+                  <i class="fa-solid fa-database text-red-400"></i>
+                  <span>Live Open-Source Phishing Database Verifier</span>
+                </h4>
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-400">
+              Cross-reference against thousands of live confirmed zero-day phishing URLs from community repositories in real time.
+            </p>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="phishfeed-target-input" value="paypal-security-login.top" placeholder="Domain, URL, or Brand" class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono">
+              <button onclick="runPhishingFeedCheck()" id="btn-phishfeed-run" class="px-3.5 py-1.5 bg-red-700 hover:bg-red-600 text-white rounded text-xs font-semibold transition flex items-center space-x-1">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Check Feeds</span>
+              </button>
+            </div>
+            <div id="phishfeed-results" class="max-h-36 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2 text-xs space-y-1">
+              <span class="text-slate-500 text-[11px]">Click 'Check Feeds' to query live OpenPhish and Phishunt databases.</span>
+            </div>
+          </div>
+
+          <!-- Card B: Web Tech & Fake Website Fingerprinter (Wappalyzer / WebTech) -->
+          <div class="p-4 bg-slate-950/60 rounded-xl border border-slate-800 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-mono">
+                  WAPPALYZER &bull; WEBTECH OSINT
+                </span>
+                <h4 class="text-xs font-bold text-white mt-1 flex items-center space-x-1.5">
+                  <i class="fa-solid fa-microchip text-cyan-400"></i>
+                  <span>Web Technology &amp; Phishing Kit Stack Fingerprinter</span>
+                </h4>
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-400">
+              Inspects remote HTTP headers, CMS, cPanel webmail ports, reverse proxies, and embedded C2 tokens.
+            </p>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="webtech-url-input" value="https://paypal-security-login.top" placeholder="https://target.com" class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono">
+              <button onclick="runWebTechFingerprint()" id="btn-webtech-run" class="px-3.5 py-1.5 bg-cyan-700 hover:bg-cyan-600 text-white rounded text-xs font-semibold transition flex items-center space-x-1">
+                <i class="fa-solid fa-fingerprint"></i>
+                <span>Fingerprint</span>
+              </button>
+            </div>
+            <div id="webtech-results" class="max-h-36 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2 text-xs space-y-1">
+              <span class="text-slate-500 text-[11px]">Click 'Fingerprint' to probe remote web server and framework stacks.</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Domain Results Table -->
         <div class="mt-6">
           <div class="flex items-center justify-between mb-3">
@@ -599,6 +658,18 @@
                   </div>
                   <div class="flex items-center space-x-1" id="hash-murmur3-links">
                     <!-- Links injected via JS -->
+                  </div>
+                </div>
+                <div class="bg-slate-900/40 p-2.5 rounded border border-slate-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                  <div>
+                    <span class="text-slate-500 block text-[10px]">Reverse Image Search (TinEye &amp; Yandex):</span>
+                    <span class="text-slate-300 text-[11px]">Track unauthorized logo re-hosting globally</span>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-1" id="reverse-search-links">
+                    <button onclick="dispatchReverseSearch('tineye')" class="px-2 py-0.5 bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white rounded text-[10px] font-semibold">TinEye</button>
+                    <button onclick="dispatchReverseSearch('yandex')" class="px-2 py-0.5 bg-red-600/30 hover:bg-red-600 text-red-300 hover:text-white rounded text-[10px] font-semibold">Yandex</button>
+                    <button onclick="dispatchReverseSearch('lens')" class="px-2 py-0.5 bg-emerald-600/30 hover:bg-emerald-600 text-emerald-300 hover:text-white rounded text-[10px] font-semibold">Google Lens</button>
+                    <button onclick="dispatchReverseSearch('bing')" class="px-2 py-0.5 bg-amber-600/30 hover:bg-amber-600 text-amber-300 hover:text-white rounded text-[10px] font-semibold">Bing</button>
                   </div>
                 </div>
               </div>
@@ -785,6 +856,37 @@
                 <!-- Rendered by JS -->
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- PhoneInfoga: Fraudulent Helpline & Smishing Phone OSINT Analyzer -->
+        <div class="mt-6 p-5 bg-slate-950/60 rounded-xl border border-slate-800 space-y-3">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30 font-mono">
+                  sundowndev/PhoneInfoga &bull; ITU E.164
+                </span>
+                <span class="text-xs text-slate-400 font-mono">Toll-Free Fraud &bull; Smishing Lure Intel</span>
+              </div>
+              <h3 class="text-sm font-bold text-white mt-1 flex items-center space-x-2">
+                <i class="fa-solid fa-phone-volume text-purple-400"></i>
+                <span>Fraudulent Customer Support Helpline &amp; Smishing Phone OSINT</span>
+              </h3>
+              <p class="text-xs text-slate-400">
+                Audits suspicious phone numbers extracted from phishing emails, SMS smishing lures, and fake tech support sites across global scam complaint registries.
+              </p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <input type="text" id="fraud-phone-input" value="+1-800-442-1234" placeholder="+1-800-XXX-XXXX or +44..." class="w-56 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono">
+              <button onclick="runFraudPhoneScan()" id="btn-fraud-phone-run" class="px-3.5 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-semibold transition flex items-center space-x-1.5 shadow-md">
+                <i class="fa-solid fa-phone-slash"></i>
+                <span>Audit Phone</span>
+              </button>
+            </div>
+          </div>
+          <div id="fraud-phone-results" class="max-h-56 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-3 text-xs space-y-2">
+            <span class="text-slate-500 text-[11px]">Click 'Audit Phone' to evaluate carrier line type, toll-free impersonation indicators, and public scam dossiers.</span>
           </div>
         </div>
       </div>
@@ -1630,6 +1732,38 @@
           </div>
           <div class="max-h-72 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2.5 text-xs space-y-2" id="recon-pagodo-results">
             <span class="text-slate-500 text-[11px]">Click 'Generate 12 Dorks' to build multi-engine passive recon queries.</span>
+          </div>
+        </div>
+
+        <!-- Tool 15: OnionSearch & Ahmia.fi Tor Hidden Service Dark Web Brand Hunter -->
+        <div class="mt-6 bg-slate-950/60 p-5 rounded-xl border border-slate-800 space-y-3">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30 font-mono">
+                  megadose/OnionSearch &bull; Ahmia.fi API
+                </span>
+                <span class="text-xs text-slate-400 font-mono">Dark Web Brand Abuse &bull; Tor Hidden Services</span>
+              </div>
+              <h3 class="text-sm font-bold text-white mt-1 flex items-center space-x-2">
+                <i class="fa-solid fa-user-ninja text-violet-400"></i>
+                <span>OnionSearch Tor Hidden Service &amp; Dark Web Brand Intelligence</span>
+              </h3>
+              <p class="text-xs text-slate-400">
+                Discovers illicit brand mentions, counterfeit shops, credential dump pastebins, and phishing mirrors hosted across Tor .onion hidden services.
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <input type="text" id="darkweb-brand-input" value="PayPal" placeholder="Brand" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white w-28">
+              <input type="text" id="darkweb-domain-input" value="paypal.com" placeholder="Domain (optional)" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-mono w-40">
+              <button onclick="runDarkwebSearch()" id="btn-darkweb-run" class="px-3.5 py-1.5 bg-violet-600 hover:bg-violet-500 text-white rounded text-xs font-semibold transition flex items-center space-x-1">
+                <i class="fa-solid fa-satellite-dish"></i>
+                <span>Search Dark Web</span>
+              </button>
+            </div>
+          </div>
+          <div class="max-h-60 overflow-y-auto border border-slate-800/80 rounded bg-slate-900/60 p-2.5 text-xs space-y-2" id="darkweb-search-results">
+            <span class="text-slate-500 text-[11px]">Click 'Search Dark Web' to generate precision Ahmia.fi, OnionLand, and Tor search queries.</span>
           </div>
         </div>
       </div>

@@ -30,6 +30,7 @@ from .modules.holehe_email_scanner import HoleheEmailScanner
 from .modules.opencti_stix2_bridge import OpenCTISTIX2Bridge
 from .modules.pagodo_dork_engine import PagodoDorkEngine
 from .modules.robofinder_forensics import RobofinderForensics
+from .modules.open_threat_feeds import OpenThreatFeeds
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -64,6 +65,7 @@ holehe_scanner = HoleheEmailScanner()
 opencti_bridge = OpenCTISTIX2Bridge()
 pagodo_engine = PagodoDorkEngine()
 robofinder = RobofinderForensics()
+open_threat_feeds = OpenThreatFeeds()
 
 # Load sample cases into graph on startup
 BASE_DIR = os.path.dirname(__file__)
@@ -869,6 +871,66 @@ def export_misp_event_json(req: OpenCTIExportRequest):
         resolved_ips=req.resolved_ips,
         threat_score=req.threat_score or 85
     )
+
+
+# Open Threat Feeds & Online OSINT Synthesis Request Models & Routes
+class PhishingFeedRequest(BaseModel):
+    target: str
+    brand: Optional[str] = None
+
+class FraudPhoneRequest(BaseModel):
+    phone_number: str
+
+class ReverseImageRequest(BaseModel):
+    image_url: str
+
+class DarkwebSearchRequest(BaseModel):
+    brand: str
+    domain: Optional[str] = None
+
+class WebTechRequest(BaseModel):
+    url: str
+
+
+@app.post("/api/recon/live-phishing-feeds")
+def query_live_phishing_feeds(req: PhishingFeedRequest):
+    """
+    Checks target domain/URL against live OpenPhish & Phishunt community threat feeds.
+    """
+    return open_threat_feeds.check_live_phishing_feeds(req.target, req.brand)
+
+
+@app.post("/api/recon/fraud-phone")
+def audit_fraud_phone(req: FraudPhoneRequest):
+    """
+    Analyzes phone numbers found in fraudulent communication (PhoneInfoga methodology).
+    """
+    return open_threat_feeds.analyze_fraud_phone_number(req.phone_number)
+
+
+@app.post("/api/recon/reverse-image-search")
+def generate_reverse_image_search(req: ReverseImageRequest):
+    """
+    Generates 1-click reverse image search queries for TinEye, Yandex, Google Lens, and Bing.
+    """
+    return open_threat_feeds.generate_reverse_image_search_links(req.image_url)
+
+
+@app.post("/api/recon/darkweb-search")
+def query_darkweb_brand(req: DarkwebSearchRequest):
+    """
+    Generates Tor hidden service search links (Ahmia.fi, OnionLand) via OnionSearch methodology.
+    """
+    return open_threat_feeds.generate_darkweb_brand_searches(req.brand, req.domain)
+
+
+@app.post("/api/recon/web-technology")
+def fingerprint_web_technology(req: WebTechRequest):
+    """
+    Fingerprints web server, framework, CMS, and security headers of suspect fake websites.
+    """
+    return open_threat_feeds.fingerprint_web_technology(req.url)
+
 
 
 
