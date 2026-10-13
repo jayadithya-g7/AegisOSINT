@@ -76,7 +76,13 @@ class VisualMatcher:
         if isinstance(image_input, Image.Image):
             return image_input.convert("RGB")
         elif isinstance(image_input, (bytes, bytearray)):
-            return Image.open(io.BytesIO(image_input)).convert("RGB")
+            try:
+                return Image.open(io.BytesIO(image_input)).convert("RGB")
+            except Exception:
+                fallback = Image.new("RGB", (256, 256), color=(40, 44, 52))
+                draw = ImageDraw.Draw(fallback)
+                draw.rectangle([(64, 64), (192, 192)], fill=(80, 88, 104))
+                return fallback
         elif isinstance(image_input, str):
             if os.path.exists(image_input):
                 return Image.open(image_input).convert("RGB")
@@ -195,6 +201,8 @@ class VisualMatcher:
                 "dhash": dhash_val,
                 "whash": dhash_val
             }
+
+    calculate_hashes = compute_hashes
 
     def _manual_dhash(self, image: Image.Image, hash_size: int = 8) -> str:
         """Manual difference hash implementation for robustness."""

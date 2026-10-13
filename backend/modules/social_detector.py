@@ -168,6 +168,8 @@ class SocialMediaDetector:
             "suspect_handle": f"@{suspect_handle}",
             "display_name": display_name,
             "impersonation_score": final_score,
+            "risk_score": final_score,
+            "is_impersonation": final_score >= 60,
             "severity": severity,
             "verdict": verdict,
             "similarity_to_authentic": sim,

@@ -218,3 +218,8 @@ class OpenCTISTIX2Bridge:
                 ]
             }
         }
+
+    # Method aliases for cross-module compatibility
+    generate_stix2_bundle = export_stix21_bundle
+    generate_misp_event_json = export_misp_event
+

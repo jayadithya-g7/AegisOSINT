@@ -36,7 +36,7 @@ class CommunicationNLPAnalyzer:
 
     def __init__(self):
         self.url_regex = re.compile(
-            r'https?://(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d+)?(?:/[^\s]*)?',
+            r'https?://(?:(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}|\d{1,3}(?:\.\d{1,3}){3})(?::\d+)?(?:/[^\s]*)?',
             re.IGNORECASE
         )
         self.email_regex = re.compile(
@@ -169,6 +169,9 @@ class CommunicationNLPAnalyzer:
             "fraud_score": final_score,
             "severity": severity,
             "verdict": verdict,
+            "urgency_score": min(45, urgency_score),
+            "harvest_score": min(45, harvest_score),
+            "sender_discrepancy": sender_discrepancy,
             "subscores": {
                 "urgency_coercion": min(45, urgency_score),
                 "harvesting_intent": min(45, harvest_score),

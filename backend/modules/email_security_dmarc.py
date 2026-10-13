@@ -101,8 +101,11 @@ class EmailSecurityDmarcAnalyzer:
             }
 
         raw_spf = spf_records[0]
-        mechanisms = raw_spf.split()
+        return self._evaluate_spf_record(raw_spf)
 
+    def _evaluate_spf_record(self, raw_spf: str) -> Dict[str, Any]:
+        """Evaluates a raw SPF TXT string directly for granular testing and analysis."""
+        mechanisms = raw_spf.split()
         all_mech = None
         for m in mechanisms:
             if m in ["-all", "~all", "?all", "+all"]:

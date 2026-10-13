@@ -186,13 +186,26 @@ class EntityCorrelationGraph:
                 "connected_edges": self.graph.degree(node_id)
             })
 
-        return {
+        node_lookup = {
+            n: {
+                "degree": self.graph.degree(n),
+                "degree_centrality": round(deg_centrality.get(n, 0), 4),
+                "betweenness_centrality": round(between_centrality.get(n, 0), 4),
+                "pagerank": round(pagerank.get(n, 0), 4)
+            }
+            for n in self.graph.nodes
+        }
+
+        result = {
             "total_nodes": self.graph.number_of_nodes(),
             "total_edges": self.graph.number_of_edges(),
             "syndicates_count": len(syndicates),
             "top_infrastructure_pivots": pivots,
-            "syndicates": syndicates
+            "syndicates": syndicates,
+            "nodes": node_lookup
         }
+        result.update(node_lookup)
+        return result
 
     def export_to_cytoscape_json(self) -> Dict[str, Any]:
         """Exports graph in standard Cytoscape.js JSON structure for web UI rendering."""
@@ -236,3 +249,7 @@ class EntityCorrelationGraph:
                 "syndicates": metrics.get("syndicates_count", 0)
             }
         }
+
+    # Method alias
+    calculate_centrality_metrics = calculate_graph_metrics
+

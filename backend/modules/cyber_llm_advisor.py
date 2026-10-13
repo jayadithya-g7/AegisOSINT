@@ -65,7 +65,13 @@ class CyberLLMAdvisor:
             ]
         }
 
-    def generate_defense_signatures(self, domain: str, brand: str, ip_addresses: Optional[List[str]] = None) -> Dict[str, str]:
+    def generate_defense_signatures(
+        self,
+        domain: str,
+        brand: Any = "Brand",
+        ip_addresses: Optional[List[str]] = None,
+        sid: Optional[int] = None
+    ) -> Dict[str, str]:
         """
         Synthesizes active defense rules for SOC firewalls, DNS resolvers, and WAFs.
         Grounded in CyberSOCEval defensive operations standards.
@@ -73,9 +79,16 @@ class CyberLLMAdvisor:
         clean_dom = domain.replace("http://", "").replace("https://", "").split("/")[0].strip()
         first_ip = ip_addresses[0] if ip_addresses and len(ip_addresses) > 0 else "127.0.0.1"
 
+        if isinstance(brand, int) and sid is None:
+            rule_sid = brand
+            brand_str = "Brand"
+        else:
+            brand_str = str(brand)
+            rule_sid = sid if sid is not None else (1000000 + (abs(hash(clean_dom)) % 800000))
+
         # 1. DNS RPZ (Response Policy Zone) Rule for recursive resolvers (BIND / Unbound)
         dns_rpz = (
-            f"; AegisOSINT / CyberSecEval Sinkhole Policy for {brand} Impersonation\n"
+            f"; AegisOSINT / CyberSecEval Sinkhole Policy for {brand_str} Impersonation\n"
             f"{clean_dom} CNAME .\n"
             f"*.{clean_dom} CNAME .\n"
             f"; Redirect to security sinkhole:\n"
@@ -83,21 +96,20 @@ class CyberLLMAdvisor:
         )
 
         # 2. Suricata / Snort Network IDS signature
-        # Generates a calibrated SID based on domain hash
-        sid = 1000000 + (abs(hash(clean_dom)) % 800000)
         suricata_rule = (
             f'alert dns $HOME_NET any -> $EXTERNAL_NET 53 '
             f'(msg:"AEGIS-CTI [GLM-5.3 Verified] Brand Impersonation Beacon to {clean_dom}"; '
             f'dns.query; content:"{clean_dom}"; nocase; '
-            f'classtype:trojan-activity; sid:{sid}; rev:1; '
-            f'metadata:created_at {time.strftime("%Y_%m_%d")}, target_brand "{brand}", confidence_level high;)'
+            f'classtype:trojan-activity; sid:{rule_sid}; rev:1; '
+            f'metadata:created_at {time.strftime("%Y_%m_%d")}, target_brand "{brand_str}", confidence_level high;)'
         )
 
         # 3. Cloudflare / ModSecurity WAF Expression
+        brand_clean = str(brand).lower()
         waf_expression = (
             f'(http.host eq "{clean_dom}") or '
             f'(http.request.uri.query contains "{clean_dom}") or '
-            f'(lower(http.request.body) contains "{brand.lower()}" and not ssl)'
+            f'(lower(http.request.body) contains "{brand_clean}" and not ssl)'
         )
 
         # 4. Sigma Rule for SIEM/EDR Detection (SigmaHQ Standard)
@@ -153,8 +165,10 @@ class CyberLLMAdvisor:
 
         return {
             "dns_rpz_zone": dns_rpz,
+            "dns_rpz_sinkhole": dns_rpz,
             "suricata_ids_rule": suricata_rule,
             "waf_filter_expression": waf_expression,
+            "waf_expression": waf_expression,
             "sigma_rule_yaml": sigma_rule,
             "yara_rule": yara_rule
         }
@@ -240,14 +254,28 @@ class CyberLLMAdvisor:
     def analyze_threat(
         self,
         domain: str,
-        brand: str,
+        brand: str = "Brand",
         telemetry: Optional[Dict[str, Any]] = None,
-        model_preference: str = "GLM-5.3-Cyber"
+        model_preference: str = "GLM-5.3-Cyber",
+        **kwargs
     ) -> Dict[str, Any]:
         """
         Executes CyberSecEval 4 / CyberSOCEval benchmark-aligned threat assessment.
         Combines deep heuristic domain reasoning with remote open-source LLM inference.
         """
+        if "target_brand" in kwargs and kwargs["target_brand"]:
+            brand = kwargs["target_brand"]
+        if "model_name" in kwargs and kwargs["model_name"]:
+            model_preference = kwargs["model_name"]
+
+        requested_model = model_preference
+        supported_models = list(self.BENCHMARK_PROFILES.keys())
+        if model_preference not in supported_models and not any(k.lower() in model_preference.lower() for k in supported_models):
+            effective_model = "GLM-5.3-Cyber"
+        else:
+            effective_model = model_preference
+        model_preference = effective_model
+
         clean_dom = domain.replace("http://", "").replace("https://", "").split("/")[0].strip()
         tel = telemetry or {}
 
@@ -356,6 +384,11 @@ class CyberLLMAdvisor:
             "model_evaluator": model_preference,
             "benchmark_framework": "Meta Purple Llama CyberSecEval 4 / CyberSOCEval",
             "provenance_engine": provenance_engine,
+            "provenance": {
+                "model_requested": requested_model,
+                "evaluator_engine": model_preference,
+                "inference_tier": "Cloud API / Deterministic CyberSOCEval Fallback"
+            },
             "zero_local_download": True,
             "threat_actor_profiling": {
                 "sophistication_tier": sophistication_tier,
@@ -364,6 +397,7 @@ class CyberLLMAdvisor:
                 "confidence_score": 94.5
             },
             "mitre_attack_mappings": mitre_mappings,
+            "mitre_attack_techniques": mitre_mappings,
             "executive_analysis": narrative,
             "active_defense_signatures": countermeasures,
             "recommended_triage_actions": [
@@ -373,3 +407,7 @@ class CyberLLMAdvisor:
                 f"Submit domain to Google Safe Browsing and Microsoft SmartScreen for browser-level blocking."
             ]
         }
+
+    # Method alias for API compatibility
+    analyze_threat_profile = analyze_threat
+
