@@ -1733,3 +1733,80 @@ TURN 16 | ASSISTANT RESPONSE(S)
 I have updated prompt-doc.txt to include the exact verbatim assistant response from Turn 15 that was previously output into the chat immediately following file creation, along with Turn 16 (your prompt calling this out and this response).
 
 prompt-doc.txt now contains all 16 turns from the start of the session to the present, with 100% exact verbatim wording, code blocks, tables, and architecture designs directly synchronized with the conversation transcript.
+
+================================================================================
+TURN 17 | USER PROMPT
+================================================================================
+okay write test cases, all possible edge case handling need to be addressed
+
+--------------------------------------------------------------------------------
+TURN 17 | ASSISTANT RESPONSE(S)
+--------------------------------------------------------------------------------
+
+[ASSISTANT RESPONSE (Step 1600)]:
+An exhaustive, enterprise-grade edge-case test suite (`backend/tests/test_all_edge_cases.py`) consisting of 36 dedicated edge-case test cases across all 11 system layers has been constructed and executed.
+
+### Test Execution Results
+- `pytest backend/tests/test_all_edge_cases.py -v`: **36 passed out of 36 (100%)**
+- `pytest backend/tests/ -v` (Full System Test Suite): **90 passed, 0 failed across all 8 test suites (100%)**
+
+### Comprehensive Edge Case Coverage Breakdown
+
+1. **Domain Scanner & Typo/Combosquatting Resiliency** (`TestDomainScannerEdgeCases`)
+   - Empty string inputs (`""`) returning 0 distance and 0.0 similarity without ZeroDivisionError.
+   - Identical strings returning 1.0 similarity and 0 edit distance.
+   - Punctuation-only and whitespace strings handling without crashing.
+   - Non-Latin IDN homoglyphs (Cyrillic `раураl.com` with homoglyphic 'а', 'р', 'у').
+   - URLs with dirty protocols (`https://`, `http://`), ports (`:8443`), query parameters (`?ref=1`), fragments (`#login`), and subdomains properly normalized to clean root domains.
+
+2. **Visual Matcher & Image Forensics** (`TestVisualMatcherEdgeCases`)
+   - `None`, missing file paths, empty zero-length byte buffers (`b""`), and corrupted raw byte streams gracefully handled with neutral RGBA fallback canvas.
+   - Extreme image dimensions (1x1 pixel image), solid white, solid black, and 100% transparent RGBA images computing valid non-empty perceptual and difference hashes.
+   - Shodan / Censys MurmurHash3 favicon hashing on empty buffers, short byte streams (<4 bytes), valid payloads, and PIL Image instances.
+
+3. **Communication NLP & Coercion Engine** (`TestCommunicationNLPEdgeCases`)
+   - Empty strings and whitespace-only text returning 0 score without exceptions.
+   - Very large payloads (50,000+ characters) processed without ReDoS vulnerabilities, with scores properly clamped.
+   - Foreign scripts (Cyrillic pretexts) correctly parsing embedded fraud URLs.
+   - Free webmail sender discrepancies (`@gmail.com` claiming official `@paypal.com` identity) scoring +30 points.
+   - Extraction of complex URLs with subdomains, non-standard ports, IPv4 literals (`http://192.168.1.1/login`), and anchor fragments.
+
+4. **Social Media Profile Mimicry** (`TestSocialDetectorEdgeCases`)
+   - Unicode emoji spoofing (e.g. `✔️` verification checkmark in unverified display name) triggering +30 penalty.
+   - Exact handle mimicry on unverified accounts.
+   - Empty, zeroed-out profiles (0 followers, 0 age, empty bio) returning valid normalized scores in [0, 100].
+
+5. **Multi-Factor Risk Scoring Engine** (`TestRiskScoringEngineBoundaryCases`)
+   - All-zero clean baseline evaluating to 0.0 overall risk and `BENIGN`.
+   - All-100 maximum threat clamped to 100.0 without numerical overflow.
+   - Multi-vector synergy penalty (+15 boost) verified when 3+ high-risk vectors trigger simultaneously.
+
+6. **Forensic Evidence Locker & Chain of Custody** (`TestEvidenceLockerEdgeCases`)
+   - Zero-byte payload recording with SHA-256 and SHA3-512 hashes.
+   - Cryptographic tamper detection: mutating one byte in the evidence file triggers `is_valid == False` and identifies integrity compromise.
+   - Querying non-existent evidence IDs returning `None` instead of throwing.
+
+7. **Email Security (RFC 7489 DMARC / RFC 7208 SPF)** (`TestEmailSecurityDmarcEdgeCases`)
+   - Parsing various SPF mechanisms (`-all`, `~all`, `?all`, `+all`, `include:`, `ip4:`).
+   - Strict `p=reject` vs permissive `p=none` policy inheritance and subdomain policy (`sp=`) evaluations.
+
+8. **PhoneInfoga & Telecom Fraud Recon** (`TestPhoneInfogaEdgeCases`)
+   - North American NANP toll-free prefixes (800, 888, 877, 866, 855, 844, 833) accurately tagged as high-risk spoofing vehicles.
+   - International country code mapping (+44 UK, +91 India, +49 Germany, +86 China).
+   - Heavy noise, alphanumeric junk, spaces, parentheses, and dashes properly normalized via E.164.
+
+9. **Cyber LLM Advisor & Defense Synthesis** (`TestCyberLLMAdvisorEdgeCases`)
+   - Unsupported model names gracefully falling back to deterministic `GLM-5.3-Cyber`.
+   - Defense signature synthesis (DNS RPZ zone, Suricata SID, Cloudflare WAF, Sigma YAML, YARA rule) handling numeric SID parameters and hyphenated subdomains.
+
+10. **Entity Correlation Graph & STIX 2.1 / MISP Bridge** (`TestEntityGraphAndExportEdgeCases`)
+    - Idempotent entity and relation deduplication.
+    - Graph centrality metrics on isolated singleton nodes (degree = 0).
+    - STIX 2.1 bundle export with empty IP arrays and 0 threat score.
+    - MISP event schema validation at boundary threat levels.
+
+11. **REST API Endpoints & Injection Sanitization** (`TestAPIEndpointsEdgeCases`)
+    - Invalid non-JSON request bodies returning HTTP 422 Unprocessable Entity.
+    - Missing mandatory request schema keys returning HTTP 422.
+    - SQL injection and XSS strings (`<script>alert(1)</script>'; DROP TABLE cases; --`) handled securely without 500 errors.
+    - Malformed target URLs (`http://`) returning structured responses without crashing.
