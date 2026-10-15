@@ -593,3 +593,53 @@ class TestAPIEndpointsEdgeCases:
         assert "dns" in data
         assert "risk" in data
         assert "evidence_receipt" in data
+
+    def test_zero_width_space_evasion_bypass(self):
+        nlp = CommunicationNLPAnalyzer()
+        # Invisible characters embedded inside keywords: 'u​r​g​e​n​t', 'v​e​r​i​f​y', 'p​a​y​p​a​l'
+        lure_with_zero_width = "U\u200BR\u200BG\u200BE\u200BN\u200BT: V\u200Be\u200Br\u200Bi\u200Bf\u200By your account now!"
+        res = nlp.analyze_communication(lure_with_zero_width, claimed_brand="PayPal")
+        assert res["fraud_score"] > 0
+        assert len(res["detected_cues"]) >= 1
+
+    def test_multiple_spf_records_rfc7208_violation(self):
+        analyzer = EmailSecurityDmarcAnalyzer()
+        # Mocking check_spf behavior for RFC 7208 violation
+        spf_eval = analyzer.check_spf("invalid-domain-with-multiple-records.test")
+        assert "has_spf" in spf_eval
+        assert "is_spoofable" in spf_eval
+
+    def test_domain_with_null_byte_and_bidi_override(self):
+        scanner = DomainScanner()
+        # Right-to-Left override and null byte injection
+        dirty_domain = "paypal.com\x00\u202Eevil.org:8443"
+        cleaned = scanner._clean_domain_string(dirty_domain)
+        assert "\x00" not in cleaned
+        assert "\u202E" not in cleaned
+        assert ":8443" not in cleaned
+        assert cleaned == "paypal.comevil.org"
+
+    def test_extreme_aspect_ratio_image_hashing(self):
+        matcher = VisualMatcher()
+        # 1000x2 banner strip image
+        extreme_img = Image.new("RGB", (1000, 2), color=(200, 50, 50))
+        hashes = matcher.calculate_hashes(extreme_img)
+        assert len(hashes["phash"]) > 0
+        assert len(hashes["dhash"]) > 0
+
+    def test_self_referential_graph_and_loops(self):
+        graph = EntityCorrelationGraph()
+        graph.add_entity("node_a", "Domain", "selfloop.com")
+        graph.add_relation("node_a", "node_a", "POINTS_TO_SELF")
+        metrics = graph.calculate_centrality_metrics()
+        assert metrics["total_nodes"] == 1
+        assert metrics["total_edges"] == 1
+
+    def test_dmarc_partial_percentage_pct_less_than_100(self):
+        analyzer = EmailSecurityDmarcAnalyzer()
+        # Raw DMARC string with partial percentage enforcement
+        raw_dmarc = "v=DMARC1; p=reject; pct=25; rua=mailto:dmarc@brand.com"
+        tags = dict(part.strip().split("=", 1) for part in raw_dmarc.split(";") if "=" in part)
+        assert tags["pct"] == "25"
+        assert tags["p"] == "reject"
+

@@ -226,9 +226,19 @@ class DomainScanner:
 
         return permutations
 
+    @staticmethod
+    def _clean_domain_string(domain: str) -> str:
+        """Sanitizes raw domain inputs stripping null bytes, bidi overrides, protocols, and ports."""
+        clean = re.sub(r'[\x00\r\n\t\u202E\u200E\u200F]', '', str(domain or '')).strip().lower()
+        if clean.startswith(("http://", "https://")):
+            import urllib.parse
+            clean = urllib.parse.urlparse(clean).netloc
+        clean = clean.split("/")[0].split(":")[0].rstrip(".")
+        return clean
+
     def resolve_dns(self, domain: str) -> Dict[str, Any]:
         """Performs live authoritative DNS queries across public resolvers."""
-        clean_domain = domain.strip().lower().replace("http://", "").replace("https://", "").split("/")[0]
+        clean_domain = self._clean_domain_string(domain)
         result: Dict[str, Any] = {
             "domain": clean_domain,
             "resolved": False,
@@ -329,7 +339,7 @@ class DomainScanner:
         Queries live ICANN RDAP endpoints (rdap.org) to fetch authoritative registration data,
         real registrar name, creation/expiration timestamps, domain age, and ICANN status.
         """
-        clean_domain = domain.strip().lower().replace("http://", "").replace("https://", "").split("/")[0]
+        clean_domain = self._clean_domain_string(domain)
         rdap_url = f"https://rdap.org/domain/{clean_domain}"
 
         res: Dict[str, Any] = {
@@ -480,7 +490,7 @@ class DomainScanner:
         Performs live TLS handshake with SNI on port 443.
         Extracts real X.509 cert chain, Issuer, Subject, SANs, validity period, and SHA256 fingerprint.
         """
-        clean_domain = domain.strip().lower().replace("http://", "").replace("https://", "").split("/")[0]
+        clean_domain = self._clean_domain_string(domain)
         res: Dict[str, Any] = {
             "domain": clean_domain,
             "has_ssl": False,
@@ -554,7 +564,7 @@ class DomainScanner:
         - Inspects Server header and security headers (HSTS, CSP, X-Frame-Options)
         - Extracts HTML title and identifies password/login credential input fields
         """
-        clean_domain = domain.strip().lower().replace("http://", "").replace("https://", "").split("/")[0]
+        clean_domain = self._clean_domain_string(domain)
         result = {
             "domain": clean_domain,
             "is_live": False,

@@ -46,7 +46,8 @@ class CommunicationNLPAnalyzer:
 
     def extract_urls(self, text: str) -> List[str]:
         """Extracts all embedded HTTP/HTTPS URLs from communication text."""
-        return self.url_regex.findall(text)
+        clean_text = re.sub(r'[\u200B-\u200D\uFEFF]', '', text)
+        return self.url_regex.findall(clean_text)
 
     def extract_emails(self, text: str) -> List[str]:
         """Extracts all email addresses present in text."""
@@ -65,13 +66,16 @@ class CommunicationNLPAnalyzer:
         - Sender header vs claimed brand domain discrepancy
         - Suspicious URL extraction and destination domain correlation
         """
-        text_lower = text.lower()
+        # Strip zero-width evasion characters (\u200B, \u200C, \u200D, \uFEFF, \u00A0)
+        clean_text = re.sub(r'[\u200B-\u200D\uFEFF]', '', text)
+        clean_text = clean_text.replace('\u00A0', ' ')
+        text_lower = clean_text.lower()
         score = 0
         urgency_score = 0
         harvest_score = 0
         detected_cues = []
-        extracted_urls = self.extract_urls(text)
-        extracted_emails = self.extract_emails(text)
+        extracted_urls = self.extract_urls(clean_text)
+        extracted_emails = self.extract_emails(clean_text)
 
         # 1. Evaluate urgency & fear coercion cues
         for pattern, pts, desc in URGENCY_TRIGGERS:

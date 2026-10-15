@@ -100,6 +100,17 @@ class EmailSecurityDmarcAnalyzer:
                 "explanation": f"Domain {domain} does not publish an SPF record. Attackers can forge emails from this domain with near-zero friction."
             }
 
+        if len(spf_records) > 1:
+            return {
+                "has_spf": True,
+                "raw_record": "; ".join(spf_records),
+                "all_mechanism": None,
+                "is_spoofable": True,
+                "risk_tier": "HIGH",
+                "vulnerability": "MULTIPLE_SPF_RECORDS_RFC7208_VIOLATION",
+                "explanation": f"Domain {domain} publishes {len(spf_records)} SPF records. RFC 7208 Section 3.2 specifies that multiple SPF records cause PermError, disabling SPF validation on receiving MTAs."
+            }
+
         raw_spf = spf_records[0]
         return self._evaluate_spf_record(raw_spf)
 
