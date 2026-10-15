@@ -2000,3 +2000,21 @@ The GitHub repository has been renamed to **AegisOSINT**.
 - **Updated GitHub URL**: [https://github.com/jayadithya-g7/AegisOSINT](https://github.com/jayadithya-g7/AegisOSINT)
 - **Local Git Remote**: Automatically updated to `https://github.com/jayadithya-g7/AegisOSINT.git`
 - **Execution Command**: `gh repo rename AegisOSINT --yes`
+
+================================================================================
+TURN 25 | USER PROMPT
+================================================================================
+okay create a separate folder called "Design"
+
+--------------------------------------------------------------------------------
+TURN 25 | ASSISTANT RESPONSE(S)
+--------------------------------------------------------------------------------
+
+[ASSISTANT RESPONSE (Step 1940)]:
+Created the dedicated `Design/` folder in the repository containing the complete architectural, system engineering, and UI/UX design specifications.
+
+### Files Created in `Design/`:
+1. [**`Design/README.md`**](file:///E:/osint-cia-2/Design/README.md): Index and directory overview of all design specifications and high-level architectural tiers.
+2. [**`Design/SYSTEM_DESIGN_SPECIFICATION.md`**](file:///E:/osint-cia-2/Design/SYSTEM_DESIGN_SPECIFICATION.md): High-Level Design (HLD) & Low-Level Design (LLD), component architecture, data flow diagrams (DFD), sequence diagrams, mathematical formulas (calibrated risk, perceptual hashing, synergy bonuses), STRIDE threat modeling, and NIST SP 800-86 cryptographic custody formulation.
+3. [**`Design/UI_UX_DESIGN_SYSTEM.md`**](file:///E:/osint-cia-2/Design/UI_UX_DESIGN_SYSTEM.md): SOC Dark Ops theme specifications, color token matrices, typography scale, Cytoscape.js network visual taxonomy, HUD widget anatomy, and interaction state machines.
+4. [**`Design/SYSTEM_ARCHITECTURE_DIAGRAM.svg`**](file:///E:/osint-cia-2/Design/SYSTEM_ARCHITECTURE_DIAGRAM.svg): Scalable vector graphic diagram illustrating the multi-tier ingestion, forensic engines, graph correlation, and evidence custody topology.
