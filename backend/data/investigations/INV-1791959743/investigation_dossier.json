@@ -1,0 +1,326 @@
+{
+  "case_id": "INV-1791959743",
+  "title": "FORENSIC OSINT INVESTIGATION DOSSIER: Brand Impersonation of 'PayPal'",
+  "generation_timestamp_utc": "2026-10-14T06:36:02.628345+00:00",
+  "investigator": "AegisOSINT CTI Automated Response Agent",
+  "target_brand": "PayPal",
+  "primary_subject": "paypal-security-alert-center.com",
+  "executive_summary": "On 2026-10-14, the AegisOSINT automated cyber threat intelligence system identified an active brand impersonation and online fraud campaign targeting 'PayPal'. The subject 'paypal-security-alert-center.com' demonstrates a composite risk rating of 100.0/100 (CRITICAL). Multi-vector analysis confirmed infrastructure deceptive staging, visual brand mimicry, and coordinated link correlation.",
+  "threat_assessment": {
+    "risk_score": 100.0,
+    "severity": "CRITICAL",
+    "action_priority": "P1 - Immediate Emergency Intervention",
+    "active_threat_vectors_count": 6,
+    "synergy_penalty_applied": 20.0,
+    "dimension_breakdown": {
+      "domain_lexical": {
+        "score": 85.0,
+        "weighted": 21.25
+      },
+      "infrastructure": {
+        "score": 80.0,
+        "weighted": 16.0
+      },
+      "visual_mimicry": {
+        "score": 90.0,
+        "weighted": 18.0
+      },
+      "content_nlp": {
+        "score": 100.0,
+        "weighted": 15.0
+      },
+      "social_impersonation": {
+        "score": 100.0,
+        "weighted": 10.0
+      },
+      "graph_syndicate": {
+        "score": 75.0,
+        "weighted": 7.5
+      }
+    },
+    "recommendations": [
+      "Issue expedited Domain Registrar Abuse Notice for domain suspension under ICANN UDRP / Emergency Takedown.",
+      "Submit Hosting Provider Cease-and-Desist to server ASN abuse contact.",
+      "Deploy Google Safe Browsing and Microsoft SmartScreen malicious URL reports.",
+      "Trigger social media account impersonation takedown via platform partner API.",
+      "Push IOCs (Domain, IP, Cert hash) to enterprise SIEM/EDR blocklists and DNS RPZ firewalls."
+    ],
+    "context_flags": [
+      "brand_in_domain",
+      "free_webmail_sender",
+      "fake_verification_badge",
+      "credential_harvesting"
+    ]
+  },
+  "indicators_of_compromise": {
+    "domains": [
+      "paypal-security-alert-center.com"
+    ],
+    "ip_addresses": [],
+    "phone_numbers": [
+      "+1-800-443-2679"
+    ],
+    "email_addresses": [
+      "billing-verification@gmail.com"
+    ],
+    "crypto_wallets": [
+      "0x71C8364741369796e95c1BEEf0bA24eE275817E1"
+    ]
+  },
+  "evidence_chain_of_custody": [
+    {
+      "evidence_id": "dca05071-ea2b-43ba-b757-4ebfa27d91bd",
+      "target_uri": "https://paypal-security-alert-center.com",
+      "artifact_type": "DOMAIN_TELEMETRY_SNAPSHOT",
+      "timestamp_utc": "2026-10-14T06:36:02.575836+00:00",
+      "sha256_hash": "b295818a5b6864c601d1e134c1fa8f9675b4a78db429c3290a5cdde1e9f8b71b",
+      "sha3_512_hash": "cd4d6c650173cf4bc466c69f88aaace3669f6688ce84c2ba05c6d26639d351ec49d75eaf5e2ad247864f92ce31f4a622c4763a865a5d5f04dc7a4ddb0ec140c4",
+      "byte_size": 78,
+      "previous_block_hash": "17c68ad25433a4bb9be754b2f7c0e7213efb6246aeb47ad5f14c2a0841f3e842",
+      "block_hash": "d64a604ae1d11af35d55ce8d9d137aaa0a874763cf26a0ec42a8f65f7a18845e",
+      "hmac_seal": "a5c83884100e219e6185f5ae42c378b430d65534ecfa34227403328d2cf8c8fa",
+      "collector": "AegisOSINT Forensic Daemon v1.0",
+      "artifact_file": "dca05071-ea2b-43ba-b757-4ebfa27d91bd_domain_telemetry_snapshot.dat",
+      "metadata": {},
+      "sequence": 98
+    },
+    {
+      "evidence_id": "6e57abed-ed14-45cc-b578-39976e83b3e3",
+      "target_uri": "tel:+1-800-443-2679",
+      "artifact_type": "TELECOM_FRAUD_RECORD",
+      "timestamp_utc": "2026-10-14T06:36:02.591552+00:00",
+      "sha256_hash": "d3c6baef0dc90db727422cfa10d5e7927785f8826fb786c14a2f5339db6411ce",
+      "sha3_512_hash": "183e4b6655bc1b7ca1cc8d65621f2f72a11c2cc970061cba222ffa22153b4d4b5ad881313285b2ab682a3cbeaea4864c36b88c8ff498841fb387cb73c7ca42d5",
+      "byte_size": 2200,
+      "previous_block_hash": "d64a604ae1d11af35d55ce8d9d137aaa0a874763cf26a0ec42a8f65f7a18845e",
+      "block_hash": "7e269d5c8158315b7f4996c4627400172883421f5655c1b11ccdbdc51552fc6d",
+      "hmac_seal": "db8547f2c4d07e0ca1d9c7b6de352c9d83dad5fc9c111568815c4c338f35e9dd",
+      "collector": "AegisOSINT Forensic Daemon v1.0",
+      "artifact_file": "6e57abed-ed14-45cc-b578-39976e83b3e3_telecom_fraud_record.dat",
+      "metadata": {},
+      "sequence": 99
+    },
+    {
+      "evidence_id": "866958a9-e5e9-4d20-8cb6-8fa46254bc88",
+      "target_uri": "email:billing-verification@gmail.com",
+      "artifact_type": "PHISHING_LURE_NLP_RECEIPT",
+      "timestamp_utc": "2026-10-14T06:36:02.613422+00:00",
+      "sha256_hash": "724014bbc800f53adf4301c1de4ba998a40e9d7abf31ffe5edeab9c8a464807b",
+      "sha3_512_hash": "e363d4c6e57a73df0e69d7745f56ae815829b9f8bce4619683b70ded6a9fc3fef7539787898cf394efaa5248052e5baf008b23b7270d968e1ea5a0f93717c2bf",
+      "byte_size": 1582,
+      "previous_block_hash": "7e269d5c8158315b7f4996c4627400172883421f5655c1b11ccdbdc51552fc6d",
+      "block_hash": "8e1478cf8b613e5b0ae164c5a5e78d600c8c1729a66037b9237221c9fbb9728f",
+      "hmac_seal": "4d05a17c29ca7b2350763fbdaa6ff60e189e8c96e9a8c24b8748e934b44ceb41",
+      "collector": "AegisOSINT Forensic Daemon v1.0",
+      "artifact_file": "866958a9-e5e9-4d20-8cb6-8fa46254bc88_phishing_lure_nlp_receipt.dat",
+      "metadata": {},
+      "sequence": 100
+    }
+  ],
+  "infrastructure_graph_topology": {
+    "total_nodes": 8,
+    "total_edges": 8,
+    "syndicates_count": 1,
+    "top_infrastructure_pivots": [
+      {
+        "node_id": "domain:paypal-security-alert-center.com",
+        "label": "paypal-security-alert-center.com",
+        "entity_type": "Domain",
+        "degree_centrality": 1.0,
+        "betweenness_centrality": 0.9524,
+        "pagerank": 0.4067,
+        "connected_edges": 7
+      },
+      {
+        "node_id": "brand:paypal",
+        "label": "Paypal",
+        "entity_type": "Brand",
+        "degree_centrality": 0.2857,
+        "betweenness_centrality": 0.0,
+        "pagerank": 0.1442,
+        "connected_edges": 2
+      },
+      {
+        "node_id": "soc:paypal_urgentsupport",
+        "label": "PayPal_UrgentSupport",
+        "entity_type": "Social_Account",
+        "degree_centrality": 0.2857,
+        "betweenness_centrality": 0.0,
+        "pagerank": 0.1372,
+        "connected_edges": 2
+      },
+      {
+        "node_id": "reg:unregistered_/_available",
+        "label": "Unregistered / Available",
+        "entity_type": "Registrar",
+        "degree_centrality": 0.1429,
+        "betweenness_centrality": 0.0,
+        "pagerank": 0.0523,
+        "connected_edges": 1
+      },
+      {
+        "node_id": "ns:ns1.cloudflare.com",
+        "label": "ns1.cloudflare.com",
+        "entity_type": "Nameserver",
+        "degree_centrality": 0.1429,
+        "betweenness_centrality": 0.0,
+        "pagerank": 0.0523,
+        "connected_edges": 1
+      },
+      {
+        "node_id": "ns:ns2.cloudflare.com",
+        "label": "ns2.cloudflare.com",
+        "entity_type": "Nameserver",
+        "degree_centrality": 0.1429,
+        "betweenness_centrality": 0.0,
+        "pagerank": 0.0523,
+        "connected_edges": 1
+      },
+      {
+        "node_id": "ssl:let's_encrypt_authority_x3",
+        "label": "Let's Encrypt Authority X3",
+        "entity_type": "SSL_Cert",
+        "degree_centrality": 0.1429,
+        "betweenness_centrality": 0.0,
+        "pagerank": 0.0523,
+        "connected_edges": 1
+      },
+      {
+        "node_id": "wallet:0x71c8364741369796e95c1beef0ba24ee275817e1",
+        "label": "0x71C8...17E1",
+        "entity_type": "Crypto_Wallet",
+        "degree_centrality": 0.1429,
+        "betweenness_centrality": 0.0,
+        "pagerank": 0.1027,
+        "connected_edges": 1
+      }
+    ],
+    "syndicates": [
+      {
+        "syndicate_id": "Syndicate-Cluster-1",
+        "node_count": 8,
+        "entities": [
+          "ns:ns2.cloudflare.com",
+          "soc:paypal_urgentsupport",
+          "ssl:let's_encrypt_authority_x3",
+          "wallet:0x71c8364741369796e95c1beef0ba24ee275817e1",
+          "ns:ns1.cloudflare.com",
+          "reg:unregistered_/_available",
+          "domain:paypal-security-alert-center.com",
+          "brand:paypal"
+        ],
+        "composition": {
+          "Nameserver": 2,
+          "Social_Account": 1,
+          "SSL_Cert": 1,
+          "Crypto_Wallet": 1,
+          "Registrar": 1,
+          "Domain": 1,
+          "Brand": 1
+        }
+      }
+    ],
+    "nodes": {
+      "brand:paypal": {
+        "degree": 2,
+        "degree_centrality": 0.2857,
+        "betweenness_centrality": 0.0,
+        "pagerank": 0.1442
+      },
+      "domain:paypal-security-alert-center.com": {
+        "degree": 7,
+        "degree_centrality": 1.0,
+        "betweenness_centrality": 0.9524,
+        "pagerank": 0.4067
+      },
+      "reg:unregistered_/_available": {
+        "degree": 1,
+        "degree_centrality": 0.1429,
+        "betweenness_centrality": 0.0,
+        "pagerank": 0.0523
+      },
+      "ns:ns1.cloudflare.com": {
+        "degree": 1,
+        "degree_centrality": 0.1429,
+        "betweenness_centrality": 0.0,
+        "pagerank": 0.0523
+      },
+      "ns:ns2.cloudflare.com": {
+        "degree": 1,
+        "degree_centrality": 0.1429,
+        "betweenness_centrality": 0.0,
+        "pagerank": 0.0523
+      },
+      "ssl:let's_encrypt_authority_x3": {
+        "degree": 1,
+        "degree_centrality": 0.1429,
+        "betweenness_centrality": 0.0,
+        "pagerank": 0.0523
+      },
+      "soc:paypal_urgentsupport": {
+        "degree": 2,
+        "degree_centrality": 0.2857,
+        "betweenness_centrality": 0.0,
+        "pagerank": 0.1372
+      },
+      "wallet:0x71c8364741369796e95c1beef0ba24ee275817e1": {
+        "degree": 1,
+        "degree_centrality": 0.1429,
+        "betweenness_centrality": 0.0,
+        "pagerank": 0.1027
+      }
+    },
+    "brand:paypal": {
+      "degree": 2,
+      "degree_centrality": 0.2857,
+      "betweenness_centrality": 0.0,
+      "pagerank": 0.1442
+    },
+    "domain:paypal-security-alert-center.com": {
+      "degree": 7,
+      "degree_centrality": 1.0,
+      "betweenness_centrality": 0.9524,
+      "pagerank": 0.4067
+    },
+    "reg:unregistered_/_available": {
+      "degree": 1,
+      "degree_centrality": 0.1429,
+      "betweenness_centrality": 0.0,
+      "pagerank": 0.0523
+    },
+    "ns:ns1.cloudflare.com": {
+      "degree": 1,
+      "degree_centrality": 0.1429,
+      "betweenness_centrality": 0.0,
+      "pagerank": 0.0523
+    },
+    "ns:ns2.cloudflare.com": {
+      "degree": 1,
+      "degree_centrality": 0.1429,
+      "betweenness_centrality": 0.0,
+      "pagerank": 0.0523
+    },
+    "ssl:let's_encrypt_authority_x3": {
+      "degree": 1,
+      "degree_centrality": 0.1429,
+      "betweenness_centrality": 0.0,
+      "pagerank": 0.0523
+    },
+    "soc:paypal_urgentsupport": {
+      "degree": 2,
+      "degree_centrality": 0.2857,
+      "betweenness_centrality": 0.0,
+      "pagerank": 0.1372
+    },
+    "wallet:0x71c8364741369796e95c1beef0ba24ee275817e1": {
+      "degree": 1,
+      "degree_centrality": 0.1429,
+      "betweenness_centrality": 0.0,
+      "pagerank": 0.1027
+    }
+  },
+  "takedown_notices": {
+    "registrar_abuse_letter": "SUBJECT: URGENT: Brand Impersonation & Malicious Phishing Takedown Request - Domain: paypal-security-alert-center.com\n\nDear Abuse and Legal Team,\n\nThis is a formal notification and urgent takedown request regarding the unauthorized brand impersonation, deceptive typosquatting, and fraudulent activity hosted via domain:\n\nDOMAIN IN VIOLATION: paypal-security-alert-center.com\nTARGETED TRADEMARK: PayPal\nRESOLVED IP ADDRESS(ES): \nDATE/TIME OF DETECTION (UTC): 2026-10-14T06:36:02.628371+00:00\n\n1. NATURE OF INFRINGEMENT & ABUSE:\nThe subject domain is actively impersonating the legitimate trademark and digital presence of 'PayPal'.\nOur automated OSINT and forensic verification suite has identified that this domain is configured to deceive end users, harvest unauthorized user credentials/payments, and inflict irreparable reputational and financial harm.\n\n2. FORENSIC EVIDENCE & CRYPTOGRAPHIC CHAIN OF CUSTODY:\nForensic snapshots of the domain have been preserved with immutable cryptographic hashes:\n- Evidence ID: dca05071-ea2b-43ba-b757-4ebfa27d91bd\n  Artifact: DOMAIN_TELEMETRY_SNAPSHOT\n  SHA-256: b295818a5b6864c601d1e134c1fa8f9675b4a78db429c3290a5cdde1e9f8b71b\n  Timestamp: 2026-10-14T06:36:02.575836+00:00\n- Evidence ID: 6e57abed-ed14-45cc-b578-39976e83b3e3\n  Artifact: TELECOM_FRAUD_RECORD\n  SHA-256: d3c6baef0dc90db727422cfa10d5e7927785f8826fb786c14a2f5339db6411ce\n  Timestamp: 2026-10-14T06:36:02.591552+00:00\n- Evidence ID: 866958a9-e5e9-4d20-8cb6-8fa46254bc88\n  Artifact: PHISHING_LURE_NLP_RECEIPT\n  SHA-256: 724014bbc800f53adf4301c1de4ba998a40e9d7abf31ffe5edeab9c8a464807b\n  Timestamp: 2026-10-14T06:36:02.613422+00:00\n\n3. REQUESTED ACTION:\nPursuant to ICANN Registrar Accreditation Agreement (RAA) Section 3.18, and your Acceptable Use Policy regarding deceptive and abusive registrations:\n- Immediate suspension / cancellation / delegation hold (clientHold / serverHold) of the domain 'paypal-security-alert-center.com'.\n- Disablement of active DNS resolution to protect internet users from ongoing fraud.\n\nPlease confirm receipt and acknowledge remediation within 24 hours.\n\nSincerely,\nAegisOSINT Brand Protection & Incident Response Unit\nEmail: abuse-response@aegis-osint.org\n",
+    "hosting_abuse_letter": "SUBJECT: URGENT: Cease & Desist / Phishing Infrastructure Hosting Abuse - Server: \n\nDear Abuse Department,\n\nWe have detected that infrastructure operated within your Autonomous System (ASN) is actively hosting fraudulent content and impersonation kits targeting PayPal.\n\nINFRASTRUCTURE DETAILS:\n- Domain: paypal-security-alert-center.com\n- Host IP(s): \n- Incident Type: Fraudulent Brand Impersonation & Credential Harvesting\n\nIn accordance with your terms of service regarding fraud and malicious hosting, we formally demand the immediate termination or null-routing of the hosting services supporting this malicious resource.\n\nFull forensic evidence packages have been sealed and are available upon request.\n\nRespectfully,\nAegisOSINT Digital Risk Protection Team\n"
+  }
+}

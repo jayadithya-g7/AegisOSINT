@@ -480,3 +480,12 @@ class OpenThreatFeeds:
                 "tactical_assessment": f"Probe error: {str(e)}",
                 "analysis_status": f"ERROR: {str(e)}"
             }
+
+    # Method alias
+    inspect_fraud_phone = analyze_fraud_phone_number
+
+
+# Class alias for cross-module integration
+OpenThreatFeedsAggregator = OpenThreatFeeds
+
+

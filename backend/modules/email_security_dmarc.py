@@ -317,3 +317,7 @@ class EmailSecurityDmarcAnalyzer:
             "remediation_actions": remediations,
             "methodology_reference": "RFC 7208 (SPF), RFC 7489 (DMARC), checkdmarc & parsedmarc Open Source Standards"
         }
+
+    # Method alias
+    analyze_domain_dmarc_spf = audit_domain_email_security
+

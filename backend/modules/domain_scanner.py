@@ -718,3 +718,9 @@ class DomainScanner:
             "risk_factors": risk_factors,
             "similarity_to_brand": sim
         }
+
+    # Method aliases for cross-module integration
+    query_rdap = inspect_whois_rdap
+    calculate_similarity_ratio = staticmethod(calculate_similarity_ratio)
+    calculate_levenshtein = staticmethod(calculate_levenshtein)
+

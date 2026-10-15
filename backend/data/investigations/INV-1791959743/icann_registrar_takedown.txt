@@ -1,0 +1,40 @@
+SUBJECT: URGENT: Brand Impersonation & Malicious Phishing Takedown Request - Domain: paypal-security-alert-center.com
+
+Dear Abuse and Legal Team,
+
+This is a formal notification and urgent takedown request regarding the unauthorized brand impersonation, deceptive typosquatting, and fraudulent activity hosted via domain:
+
+DOMAIN IN VIOLATION: paypal-security-alert-center.com
+TARGETED TRADEMARK: PayPal
+RESOLVED IP ADDRESS(ES): 
+DATE/TIME OF DETECTION (UTC): 2026-10-14T06:36:02.628371+00:00
+
+1. NATURE OF INFRINGEMENT & ABUSE:
+The subject domain is actively impersonating the legitimate trademark and digital presence of 'PayPal'.
+Our automated OSINT and forensic verification suite has identified that this domain is configured to deceive end users, harvest unauthorized user credentials/payments, and inflict irreparable reputational and financial harm.
+
+2. FORENSIC EVIDENCE & CRYPTOGRAPHIC CHAIN OF CUSTODY:
+Forensic snapshots of the domain have been preserved with immutable cryptographic hashes:
+- Evidence ID: dca05071-ea2b-43ba-b757-4ebfa27d91bd
+  Artifact: DOMAIN_TELEMETRY_SNAPSHOT
+  SHA-256: b295818a5b6864c601d1e134c1fa8f9675b4a78db429c3290a5cdde1e9f8b71b
+  Timestamp: 2026-10-14T06:36:02.575836+00:00
+- Evidence ID: 6e57abed-ed14-45cc-b578-39976e83b3e3
+  Artifact: TELECOM_FRAUD_RECORD
+  SHA-256: d3c6baef0dc90db727422cfa10d5e7927785f8826fb786c14a2f5339db6411ce
+  Timestamp: 2026-10-14T06:36:02.591552+00:00
+- Evidence ID: 866958a9-e5e9-4d20-8cb6-8fa46254bc88
+  Artifact: PHISHING_LURE_NLP_RECEIPT
+  SHA-256: 724014bbc800f53adf4301c1de4ba998a40e9d7abf31ffe5edeab9c8a464807b
+  Timestamp: 2026-10-14T06:36:02.613422+00:00
+
+3. REQUESTED ACTION:
+Pursuant to ICANN Registrar Accreditation Agreement (RAA) Section 3.18, and your Acceptable Use Policy regarding deceptive and abusive registrations:
+- Immediate suspension / cancellation / delegation hold (clientHold / serverHold) of the domain 'paypal-security-alert-center.com'.
+- Disablement of active DNS resolution to protect internet users from ongoing fraud.
+
+Please confirm receipt and acknowledge remediation within 24 hours.
+
+Sincerely,
+AegisOSINT Brand Protection & Incident Response Unit
+Email: abuse-response@aegis-osint.org

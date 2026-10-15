@@ -1,0 +1,44 @@
+{
+  "Event": {
+    "info": "Brand Impersonation & Phishing Campaign: PayPal (paypal-security-alert-center.com)",
+    "date": "2026-10-14",
+    "threat_level_id": "1",
+    "analysis": "2",
+    "distribution": "1",
+    "published": false,
+    "Attribute": [
+      {
+        "type": "domain",
+        "category": "Network activity",
+        "to_ids": true,
+        "value": "paypal-security-alert-center.com",
+        "comment": "Suspect brand impersonation domain targeting PayPal"
+      },
+      {
+        "type": "url",
+        "category": "Network activity",
+        "to_ids": true,
+        "value": "https://paypal-security-alert-center.com/",
+        "comment": "Suspect landing page URL"
+      }
+    ],
+    "Tag": [
+      {
+        "name": "tlp:amber",
+        "colour": "#ffc000"
+      },
+      {
+        "name": "misp-galaxy:threat-actor=\"Phishing Syndicate\"",
+        "colour": "#d9534f"
+      },
+      {
+        "name": "brand-abuse",
+        "colour": "#5bc0de"
+      },
+      {
+        "name": "target:paypal",
+        "colour": "#0275d8"
+      }
+    ]
+  }
+}

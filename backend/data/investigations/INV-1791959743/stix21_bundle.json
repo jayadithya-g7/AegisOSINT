@@ -1,0 +1,112 @@
+{
+  "type": "bundle",
+  "id": "bundle--32e190c5-ce5c-4355-8f35-bfe10fa93cf0",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "identity",
+      "spec_version": "2.1",
+      "id": "identity--1bede61b-971f-5c34-96e8-19c5b98c4b40",
+      "created": "2026-10-14T06:36:02.000Z",
+      "modified": "2026-10-14T06:36:02.000Z",
+      "name": "PayPal",
+      "identity_class": "organization",
+      "description": "Target organization and brand identity under impersonation attack: PayPal"
+    },
+    {
+      "type": "threat-actor",
+      "spec_version": "2.1",
+      "id": "threat-actor--89c3367d-876b-5502-83e3-db95c7894414",
+      "created": "2026-10-14T06:36:02.000Z",
+      "modified": "2026-10-14T06:36:02.000Z",
+      "name": "Adversary Cluster (paypal-security-alert-center.com)",
+      "threat_actor_types": [
+        "crime-syndicate",
+        "impersonator"
+      ],
+      "description": "Organized BEC Phishing Syndicate staging brand impersonation infrastructure targeting PayPal.",
+      "sophistication": "intermediate",
+      "resource_level": "organization",
+      "primary_motivation": "financial-gain"
+    },
+    {
+      "type": "infrastructure",
+      "spec_version": "2.1",
+      "id": "infrastructure--265a407e-0f97-5085-9914-b12e893f1358",
+      "created": "2026-10-14T06:36:02.000Z",
+      "modified": "2026-10-14T06:36:02.000Z",
+      "name": "Impersonation Domain (paypal-security-alert-center.com)",
+      "infrastructure_types": [
+        "phishing",
+        "command-and-control"
+      ],
+      "description": "Unauthenticated lookalike infrastructure masquerading as official PayPal web portals."
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--21414e4b-ecae-5c55-a74e-63c12470b9f9",
+      "created": "2026-10-14T06:36:02.000Z",
+      "modified": "2026-10-14T06:36:02.000Z",
+      "name": "Malicious Domain Indicator: paypal-security-alert-center.com",
+      "pattern": "[domain-name:value = 'paypal-security-alert-center.com']",
+      "pattern_type": "stix",
+      "valid_from": "2026-10-14T06:36:02.000Z",
+      "confidence": 100,
+      "indicator_types": [
+        "malicious-activity",
+        "phishing"
+      ]
+    },
+    {
+      "type": "attack-pattern",
+      "spec_version": "2.1",
+      "id": "attack-pattern--3690699f-7c41-51db-9cb5-00bcfac0e6ad",
+      "created": "2026-10-14T06:36:02.000Z",
+      "modified": "2026-10-14T06:36:02.000Z",
+      "name": "Spearphishing Link",
+      "external_references": [
+        {
+          "source_name": "mitre-attack",
+          "external_id": "T1566.002",
+          "url": "https://attack.mitre.org/techniques/T1566/002/"
+        }
+      ]
+    },
+    {
+      "type": "relationship",
+      "spec_version": "2.1",
+      "id": "relationship--4d714c00-5cc1-40cf-9670-c1f4d79bc288",
+      "created": "2026-10-14T06:36:02.000Z",
+      "modified": "2026-10-14T06:36:02.000Z",
+      "relationship_type": "uses",
+      "source_ref": "threat-actor--89c3367d-876b-5502-83e3-db95c7894414",
+      "target_ref": "infrastructure--265a407e-0f97-5085-9914-b12e893f1358"
+    },
+    {
+      "type": "relationship",
+      "spec_version": "2.1",
+      "id": "relationship--03af55c2-961b-49c4-b0d3-721fe052bfa7",
+      "created": "2026-10-14T06:36:02.000Z",
+      "modified": "2026-10-14T06:36:02.000Z",
+      "relationship_type": "targets",
+      "source_ref": "threat-actor--89c3367d-876b-5502-83e3-db95c7894414",
+      "target_ref": "identity--1bede61b-971f-5c34-96e8-19c5b98c4b40"
+    },
+    {
+      "type": "relationship",
+      "spec_version": "2.1",
+      "id": "relationship--12988662-92d8-4c8a-985c-7f8e146eeb28",
+      "created": "2026-10-14T06:36:02.000Z",
+      "modified": "2026-10-14T06:36:02.000Z",
+      "relationship_type": "indicates",
+      "source_ref": "indicator--21414e4b-ecae-5c55-a74e-63c12470b9f9",
+      "target_ref": "infrastructure--265a407e-0f97-5085-9914-b12e893f1358"
+    }
+  ],
+  "metadata": {
+    "generated_by": "AegisOSINT OpenCTI STIX2 Engine",
+    "case_id": "INV-1791959743",
+    "objects_count": 8
+  }
+}
