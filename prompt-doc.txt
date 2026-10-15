@@ -1924,3 +1924,42 @@ Yes. We have conducted an exhaustive, multi-tier adversarial audit and hardened 
 - **Total Test Suites**: 8 test files across `backend/tests/`
 - **Total Tests**: **96 passed out of 96 (100% pass rate in 103s)**
 - **Working Tree**: Clean commit on branch `master`.
+
+================================================================================
+TURN 22 | USER PROMPT
+================================================================================
+okay let's upload it to github, create a repo in main branch, here's my account, https://github.com/jayadithya-g7, push the commits
+
+--------------------------------------------------------------------------------
+TURN 22 | ASSISTANT RESPONSE(S)
+--------------------------------------------------------------------------------
+
+[ASSISTANT RESPONSE (Step 1910)]:
+The AegisOSINT repository has been successfully initialized, configured on the `main` branch, created under your GitHub account, and all commits have been pushed.
+
+### GitHub Repository Deployment Summary
+
+- **Account**: [`jayadithya-g7`](https://github.com/jayadithya-g7)
+- **Repository**: [`https://github.com/jayadithya-g7/osint-cia-2`](https://github.com/jayadithya-g7/osint-cia-2)
+- **Branch**: `main` (tracking `origin/main`)
+- **Visibility**: Public
+- **Description**: AegisOSINT - Multi-Vector Real-Time AI & Forensic Brand Impersonation & Online Fraud Detection System
+
+### Key Operations Completed
+
+1. **Branch Configuration**:
+   - Renamed local default branch from `master` to `main` via `git branch -M main`.
+
+2. **Remote Repository Creation**:
+   - Created the remote GitHub repository using GitHub CLI:
+     `gh repo create jayadithya-g7/osint-cia-2 --public --source=. --remote=origin --description "AegisOSINT - Multi-Vector Real-Time AI & Forensic Brand Impersonation & Online Fraud Detection System"`
+
+3. **Codebase & Forensic Assets Pushed**:
+   - Pushed the entire commit history and all assets to `origin/main` via `git push -u origin main`.
+   - Included subsystems:
+     - 8 Core Engine modules (`domain_scanner`, `content_inspector`, `visual_similarity`, `social_monitor`, `email_forensics`, `phone_intelligence`, `threat_graph`, `evidence_ledger`)
+     - Open-source online OSINT integrations (OpenPhish, Phishunt, PhoneInfoga, TinEye/Yandex dispatchers, Favicon Murmur3, OnionSearch)
+     - Full test suite: 96 automated tests across 8 test suites passing 100% (including 42 edge cases in `test_all_edge_cases.py`)
+     - Real-world investigation artifacts, CTI dossiers, STIX 2.1 bundles, and MISP events
+     - Verbatim transcript documentation (`prompt-doc.txt`)
+     - NIST SP 800-86 tamper-evident cryptographic hash chain ledger (`backend/data/evidence_vault/chain_of_custody_ledger.json`)

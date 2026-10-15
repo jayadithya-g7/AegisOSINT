@@ -1993,5 +1993,21 @@
     "artifact_file": "eaee977c-3b83-499a-806b-5f34815b5709_cyber_llm_advisory_report.dat",
     "metadata": {},
     "sequence": 124
+  },
+  {
+    "evidence_id": "bec4e4d9-76f4-4b6f-aac4-bb49d9d4a83f",
+    "target_uri": "live://www.snuchennai.edu.in",
+    "artifact_type": "REAL_WORLD_LIVE_SCAN_RECEIPT",
+    "timestamp_utc": "2026-10-15T04:33:06.907164+00:00",
+    "sha256_hash": "4aec8ab2388fa1afa73cc4e2f6918a1ac32da8826a0ed25768fa7be99c809e9b",
+    "sha3_512_hash": "4adf22cb6da7894a3b1eff0fd560f43b39464c024314b90e59b988abf179a1deb4945b5a3ca1e2de10afcc1b369354455673e9f7dc1aa01940f91bc944efb477",
+    "byte_size": 2922,
+    "previous_block_hash": "5ddb7a8ce396f66c592db2e1e1d45a518287cd6d3309e7adebb1bfc5d8f5bcac",
+    "block_hash": "8c753d99f6c0d98d5d1d11eeb42fe6cb36bb1b451a85192557fb41427f2148b6",
+    "hmac_seal": "31dad25e1c20882257858d9c977df26651d611f962f4c31e63dedfe8f6fcaa41",
+    "collector": "AegisOSINT Forensic Daemon v1.0",
+    "artifact_file": "bec4e4d9-76f4-4b6f-aac4-bb49d9d4a83f_real_world_live_scan_receipt.dat",
+    "metadata": {},
+    "sequence": 125
   }
 ]
