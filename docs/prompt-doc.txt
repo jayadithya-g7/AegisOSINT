@@ -1963,3 +1963,22 @@ The AegisOSINT repository has been successfully initialized, configured on the `
      - Real-world investigation artifacts, CTI dossiers, STIX 2.1 bundles, and MISP events
      - Verbatim transcript documentation (`prompt-doc.txt`)
      - NIST SP 800-86 tamper-evident cryptographic hash chain ledger (`backend/data/evidence_vault/chain_of_custody_ledger.json`)
+
+================================================================================
+TURN 23 | USER PROMPT
+================================================================================
+prompt-doc.txt take this to docs folder itself
+
+--------------------------------------------------------------------------------
+TURN 23 | ASSISTANT RESPONSE(S)
+--------------------------------------------------------------------------------
+
+[ASSISTANT RESPONSE (Step 1920)]:
+Relocated `prompt-doc.txt` to `docs/prompt-doc.txt` using Git so the entire commit and tracking history is preserved.
+
+### Actions Completed:
+1. Executed `git mv prompt-doc.txt docs/prompt-doc.txt` to move the document cleanly into the `docs/` directory.
+2. Synchronized `docs/prompt-doc.txt` with Turn 23.
+3. Committed the change:
+   `git commit -m "refactor(docs): move prompt-doc.txt into docs directory"`
+4. Pushed the update to GitHub (`origin/main`).
