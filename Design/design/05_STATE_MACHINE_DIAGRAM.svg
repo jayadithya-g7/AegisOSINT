@@ -1,0 +1,231 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1250" width="100%" height="100%" style="background:#090d16; font-family:'Segoe UI', Inter, -apple-system, sans-serif;">
+  <defs>
+    <linearGradient id="bgHeader5" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <filter id="shadow5" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <marker id="stateArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="critArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#f43f5e"/>
+    </marker>
+    <marker id="benignArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981"/>
+    </marker>
+  </defs>
+
+  <!-- Title Banner -->
+  <rect x="40" y="30" width="1520" height="70" rx="10" fill="url(#bgHeader5)" filter="url(#shadow5)"/>
+  <text x="800" y="65" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="bold" letter-spacing="1">UML STATE MACHINE &amp; STATE SPACE DIAGRAM: INCIDENT THREAT LIFECYCLE</text>
+  <text x="800" y="88" text-anchor="middle" fill="#e0e7ff" font-size="13">State Transitions, Composite States, Guard Conditions, Threat Tiers, and NIST Evidentiary Lifecycle</text>
+
+  <!-- Initial State -->
+  <circle cx="100" cy="200" r="16" fill="#38bdf8" stroke="#ffffff" stroke-width="3"/>
+  <line x1="116" y1="200" x2="160" y2="200" stroke="#38bdf8" stroke-width="2" marker-end="url(#stateArrow)"/>
+
+  <!-- State 1: DORMANT_BASELINE -->
+  <g transform="translate(160, 160)">
+    <rect x="0" y="0" width="240" height="80" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8" filter="url(#shadow5)"/>
+    <text x="120" y="28" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">DORMANT_BASELINE</text>
+    <line x1="0" y1="38" x2="240" y2="38" stroke="#334155"/>
+    <text x="12" y="55" fill="#94a3b8" font-size="10">entry / monitor_brand_assets()</text>
+    <text x="12" y="70" fill="#94a3b8" font-size="10">do / poll_certificate_transparency()</text>
+  </g>
+
+  <!-- Transition 1 -> 2 -->
+  <line x1="400" y1="200" x2="490" y2="200" stroke="#38bdf8" stroke-width="2" marker-end="url(#stateArrow)"/>
+  <text x="445" y="190" text-anchor="middle" fill="#7dd3fc" font-size="10">signal_detected</text>
+
+  <!-- State 2: DISCOVERED -->
+  <g transform="translate(490, 160)">
+    <rect x="0" y="0" width="220" height="80" rx="10" fill="#1e293b" stroke="#818cf8" stroke-width="1.8" filter="url(#shadow5)"/>
+    <text x="110" y="28" text-anchor="middle" fill="#818cf8" font-size="12" font-weight="bold">SIGNAL_DISCOVERED</text>
+    <line x1="0" y1="38" x2="220" y2="38" stroke="#334155"/>
+    <text x="12" y="55" fill="#94a3b8" font-size="10">entry / queue_target_domain()</text>
+    <text x="12" y="70" fill="#94a3b8" font-size="10">do / sanitize_idn_punycode()</text>
+  </g>
+
+  <!-- Transition 2 -> Composite 1 -->
+  <line x1="710" y1="200" x2="800" y2="200" stroke="#38bdf8" stroke-width="2" marker-end="url(#stateArrow)"/>
+  <text x="755" y="190" text-anchor="middle" fill="#7dd3fc" font-size="10">dispatch_probes</text>
+
+  <!-- COMPOSITE STATE 1: ACTIVE_RECONNAISSANCE -->
+  <g transform="translate(800, 130)">
+    <rect x="0" y="0" width="750" height="150" rx="14" fill="#0f172a" stroke="#06b6d4" stroke-width="2" filter="url(#shadow5)"/>
+    <text x="25" y="25" fill="#06b6d4" font-size="12" font-weight="bold">COMPOSITE STATE: ACTIVE_RECONNAISSANCE</text>
+
+    <!-- Substate 1 -->
+    <rect x="25" y="45" width="220" height="85" rx="8" fill="#1e293b" stroke="#0ea5e9"/>
+    <text x="135" y="70" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">DNS_RDAP_QUERYING</text>
+    <text x="35" y="90" fill="#94a3b8" font-size="9">do / query_doh_resolvers()</text>
+    <text x="35" y="105" fill="#94a3b8" font-size="9">do / extract_asn_whois()</text>
+
+    <!-- Substate 2 -->
+    <rect x="265" y="45" width="220" height="85" rx="8" fill="#1e293b" stroke="#0ea5e9"/>
+    <text x="375" y="70" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">TLS_HANDSHAKE_EXTRACT</text>
+    <text x="275" y="90" fill="#94a3b8" font-size="9">do / parse_x509_cert()</text>
+    <text x="275" y="105" fill="#94a3b8" font-size="9">do / extract_san_alt_names()</text>
+
+    <!-- Substate 3 -->
+    <rect x="505" y="45" width="220" height="85" rx="8" fill="#1e293b" stroke="#0ea5e9"/>
+    <text x="615" y="70" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">DOM_CRAWL_AND_SCREENSHOT</text>
+    <text x="515" y="90" fill="#94a3b8" font-size="9">do / headless_viewport_render()</text>
+    <text x="515" y="105" fill="#94a3b8" font-size="9">do / extract_form_actions()</text>
+  </g>
+
+  <!-- Transition Composite 1 -> Composite 2 -->
+  <line x1="1175" y1="280" x2="1175" y2="350" stroke="#38bdf8" stroke-width="2" marker-end="url(#stateArrow)"/>
+  <text x="1185" y="320" fill="#7dd3fc" font-size="10">telemetry_ready</text>
+
+  <!-- COMPOSITE STATE 2: MULTIMODAL_FORENSICS -->
+  <g transform="translate(800, 350)">
+    <rect x="0" y="0" width="750" height="150" rx="14" fill="#0f172a" stroke="#818cf8" stroke-width="2" filter="url(#shadow5)"/>
+    <text x="25" y="25" fill="#818cf8" font-size="12" font-weight="bold">COMPOSITE STATE: MULTIMODAL_FORENSIC_ANALYSIS</text>
+
+    <!-- Substate 1 -->
+    <rect x="25" y="45" width="220" height="85" rx="8" fill="#1e293b" stroke="#818cf8"/>
+    <text x="135" y="70" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">LOGO_PHASH_MATCHING</text>
+    <text x="35" y="90" fill="#94a3b8" font-size="9">do / 64bit_dct_phash()</text>
+    <text x="35" y="105" fill="#94a3b8" font-size="9">do / cielab_histogram_match()</text>
+
+    <!-- Substate 2 -->
+    <rect x="265" y="45" width="220" height="85" rx="8" fill="#1e293b" stroke="#818cf8"/>
+    <text x="375" y="70" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">NLP_LURE_INSPECTION</text>
+    <text x="275" y="90" fill="#94a3b8" font-size="9">do / strip_zero_width_spaces()</text>
+    <text x="275" y="105" fill="#94a3b8" font-size="9">do / score_urgency_triggers()</text>
+
+    <!-- Substate 3 -->
+    <rect x="505" y="45" width="220" height="85" rx="8" fill="#1e293b" stroke="#818cf8"/>
+    <text x="615" y="70" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">PROTOCOL_COMPLIANCE</text>
+    <text x="515" y="90" fill="#94a3b8" font-size="9">do / parse_rfc7208_spf()</text>
+    <text x="515" y="105" fill="#94a3b8" font-size="9">do / audit_rfc7489_dmarc()</text>
+  </g>
+
+  <!-- Transition Composite 2 -> State 3 (Leftwards flow) -->
+  <line x1="800" y1="425" x2="650" y2="425" stroke="#38bdf8" stroke-width="2" marker-end="url(#stateArrow)"/>
+  <text x="725" y="415" text-anchor="middle" fill="#7dd3fc" font-size="10">features_extracted</text>
+
+  <!-- State 3: GRAPH_CORRELATING -->
+  <g transform="translate(380, 385)">
+    <rect x="0" y="0" width="270" height="80" rx="10" fill="#1e293b" stroke="#a855f7" stroke-width="1.8" filter="url(#shadow5)"/>
+    <text x="135" y="28" text-anchor="middle" fill="#a855f7" font-size="12" font-weight="bold">GRAPH_CORRELATING</text>
+    <line x1="0" y1="38" x2="270" y2="38" stroke="#334155"/>
+    <text x="12" y="55" fill="#94a3b8" font-size="10">entry / update_knowledge_graph()</text>
+    <text x="12" y="70" fill="#94a3b8" font-size="10">do / compute_centrality_and_clusters()</text>
+  </g>
+
+  <!-- Transition 3 -> 4 (Downwards flow) -->
+  <line x1="515" y1="465" x2="515" y2="540" stroke="#38bdf8" stroke-width="2" marker-end="url(#stateArrow)"/>
+  <text x="525" y="505" fill="#7dd3fc" font-size="10">topology_resolved</text>
+
+  <!-- State 4: RISK_EVALUATING -->
+  <g transform="translate(380, 540)">
+    <rect x="0" y="0" width="270" height="85" rx="10" fill="#1e293b" stroke="#f59e0b" stroke-width="1.8" filter="url(#shadow5)"/>
+    <text x="135" y="28" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="bold">RISK_EVALUATING</text>
+    <line x1="0" y1="38" x2="270" y2="38" stroke="#334155"/>
+    <text x="12" y="55" fill="#94a3b8" font-size="10">entry / calculate_linear_weights()</text>
+    <text x="12" y="70" fill="#94a3b8" font-size="10">do / apply_adversarial_synergy()</text>
+  </g>
+
+  <!-- Transition 4 -> 5 -->
+  <line x1="650" y1="582" x2="800" y2="582" stroke="#38bdf8" stroke-width="2" marker-end="url(#stateArrow)"/>
+  <text x="725" y="572" text-anchor="middle" fill="#7dd3fc" font-size="10">score_finalized</text>
+
+  <!-- State 5: EVIDENCE_SEALING (NIST SP 800-86) -->
+  <g transform="translate(800, 540)">
+    <rect x="0" y="0" width="300" height="85" rx="10" fill="#1e293b" stroke="#10b981" stroke-width="2" filter="url(#shadow5)"/>
+    <text x="150" y="28" text-anchor="middle" fill="#10b981" font-size="12" font-weight="bold">EVIDENCE_CUSTODY_SEALING</text>
+    <line x1="0" y1="38" x2="300" y2="38" stroke="#334155"/>
+    <text x="12" y="55" fill="#94a3b8" font-size="10">entry / dual_hash(SHA256, SHA3-512)</text>
+    <text x="12" y="70" fill="#94a3b8" font-size="10">do / append_immutable_ledger_block()</text>
+  </g>
+
+  <!-- GUARD BRANCHES (From Evidence Sealing to Tiers) -->
+  <!-- 1. [Score >= 80] -> ACTIONABLE_CRITICAL -->
+  <line x1="950" y1="625" x2="950" y2="700" stroke="#f43f5e" stroke-width="2.5" marker-end="url(#critArrow)"/>
+  <text x="960" y="665" fill="#f43f5e" font-size="11" font-weight="bold">[Score &gt;= 80 (CRITICAL)]</text>
+
+  <g transform="translate(800, 700)">
+    <rect x="0" y="0" width="300" height="85" rx="10" fill="#4c0519" stroke="#f43f5e" stroke-width="2" filter="url(#shadow5)"/>
+    <text x="150" y="28" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">ACTIONABLE_CRITICAL</text>
+    <line x1="0" y1="38" x2="300" y2="38" stroke="#f43f5e"/>
+    <text x="12" y="55" fill="#fda4af" font-size="10">entry / auto_generate_icann_notice()</text>
+    <text x="12" y="70" fill="#fda4af" font-size="10">do / dispatch_registrar_abuse_packet()</text>
+  </g>
+
+  <!-- Transition -> TAKEDOWN_SUBMITTED -->
+  <line x1="950" y1="785" x2="950" y2="860" stroke="#f43f5e" stroke-width="2" marker-end="url(#critArrow)"/>
+  <text x="960" y="825" fill="#f43f5e" font-size="10">notice_dispatched</text>
+
+  <g transform="translate(800, 860)">
+    <rect x="0" y="0" width="300" height="75" rx="10" fill="#1e293b" stroke="#f43f5e" stroke-width="1.8" filter="url(#shadow5)"/>
+    <text x="150" y="28" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">TAKEDOWN_SUBMITTED</text>
+    <line x1="0" y1="38" x2="300" y2="38" stroke="#334155"/>
+    <text x="12" y="55" fill="#94a3b8" font-size="10">do / poll_dns_suspension_status()</text>
+  </g>
+
+  <!-- Transition -> NEUTRALIZED_RESOLVED -->
+  <line x1="950" y1="935" x2="950" y2="1010" stroke="#10b981" stroke-width="2" marker-end="url(#benignArrow)"/>
+  <text x="960" y="975" fill="#10b981" font-size="10">domain_suspended_or_sinkholed</text>
+
+  <g transform="translate(800, 1010)">
+    <rect x="0" y="0" width="300" height="60" rx="10" fill="#064e3b" stroke="#10b981" stroke-width="2" filter="url(#shadow5)"/>
+    <text x="150" y="26" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">NEUTRALIZED_RESOLVED</text>
+    <text x="150" y="44" text-anchor="middle" fill="#a7f3d0" font-size="10">exit / close_incident_record()</text>
+  </g>
+
+  <!-- Final Node (Resolved) -->
+  <circle cx="950" cy="1130" r="18" fill="#0f172a" stroke="#10b981" stroke-width="2.5"/>
+  <circle cx="950" cy="1130" r="10" fill="#10b981"/>
+  <line x1="950" y1="1070" x2="950" y2="1112" stroke="#10b981" stroke-width="2" marker-end="url(#benignArrow)"/>
+
+  <!-- 2. [60 <= Score < 80] -> HIGH_RISK_REVIEW (Left branch) -->
+  <line x1="800" y1="590" x2="250" y2="590" stroke="#f59e0b" stroke-width="2"/>
+  <line x1="250" y1="590" x2="250" y2="700" stroke="#f59e0b" stroke-width="2" marker-end="url(#stateArrow)"/>
+  <text x="260" y="650" fill="#f59e0b" font-size="10" font-weight="bold">[60 &lt;= Score &lt; 80]</text>
+
+  <g transform="translate(100, 700)">
+    <rect x="0" y="0" width="280" height="85" rx="10" fill="#451a03" stroke="#f59e0b" stroke-width="1.8" filter="url(#shadow5)"/>
+    <text x="140" y="28" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">HIGH_RISK_MANUAL_REVIEW</text>
+    <line x1="0" y1="38" x2="280" y2="38" stroke="#f59e0b"/>
+    <text x="12" y="55" fill="#fde68a" font-size="10">entry / alert_soc_analyst_queue()</text>
+    <text x="12" y="70" fill="#fde68a" font-size="10">do / inspect_xai_attribution()</text>
+  </g>
+
+  <!-- 3. [20 <= Score < 60] -> SUSPICIOUS_MONITORED -->
+  <line x1="1100" y1="582" x2="1350" y2="582" stroke="#38bdf8" stroke-width="2"/>
+  <line x1="1350" y1="582" x2="1350" y2="700" stroke="#38bdf8" stroke-width="2" marker-end="url(#stateArrow)"/>
+  <text x="1360" y="650" fill="#38bdf8" font-size="10" font-weight="bold">[20 &lt;= Score &lt; 60]</text>
+
+  <g transform="translate(1220, 700)">
+    <rect x="0" y="0" width="260" height="85" rx="10" fill="#082f49" stroke="#38bdf8" stroke-width="1.8" filter="url(#shadow5)"/>
+    <text x="130" y="28" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">SUSPICIOUS_MONITORED</text>
+    <line x1="0" y1="38" x2="260" y2="38" stroke="#38bdf8"/>
+    <text x="12" y="55" fill="#7dd3fc" font-size="10">entry / add_to_24h_watchlist()</text>
+    <text x="12" y="70" fill="#7dd3fc" font-size="10">do / schedule_differential_reprobe()</text>
+  </g>
+
+  <!-- Re-probe Loop from Suspicious back to Active Reconnaissance -->
+  <path d="M 1480 740 L 1570 740 L 1570 200 L 1550 200" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#stateArrow)"/>
+  <text x="1560" y="470" fill="#38bdf8" font-size="10" transform="rotate(90,1560,470)">24h_timer_expired</text>
+
+  <!-- 4. [Score < 20] -> BENIGN_DISMISSED -->
+  <line x1="1100" y1="560" x2="1480" y2="560" stroke="#10b981" stroke-width="1.8"/>
+  <line x1="1480" y1="560" x2="1480" y2="860" stroke="#10b981" stroke-width="1.8" marker-end="url(#benignArrow)"/>
+  <text x="1490" y="610" fill="#10b981" font-size="10" font-weight="bold">[Score &lt; 20 (BENIGN)]</text>
+
+  <g transform="translate(1360, 860)">
+    <rect x="0" y="0" width="220" height="60" rx="10" fill="#064e3b" stroke="#10b981" stroke-width="1.8" filter="url(#shadow5)"/>
+    <text x="110" y="26" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">BENIGN_DISMISSED</text>
+    <text x="110" y="44" text-anchor="middle" fill="#a7f3d0" font-size="9">entry / archive_evidence_receipt()</text>
+  </g>
+
+  <!-- Final Node (Benign) -->
+  <circle cx="1470" cy="980" r="16" fill="#0f172a" stroke="#10b981" stroke-width="2.5"/>
+  <circle cx="1470" cy="980" r="9" fill="#10b981"/>
+  <line x1="1470" y1="920" x2="1470" y2="964" stroke="#10b981" stroke-width="1.8" marker-end="url(#benignArrow)"/>
+</svg>

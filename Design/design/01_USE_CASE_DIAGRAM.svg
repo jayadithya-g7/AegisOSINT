@@ -1,0 +1,247 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1100" width="100%" height="100%" style="background:#090d16; font-family:'Segoe UI', Inter, -apple-system, sans-serif;">
+  <defs>
+    <linearGradient id="bgHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="actorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="includeArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#06b6d4"/>
+    </marker>
+    <marker id="extendArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b"/>
+    </marker>
+  </defs>
+
+  <!-- Title Banner -->
+  <rect x="40" y="30" width="1520" height="70" rx="10" fill="url(#bgHeader)" filter="url(#shadow)"/>
+  <text x="800" y="65" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="bold" letter-spacing="1">UML USE CASE DIAGRAM: MULTI-VECTOR OSINT BRAND IMPERSONATION &amp; FRAUD DETECTION SYSTEM</text>
+  <text x="800" y="88" text-anchor="middle" fill="#e0e7ff" font-size="13">Specification of System Boundaries, Primary/Secondary Actors, Functional Use Cases, and &lt;&lt;include&gt;&gt; / &lt;&lt;extend&gt;&gt; Relationships</text>
+
+  <!-- System Boundary Container -->
+  <rect x="360" y="130" width="880" height="920" rx="16" fill="#0f172a" stroke="#334155" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="360" y="130" width="880" height="40" rx="16" fill="#1e293b"/>
+  <text x="800" y="156" text-anchor="middle" fill="#38bdf8" font-size="14" font-weight="bold" letter-spacing="1.5">SYSTEM BOUNDARY: AEGIS-OSINT THREAT DETECTION &amp; INVESTIGATION SUITE</text>
+
+  <!-- ACTORS (Left: Primary Human & Daemon Actors) -->
+  <!-- Actor 1: Brand Protection / SOC Analyst -->
+  <g transform="translate(60, 260)">
+    <circle cx="110" cy="40" r="24" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5"/>
+    <line x1="110" y1="64" x2="110" y2="120" stroke="#38bdf8" stroke-width="2.5"/>
+    <line x1="75" y1="85" x2="145" y2="85" stroke="#38bdf8" stroke-width="2.5"/>
+    <line x1="110" y1="120" x2="80" y2="165" stroke="#38bdf8" stroke-width="2.5"/>
+    <line x1="110" y1="120" x2="140" y2="165" stroke="#38bdf8" stroke-width="2.5"/>
+    <rect x="15" y="175" width="190" height="45" rx="6" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="110" y="195" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Brand Protection Lead /</text>
+    <text x="110" y="210" text-anchor="middle" fill="#94a3b8" font-size="11">SOC Analyst</text>
+  </g>
+
+  <!-- Actor 2: CTI Forensic Investigator -->
+  <g transform="translate(60, 520)">
+    <circle cx="110" cy="40" r="24" fill="#1e293b" stroke="#818cf8" stroke-width="2.5"/>
+    <line x1="110" y1="64" x2="110" y2="120" stroke="#818cf8" stroke-width="2.5"/>
+    <line x1="75" y1="85" x2="145" y2="85" stroke="#818cf8" stroke-width="2.5"/>
+    <line x1="110" y1="120" x2="80" y2="165" stroke="#818cf8" stroke-width="2.5"/>
+    <line x1="110" y1="120" x2="140" y2="165" stroke="#818cf8" stroke-width="2.5"/>
+    <rect x="15" y="175" width="190" height="45" rx="6" fill="#0f172a" stroke="#818cf8" stroke-width="1.5"/>
+    <text x="110" y="195" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">CTI Forensic Investigator</text>
+    <text x="110" y="210" text-anchor="middle" fill="#94a3b8" font-size="11">(Digital Evidence Custodian)</text>
+  </g>
+
+  <!-- Actor 3: Automated OSINT Daemon -->
+  <g transform="translate(60, 780)">
+    <rect x="70" y="20" width="80" height="70" rx="8" fill="#1e293b" stroke="#a855f7" stroke-width="2.5"/>
+    <circle cx="95" cy="50" r="6" fill="#a855f7"/>
+    <circle cx="125" cy="50" r="6" fill="#a855f7"/>
+    <path d="M 90 70 Q 110 82 130 70" stroke="#a855f7" stroke-width="2.5" fill="none"/>
+    <line x1="110" y1="20" x2="110" y2="5" stroke="#a855f7" stroke-width="2.5"/>
+    <circle cx="110" cy="4" r="3" fill="#a855f7"/>
+    <rect x="15" y="105" width="190" height="45" rx="6" fill="#0f172a" stroke="#a855f7" stroke-width="1.5"/>
+    <text x="110" y="125" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Automated Recon Daemon</text>
+    <text x="110" y="140" text-anchor="middle" fill="#94a3b8" font-size="11">(Timer / CT Log Crawler)</text>
+  </g>
+
+  <!-- ACTORS (Right: Secondary Responding & Sharing Entities) -->
+  <!-- Actor 4: Domain Registrar / Hosting Abuse Desk -->
+  <g transform="translate(1330, 360)">
+    <circle cx="110" cy="40" r="24" fill="#1e293b" stroke="#f43f5e" stroke-width="2.5"/>
+    <line x1="110" y1="64" x2="110" y2="120" stroke="#f43f5e" stroke-width="2.5"/>
+    <line x1="75" y1="85" x2="145" y2="85" stroke="#f43f5e" stroke-width="2.5"/>
+    <line x1="110" y1="120" x2="80" y2="165" stroke="#f43f5e" stroke-width="2.5"/>
+    <line x1="110" y1="120" x2="140" y2="165" stroke="#f43f5e" stroke-width="2.5"/>
+    <rect x="15" y="175" width="190" height="45" rx="6" fill="#0f172a" stroke="#f43f5e" stroke-width="1.5"/>
+    <text x="110" y="195" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Registrar Abuse Desk /</text>
+    <text x="110" y="210" text-anchor="middle" fill="#94a3b8" font-size="11">Hosting Provider (ASN)</text>
+  </g>
+
+  <!-- Actor 5: Global Threat Sharing Feeds (STIX / MISP) -->
+  <g transform="translate(1330, 680)">
+    <rect x="70" y="20" width="80" height="70" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2.5"/>
+    <line x1="85" y1="40" x2="135" y2="40" stroke="#10b981" stroke-width="2"/>
+    <line x1="85" y1="55" x2="135" y2="55" stroke="#10b981" stroke-width="2"/>
+    <line x1="85" y1="70" x2="115" y2="70" stroke="#10b981" stroke-width="2"/>
+    <rect x="15" y="105" width="190" height="45" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.5"/>
+    <text x="110" y="125" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Global CTI Feeds</text>
+    <text x="110" y="140" text-anchor="middle" fill="#94a3b8" font-size="11">(STIX 2.1 / MISP 2.4)</text>
+  </g>
+
+  <!-- USE CASES (Inside System Boundary) -->
+  <!-- UC-1: Brand Watchlist -->
+  <g id="uc1">
+    <ellipse cx="530" cy="220" rx="130" ry="32" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+    <text x="530" y="218" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">UC-1: Define Brand Watchlist &amp;</text>
+    <text x="530" y="232" text-anchor="middle" fill="#94a3b8" font-size="10">Reference Emblems</text>
+  </g>
+
+  <!-- UC-2: Permutation Generation -->
+  <g id="uc2">
+    <ellipse cx="530" cy="330" rx="130" ry="32" fill="#1e293b" stroke="#818cf8" stroke-width="2"/>
+    <text x="530" y="328" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">UC-2: Proactive Permutation Gen</text>
+    <text x="530" y="342" text-anchor="middle" fill="#94a3b8" font-size="10">(Typos, Combos, Homoglyphs)</text>
+  </g>
+
+  <!-- UC-3: Active Network Probing -->
+  <g id="uc3">
+    <ellipse cx="800" cy="330" rx="125" ry="32" fill="#1e293b" stroke="#06b6d4" stroke-width="2"/>
+    <text x="800" y="328" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">UC-3: Execute Active Probing</text>
+    <text x="800" y="342" text-anchor="middle" fill="#94a3b8" font-size="10">(DoH DNS, RDAP, TLS X.509)</text>
+  </g>
+
+  <!-- UC-4: Web DOM & Form Action Inspection -->
+  <g id="uc4">
+    <ellipse cx="530" cy="460" rx="130" ry="32" fill="#1e293b" stroke="#06b6d4" stroke-width="2"/>
+    <text x="530" y="458" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">UC-4: Inspect Web Interfaces</text>
+    <text x="530" y="472" text-anchor="middle" fill="#94a3b8" font-size="10">&amp; Anti-Cloaking Form Actions</text>
+  </g>
+
+  <!-- UC-5: Visual Logo Perceptual Hashing -->
+  <g id="uc5">
+    <ellipse cx="800" cy="460" rx="125" ry="32" fill="#1e293b" stroke="#06b6d4" stroke-width="2"/>
+    <text x="800" y="458" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">UC-5: Logo Visual Similarity</text>
+    <text x="800" y="472" text-anchor="middle" fill="#94a3b8" font-size="10">(64-bit pHash, dHash, CIELAB)</text>
+  </g>
+
+  <!-- UC-6: Social Media Monitor -->
+  <g id="uc6">
+    <ellipse cx="1070" cy="460" rx="125" ry="32" fill="#1e293b" stroke="#06b6d4" stroke-width="2"/>
+    <text x="1070" y="458" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">UC-6: Social Account Recon</text>
+    <text x="1070" y="472" text-anchor="middle" fill="#94a3b8" font-size="10">&amp; Emoji Badge Spoofing</text>
+  </g>
+
+  <!-- UC-7: Email Forensics (SPF/DMARC) -->
+  <g id="uc7">
+    <ellipse cx="530" cy="590" rx="130" ry="32" fill="#1e293b" stroke="#06b6d4" stroke-width="2"/>
+    <text x="530" y="588" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">UC-7: Email Security Auditing</text>
+    <text x="530" y="602" text-anchor="middle" fill="#94a3b8" font-size="10">(RFC 7208 SPF / RFC 7489 DMARC)</text>
+  </g>
+
+  <!-- UC-8: Threat Knowledge Graph -->
+  <g id="uc8">
+    <ellipse cx="800" cy="590" rx="130" ry="32" fill="#1e293b" stroke="#a855f7" stroke-width="2"/>
+    <text x="800" y="588" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">UC-8: Threat Graph Correlation</text>
+    <text x="800" y="602" text-anchor="middle" fill="#94a3b8" font-size="10">&amp; Centrality Link Analysis</text>
+  </g>
+
+  <!-- UC-9: Calibrated Risk Engine -->
+  <g id="uc9">
+    <ellipse cx="800" cy="710" rx="130" ry="32" fill="#1e293b" stroke="#f59e0b" stroke-width="2.5"/>
+    <text x="800" y="708" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">UC-9: Calibrated Risk Scoring</text>
+    <text x="800" y="722" text-anchor="middle" fill="#f59e0b" font-size="10">&amp; Synergy Bonus Evaluation</text>
+  </g>
+
+  <!-- UC-10: Evidence Ledger (NIST SP 800-86) -->
+  <g id="uc10">
+    <ellipse cx="800" cy="830" rx="130" ry="32" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+    <text x="800" y="828" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">UC-10: Seal Evidence in Ledger</text>
+    <text x="800" y="842" text-anchor="middle" fill="#10b981" font-size="10">(SHA-256 + SHA3 Hash Chain)</text>
+  </g>
+
+  <!-- UC-11: Takedown Notices (ICANN) -->
+  <g id="uc11">
+    <ellipse cx="1070" cy="710" rx="125" ry="32" fill="#1e293b" stroke="#f43f5e" stroke-width="2"/>
+    <text x="1070" y="708" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">UC-11: Generate Takedown Dossier</text>
+    <text x="1070" y="722" text-anchor="middle" fill="#94a3b8" font-size="10">(ICANN RAA §3.18 Abuse Notice)</text>
+  </g>
+
+  <!-- UC-12: STIX 2.1 / MISP Threat Intel Export -->
+  <g id="uc12">
+    <ellipse cx="1070" cy="830" rx="125" ry="32" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+    <text x="1070" y="828" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">UC-12: Export Threat Intel</text>
+    <text x="1070" y="842" text-anchor="middle" fill="#94a3b8" font-size="10">(STIX 2.1 Bundles &amp; MISP Events)</text>
+  </g>
+
+  <!-- ACTOR ASSOCIATION LINES -->
+  <!-- Analyst connects to UC-1, UC-2, UC-8, UC-9, UC-11 -->
+  <line x1="260" y1="350" x2="405" y2="230" stroke="#475569" stroke-width="1.8"/>
+  <line x1="260" y1="350" x2="405" y2="330" stroke="#475569" stroke-width="1.8"/>
+  <line x1="260" y1="350" x2="675" y2="590" stroke="#475569" stroke-width="1.8"/>
+  <line x1="260" y1="350" x2="675" y2="710" stroke="#475569" stroke-width="1.8"/>
+
+  <!-- Investigator connects to UC-8, UC-10, UC-11, UC-12 -->
+  <line x1="260" y1="610" x2="670" y2="590" stroke="#475569" stroke-width="1.8"/>
+  <line x1="260" y1="610" x2="670" y2="830" stroke="#475569" stroke-width="1.8"/>
+  <line x1="260" y1="610" x2="945" y2="710" stroke="#475569" stroke-width="1.8"/>
+
+  <!-- Recon Daemon connects to UC-2, UC-3, UC-4, UC-6 -->
+  <line x1="260" y1="870" x2="405" y2="345" stroke="#475569" stroke-width="1.8" stroke-dasharray="4,4"/>
+  <line x1="260" y1="870" x2="680" y2="340" stroke="#475569" stroke-width="1.8" stroke-dasharray="4,4"/>
+  <line x1="260" y1="870" x2="420" y2="475" stroke="#475569" stroke-width="1.8" stroke-dasharray="4,4"/>
+
+  <!-- Secondary Actor lines -->
+  <line x1="1195" y1="710" x2="1330" y2="460" stroke="#f43f5e" stroke-width="2"/>
+  <line x1="1195" y1="830" x2="1330" y2="780" stroke="#10b981" stroke-width="2"/>
+
+  <!-- INCLUDE & EXTEND RELATIONSHIPS -->
+  <!-- UC-2 includes UC-3 -->
+  <path d="M 660 330 L 675 330" stroke="#06b6d4" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#includeArrow)"/>
+  <text x="668" y="322" text-anchor="middle" fill="#06b6d4" font-size="10" font-weight="bold">&lt;&lt;include&gt;&gt;</text>
+
+  <!-- Probes include UC-8 (Threat Graph) -->
+  <path d="M 800 362 L 800 428" stroke="#06b6d4" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#includeArrow)"/>
+  <text x="835" y="398" fill="#06b6d4" font-size="10" font-weight="bold">&lt;&lt;include&gt;&gt;</text>
+
+  <path d="M 800 492 L 800 558" stroke="#06b6d4" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#includeArrow)"/>
+  <text x="835" y="528" fill="#06b6d4" font-size="10" font-weight="bold">&lt;&lt;include&gt;&gt;</text>
+
+  <!-- UC-8 includes UC-9 (Risk Engine) -->
+  <path d="M 800 622 L 800 678" stroke="#06b6d4" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#includeArrow)"/>
+  <text x="835" y="652" fill="#06b6d4" font-size="10" font-weight="bold">&lt;&lt;include&gt;&gt;</text>
+
+  <!-- UC-9 includes UC-10 (Evidence Custody) -->
+  <path d="M 800 742 L 800 798" stroke="#06b6d4" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#includeArrow)"/>
+  <text x="835" y="772" fill="#06b6d4" font-size="10" font-weight="bold">&lt;&lt;include&gt;&gt;</text>
+
+  <!-- UC-9 extends UC-11 (Takedown Notice) condition: Risk >= 80 -->
+  <path d="M 945 710 L 930 710" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#extendArrow)"/>
+  <text x="935" y="698" text-anchor="middle" fill="#f59e0b" font-size="10" font-weight="bold">&lt;&lt;extend&gt;&gt;</text>
+  <text x="935" y="728" text-anchor="middle" fill="#94a3b8" font-size="9">[Risk &gt;= 80]</text>
+
+  <!-- UC-10 includes UC-12 (STIX / MISP Export) -->
+  <path d="M 930 830 L 945 830" stroke="#06b6d4" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#includeArrow)"/>
+  <text x="938" y="822" text-anchor="middle" fill="#06b6d4" font-size="10" font-weight="bold">&lt;&lt;include&gt;&gt;</text>
+
+  <!-- Legend Box -->
+  <rect x="380" y="940" width="840" height="85" rx="8" fill="#1e293b" stroke="#334155"/>
+  <text x="400" y="962" fill="#e2e8f0" font-size="11" font-weight="bold">DIAGRAM NOTATION &amp; RELATIONSHIP LEGEND:</text>
+  <line x1="400" y1="985" x2="450" y2="985" stroke="#475569" stroke-width="2"/>
+  <text x="460" y="989" fill="#94a3b8" font-size="10">Actor-Use Case Association</text>
+  <line x1="620" y1="985" x2="670" y2="985" stroke="#06b6d4" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#includeArrow)"/>
+  <text x="680" y="989" fill="#06b6d4" font-size="10">&lt;&lt;include&gt;&gt; Mandatory Ingestion/Processing Flow</text>
+  <line x1="950" y1="985" x2="1000" y2="985" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#extendArrow)"/>
+  <text x="1010" y="989" fill="#f59e0b" font-size="10">&lt;&lt;extend&gt;&gt; Conditional High-Risk Escalation</text>
+  <circle cx="410" cy="1010" r="5" fill="#38bdf8"/>
+  <text x="425" y="1014" fill="#94a3b8" font-size="10">Primary Human Actor</text>
+  <rect x="620" y="1005" width="12" height="10" fill="#a855f7" rx="2"/>
+  <text x="640" y="1014" fill="#94a3b8" font-size="10">Automated Timer Daemon</text>
+  <circle cx="955" cy="1010" r="5" fill="#f43f5e"/>
+  <text x="970" y="1014" fill="#94a3b8" font-size="10">External Abuse Desk / Threat Sharing System</text>
+</svg>

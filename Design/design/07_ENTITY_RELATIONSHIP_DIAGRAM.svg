@@ -1,0 +1,228 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1760 1350" width="100%" height="100%" style="background:#090d16; font-family:'Segoe UI', Inter, -apple-system, sans-serif;">
+  <defs>
+    <linearGradient id="bgHeader7" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <filter id="shadow7" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Title Banner -->
+  <rect x="40" y="30" width="1680" height="70" rx="10" fill="url(#bgHeader7)" filter="url(#shadow7)"/>
+  <text x="880" y="65" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="bold" letter-spacing="1">ENTITY-RELATIONSHIP DIAGRAM (ERD): FORENSIC DATA REPOSITORY &amp; CUSTODY SCHEMA</text>
+  <text x="880" y="88" text-anchor="middle" fill="#e0e7ff" font-size="13">Relational Entities, Primary &amp; Foreign Keys, Cardinalities (1:1, 1:N, N:M), and Cryptographic Evidence Vault Schemas</text>
+
+  <!-- ENTITY 1: BRANDS (Top Left) -->
+  <g transform="translate(60, 140)">
+    <rect x="0" y="0" width="340" height="170" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8" filter="url(#shadow7)"/>
+    <rect x="0" y="0" width="340" height="32" rx="8" fill="#082f49"/>
+    <text x="170" y="22" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">BRANDS</text>
+    <text x="15" y="52" fill="#38bdf8" font-size="11" font-weight="bold">PK  brand_id : UUID</text>
+    <text x="15" y="72" fill="#cbd5e1" font-size="11">    brand_name : VARCHAR(128)</text>
+    <text x="15" y="92" fill="#cbd5e1" font-size="11">    official_domain : VARCHAR(255)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-size="11">    reference_logo_hash : CHAR(16)</text>
+    <text x="15" y="132" fill="#cbd5e1" font-size="11">    monitored_since : TIMESTAMP</text>
+    <text x="15" y="152" fill="#cbd5e1" font-size="11">    is_active : BOOLEAN</text>
+  </g>
+
+  <!-- ENTITY 2: SUSPICIOUS_DOMAINS (Center) -->
+  <g transform="translate(480, 140)">
+    <rect x="0" y="0" width="380" height="230" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2" filter="url(#shadow7)"/>
+    <rect x="0" y="0" width="380" height="32" rx="8" fill="#451a03"/>
+    <text x="190" y="22" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="bold">SUSPICIOUS_DOMAINS</text>
+    <text x="15" y="52" fill="#f59e0b" font-size="11" font-weight="bold">PK  domain_id : UUID</text>
+    <text x="15" y="72" fill="#818cf8" font-size="11" font-weight="bold">FK  brand_id : UUID</text>
+    <text x="15" y="92" fill="#cbd5e1" font-size="11">    domain_name : VARCHAR(255)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-size="11">    idn_punycode : VARCHAR(255)</text>
+    <text x="15" y="132" fill="#cbd5e1" font-size="11">    tld : VARCHAR(32)</text>
+    <text x="15" y="152" fill="#cbd5e1" font-size="11">    registrar_name : VARCHAR(128)</text>
+    <text x="15" y="172" fill="#cbd5e1" font-size="11">    created_date : DATE</text>
+    <text x="15" y="192" fill="#cbd5e1" font-size="11">    is_live : BOOLEAN</text>
+    <text x="15" y="212" fill="#cbd5e1" font-size="11">    discovered_at : TIMESTAMP</text>
+  </g>
+
+  <!-- ENTITY 3: DNS_RECORDS (Top Right) -->
+  <g transform="translate(940, 140)">
+    <rect x="0" y="0" width="340" height="190" rx="8" fill="#1e293b" stroke="#0ea5e9" stroke-width="1.8" filter="url(#shadow7)"/>
+    <rect x="0" y="0" width="340" height="32" rx="8" fill="#082f49"/>
+    <text x="170" y="22" text-anchor="middle" fill="#0ea5e9" font-size="12" font-weight="bold">DNS_RECORDS</text>
+    <text x="15" y="52" fill="#0ea5e9" font-size="11" font-weight="bold">PK  record_id : UUID</text>
+    <text x="15" y="72" fill="#f59e0b" font-size="11" font-weight="bold">FK  domain_id : UUID</text>
+    <text x="15" y="92" fill="#cbd5e1" font-size="11">    record_type : ENUM(A, AAAA, MX, TXT, NS)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-size="11">    record_value : VARCHAR(512)</text>
+    <text x="15" y="132" fill="#cbd5e1" font-size="11">    ttl : INTEGER</text>
+    <text x="15" y="152" fill="#cbd5e1" font-size="11">    resolved_via : VARCHAR(64)</text>
+    <text x="15" y="172" fill="#cbd5e1" font-size="11">    timestamp_utc : TIMESTAMP</text>
+  </g>
+
+  <!-- ENTITY 4: SSL_CERTIFICATES (Far Right) -->
+  <g transform="translate(1360, 140)">
+    <rect x="0" y="0" width="340" height="210" rx="8" fill="#1e293b" stroke="#0ea5e9" stroke-width="1.8" filter="url(#shadow7)"/>
+    <rect x="0" y="0" width="340" height="32" rx="8" fill="#082f49"/>
+    <text x="170" y="22" text-anchor="middle" fill="#0ea5e9" font-size="12" font-weight="bold">SSL_CERTIFICATES</text>
+    <text x="15" y="52" fill="#0ea5e9" font-size="11" font-weight="bold">PK  cert_id : UUID</text>
+    <text x="15" y="72" fill="#f59e0b" font-size="11" font-weight="bold">FK  domain_id : UUID</text>
+    <text x="15" y="92" fill="#cbd5e1" font-size="11">    issuer_cn : VARCHAR(255)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-size="11">    subject_cn : VARCHAR(255)</text>
+    <text x="15" y="132" fill="#cbd5e1" font-size="11">    san_dns_names : TEXT</text>
+    <text x="15" y="152" fill="#cbd5e1" font-size="11">    sha256_fingerprint : CHAR(64)</text>
+    <text x="15" y="172" fill="#cbd5e1" font-size="11">    valid_from : TIMESTAMP</text>
+    <text x="15" y="192" fill="#cbd5e1" font-size="11">    valid_to : TIMESTAMP</text>
+  </g>
+
+  <!-- ENTITY 5: VISUAL_ARTIFACTS (Middle Left) -->
+  <g transform="translate(60, 440)">
+    <rect x="0" y="0" width="340" height="210" rx="8" fill="#1e293b" stroke="#818cf8" stroke-width="1.8" filter="url(#shadow7)"/>
+    <rect x="0" y="0" width="340" height="32" rx="8" fill="#1e1b4b"/>
+    <text x="170" y="22" text-anchor="middle" fill="#818cf8" font-size="12" font-weight="bold">VISUAL_ARTIFACTS</text>
+    <text x="15" y="52" fill="#818cf8" font-size="11" font-weight="bold">PK  artifact_id : UUID</text>
+    <text x="15" y="72" fill="#f59e0b" font-size="11" font-weight="bold">FK  domain_id : UUID</text>
+    <text x="15" y="92" fill="#cbd5e1" font-size="11">    screenshot_vault_uri : VARCHAR(512)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-size="11">    phash_64_hex : CHAR(16)</text>
+    <text x="15" y="132" fill="#cbd5e1" font-size="11">    dhash_64_hex : CHAR(16)</text>
+    <text x="15" y="152" fill="#cbd5e1" font-size="11">    cielab_color_bins : BLOB</text>
+    <text x="15" y="172" fill="#cbd5e1" font-size="11">    hamming_distance : INTEGER</text>
+    <text x="15" y="192" fill="#cbd5e1" font-size="11">    similarity_pct : FLOAT</text>
+  </g>
+
+  <!-- ENTITY 6: NLP_CONTENT_ANALYSIS (Middle Center) -->
+  <g transform="translate(480, 440)">
+    <rect x="0" y="0" width="380" height="210" rx="8" fill="#1e293b" stroke="#818cf8" stroke-width="1.8" filter="url(#shadow7)"/>
+    <rect x="0" y="0" width="380" height="32" rx="8" fill="#1e1b4b"/>
+    <text x="190" y="22" text-anchor="middle" fill="#818cf8" font-size="12" font-weight="bold">NLP_CONTENT_ANALYSIS</text>
+    <text x="15" y="52" fill="#818cf8" font-size="11" font-weight="bold">PK  nlp_id : UUID</text>
+    <text x="15" y="72" fill="#f59e0b" font-size="11" font-weight="bold">FK  domain_id : UUID</text>
+    <text x="15" y="92" fill="#cbd5e1" font-size="11">    urgency_score : FLOAT</text>
+    <text x="15" y="112" fill="#cbd5e1" font-size="11">    credential_harvest_flag : BOOLEAN</text>
+    <text x="15" y="132" fill="#cbd5e1" font-size="11">    form_action_url : VARCHAR(512)</text>
+    <text x="15" y="152" fill="#cbd5e1" font-size="11">    is_telegram_c2 : BOOLEAN</text>
+    <text x="15" y="172" fill="#cbd5e1" font-size="11">    is_discord_c2 : BOOLEAN</text>
+    <text x="15" y="192" fill="#cbd5e1" font-size="11">    zero_width_chars_count : INTEGER</text>
+  </g>
+
+  <!-- ENTITY 7: EMAIL_SECURITY_POSTURE (Middle Right) -->
+  <g transform="translate(940, 440)">
+    <rect x="0" y="0" width="340" height="210" rx="8" fill="#1e293b" stroke="#818cf8" stroke-width="1.8" filter="url(#shadow7)"/>
+    <rect x="0" y="0" width="340" height="32" rx="8" fill="#1e1b4b"/>
+    <text x="170" y="22" text-anchor="middle" fill="#818cf8" font-size="12" font-weight="bold">EMAIL_SECURITY_POSTURE</text>
+    <text x="15" y="52" fill="#818cf8" font-size="11" font-weight="bold">PK  email_sec_id : UUID</text>
+    <text x="15" y="72" fill="#f59e0b" font-size="11" font-weight="bold">FK  domain_id : UUID</text>
+    <text x="15" y="92" fill="#cbd5e1" font-size="11">    raw_spf_record : VARCHAR(512)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-size="11">    rfc7208_multi_spf_violation : BOOLEAN</text>
+    <text x="15" y="132" fill="#cbd5e1" font-size="11">    raw_dmarc_record : VARCHAR(512)</text>
+    <text x="15" y="152" fill="#cbd5e1" font-size="11">    dmarc_policy : ENUM(none, quarantine, reject)</text>
+    <text x="15" y="172" fill="#cbd5e1" font-size="11">    dmarc_pct : INTEGER</text>
+    <text x="15" y="192" fill="#cbd5e1" font-size="11">    bimi_vmc_valid : BOOLEAN</text>
+  </g>
+
+  <!-- ENTITY 8: INCIDENTS (Bottom Left) -->
+  <g transform="translate(60, 750)">
+    <rect x="0" y="0" width="340" height="230" rx="8" fill="#1e293b" stroke="#f43f5e" stroke-width="2" filter="url(#shadow7)"/>
+    <rect x="0" y="0" width="340" height="32" rx="8" fill="#4c0519"/>
+    <text x="170" y="22" text-anchor="middle" fill="#f43f5e" font-size="12" font-weight="bold">INCIDENT_TRIAGE</text>
+    <text x="15" y="52" fill="#f43f5e" font-size="11" font-weight="bold">PK  incident_id : VARCHAR(64)</text>
+    <text x="15" y="72" fill="#38bdf8" font-size="11" font-weight="bold">FK  brand_id : UUID</text>
+    <text x="15" y="92" fill="#f59e0b" font-size="11" font-weight="bold">FK  primary_domain_id : UUID</text>
+    <text x="15" y="112" fill="#cbd5e1" font-size="11">    composite_risk_score : FLOAT</text>
+    <text x="15" y="132" fill="#cbd5e1" font-size="11">    threat_tier : ENUM(CRIT, HIGH, MED, LOW, BEN)</text>
+    <text x="15" y="152" fill="#cbd5e1" font-size="11">    synergy_multiplier : FLOAT</text>
+    <text x="15" y="172" fill="#cbd5e1" font-size="11">    triage_status : VARCHAR(32)</text>
+    <text x="15" y="192" fill="#cbd5e1" font-size="11">    assigned_analyst : VARCHAR(128)</text>
+    <text x="15" y="212" fill="#cbd5e1" font-size="11">    created_at : TIMESTAMP</text>
+  </g>
+
+  <!-- ENTITY 9: EVIDENCE_BLOCKS (NIST SP 800-86) (Bottom Center) -->
+  <g transform="translate(480, 750)">
+    <rect x="0" y="0" width="440" height="250" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2" filter="url(#shadow7)"/>
+    <rect x="0" y="0" width="440" height="32" rx="8" fill="#064e3b"/>
+    <text x="220" y="22" text-anchor="middle" fill="#10b981" font-size="12" font-weight="bold">EVIDENCE_CUSTODY_BLOCKS (NIST SP 800-86)</text>
+    <text x="15" y="52" fill="#10b981" font-size="11" font-weight="bold">PK  block_id : UUID</text>
+    <text x="15" y="72" fill="#10b981" font-size="11" font-weight="bold">    sequence_num : BIGINT (Sequential)</text>
+    <text x="15" y="92" fill="#f59e0b" font-size="11" font-weight="bold">FK  domain_id : UUID</text>
+    <text x="15" y="112" fill="#cbd5e1" font-size="11">    target_uri : VARCHAR(512)</text>
+    <text x="15" y="132" fill="#cbd5e1" font-size="11">    artifact_sha256 : CHAR(64)</text>
+    <text x="15" y="152" fill="#cbd5e1" font-size="11">    artifact_sha3_512 : CHAR(128)</text>
+    <text x="15" y="172" fill="#cbd5e1" font-size="11">    previous_block_hash : CHAR(64)</text>
+    <text x="15" y="192" fill="#cbd5e1" font-size="11">    block_hash : CHAR(64)</text>
+    <text x="15" y="212" fill="#cbd5e1" font-size="11">    hmac_seal : CHAR(64)</text>
+    <text x="15" y="232" fill="#cbd5e1" font-size="11">    timestamp_utc : TIMESTAMP</text>
+  </g>
+
+  <!-- ENTITY 10: TAKEDOWN_NOTICES (Bottom Right) -->
+  <g transform="translate(1000, 750)">
+    <rect x="0" y="0" width="360" height="210" rx="8" fill="#1e293b" stroke="#f43f5e" stroke-width="1.8" filter="url(#shadow7)"/>
+    <rect x="0" y="0" width="360" height="32" rx="8" fill="#4c0519"/>
+    <text x="180" y="22" text-anchor="middle" fill="#f43f5e" font-size="12" font-weight="bold">TAKEDOWN_NOTICES</text>
+    <text x="15" y="52" fill="#f43f5e" font-size="11" font-weight="bold">PK  notice_id : UUID</text>
+    <text x="15" y="72" fill="#f43f5e" font-size="11" font-weight="bold">FK  incident_id : VARCHAR(64)</text>
+    <text x="15" y="92" fill="#cbd5e1" font-size="11">    recipient_registrar_email : VARCHAR(255)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-size="11">    icann_raa_clause : VARCHAR(64)</text>
+    <text x="15" y="132" fill="#cbd5e1" font-size="11">    embedded_evidence_hashes : TEXT</text>
+    <text x="15" y="152" fill="#cbd5e1" font-size="11">    dispatch_status : ENUM(SENT, ACK, RESOLVED)</text>
+    <text x="15" y="172" fill="#cbd5e1" font-size="11">    dispatched_at : TIMESTAMP</text>
+    <text x="15" y="192" fill="#cbd5e1" font-size="11">    domain_suspended_at : TIMESTAMP</text>
+  </g>
+
+  <!-- ENTITY 11: THREAT_ACTORS (Far Bottom Right) -->
+  <g transform="translate(1420, 750)">
+    <rect x="0" y="0" width="300" height="190" rx="8" fill="#1e293b" stroke="#a855f7" stroke-width="1.8" filter="url(#shadow7)"/>
+    <rect x="0" y="0" width="300" height="32" rx="8" fill="#3b0764"/>
+    <text x="150" y="22" text-anchor="middle" fill="#a855f7" font-size="12" font-weight="bold">THREAT_ACTOR_ENTITIES</text>
+    <text x="15" y="52" fill="#a855f7" font-size="11" font-weight="bold">PK  actor_id : UUID</text>
+    <text x="15" y="72" fill="#cbd5e1" font-size="11">    syndicate_alias : VARCHAR(128)</text>
+    <text x="15" y="92" fill="#cbd5e1" font-size="11">    associated_email : VARCHAR(255)</text>
+    <text x="15" y="112" fill="#cbd5e1" font-size="11">    telegram_channel : VARCHAR(128)</text>
+    <text x="15" y="132" fill="#cbd5e1" font-size="11">    primary_target_sector : VARCHAR(64)</text>
+    <text x="15" y="152" fill="#cbd5e1" font-size="11">    confidence_score : FLOAT</text>
+    <text x="15" y="172" fill="#cbd5e1" font-size="11">    first_observed : TIMESTAMP</text>
+  </g>
+
+  <!-- CARDINALITY RELATIONSHIP LINES (Crow's Foot Notation) -->
+  <!-- BRANDS (1) -> (N) SUSPICIOUS_DOMAINS -->
+  <line x1="400" y1="210" x2="480" y2="210" stroke="#38bdf8" stroke-width="2"/>
+  <circle cx="410" cy="210" r="4" fill="#38bdf8"/>
+  <line x1="420" y1="202" x2="420" y2="218" stroke="#38bdf8" stroke-width="2"/>
+  <!-- Crow's foot at 480 -->
+  <line x1="470" y1="202" x2="480" y2="210" stroke="#38bdf8" stroke-width="2"/>
+  <line x1="470" y1="218" x2="480" y2="210" stroke="#38bdf8" stroke-width="2"/>
+  <text x="440" y="200" text-anchor="middle" fill="#38bdf8" font-size="10">1 : N</text>
+
+  <!-- SUSPICIOUS_DOMAINS (1) -> (N) DNS_RECORDS -->
+  <line x1="860" y1="210" x2="940" y2="210" stroke="#0ea5e9" stroke-width="2"/>
+  <text x="900" y="200" text-anchor="middle" fill="#0ea5e9" font-size="10">1 : N</text>
+
+  <!-- SUSPICIOUS_DOMAINS (1) -> (1) SSL_CERTIFICATES -->
+  <path d="M 860 170 L 1360 170" stroke="#0ea5e9" stroke-width="2"/>
+  <text x="1110" y="160" text-anchor="middle" fill="#0ea5e9" font-size="10">1 : 1</text>
+
+  <!-- SUSPICIOUS_DOMAINS (1) -> (1) VISUAL_ARTIFACTS -->
+  <path d="M 580 370 L 580 400 L 230 400 L 230 440" stroke="#818cf8" stroke-width="2"/>
+  <text x="380" y="390" text-anchor="middle" fill="#818cf8" font-size="10">1 : 1</text>
+
+  <!-- SUSPICIOUS_DOMAINS (1) -> (1) NLP_CONTENT_ANALYSIS -->
+  <line x1="670" y1="370" x2="670" y2="440" stroke="#818cf8" stroke-width="2"/>
+  <text x="685" y="410" fill="#818cf8" font-size="10">1 : 1</text>
+
+  <!-- SUSPICIOUS_DOMAINS (1) -> (1) EMAIL_SECURITY_POSTURE -->
+  <path d="M 760 370 L 760 400 L 1110 400 L 1110 440" stroke="#818cf8" stroke-width="2"/>
+  <text x="940" y="390" text-anchor="middle" fill="#818cf8" font-size="10">1 : 1</text>
+
+  <!-- SUSPICIOUS_DOMAINS (1) -> (N) EVIDENCE_CUSTODY_BLOCKS -->
+  <path d="M 700 650 L 700 750" stroke="#10b981" stroke-width="2.5"/>
+  <text x="715" y="700" fill="#10b981" font-size="11" font-weight="bold">1 : N (Hash Chained)</text>
+
+  <!-- INCIDENT_TRIAGE (1) -> (N) TAKEDOWN_NOTICES -->
+  <line x1="400" y1="840" x2="1000" y2="840" stroke="#f43f5e" stroke-width="2"/>
+  <text x="700" y="830" text-anchor="middle" fill="#f43f5e" font-size="10">1 : N (Takedown Actions)</text>
+
+  <!-- ERD Legend & Notes -->
+  <rect x="60" y="1070" width="1660" height="220" rx="8" fill="#1e293b" stroke="#334155"/>
+  <text x="90" y="1100" fill="#e2e8f0" font-size="13" font-weight="bold">RELATIONAL SCHEMA SPECIFICATIONS &amp; FORENSIC INTEGRITY CONSTRAINTS:</text>
+  <text x="90" y="1130" fill="#cbd5e1" font-size="11">1. Primary Keys (PK): Globally unique RFC 4122 UUID v4 identifiers, preventing collision across distributed forensic collectors.</text>
+  <text x="90" y="1150" fill="#cbd5e1" font-size="11">2. Foreign Keys (FK): Referential integrity enforced with ON DELETE RESTRICT on evidence custody tables to prevent accidental evidentiary destruction.</text>
+  <text x="90" y="1170" fill="#10b981" font-size="11" font-weight="bold">3. NIST SP 800-86 Invariant: EVIDENCE_CUSTODY_BLOCKS is an append-only table where block_hash = SHA256(previous_block_hash || domain_id || artifact_sha256 || timestamp_utc).</text>
+  <text x="90" y="1190" fill="#cbd5e1" font-size="11">4. Dual-Digest Auditing: Parallel SHA-256 and SHA3-512 hashes guarantee quantum-resistant collision resistance for court admissibility.</text>
+  <text x="90" y="1210" fill="#cbd5e1" font-size="11">5. Takedown Audit Trail: TAKEDOWN_NOTICES logs exact RFC 822 email transmission records and timestamped DNS suspension confirmations.</text>
+</svg>

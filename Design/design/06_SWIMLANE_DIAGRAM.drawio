@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net" modified="2026-10-15T00:00:00.000Z" agent="AegisOSINT" version="21.0.0" type="device">
+  <diagram id="diag_swimlane" name="Cross-Functional Swimlane Diagram">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1300" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="500" value="LANE 1: DATA INGESTION &amp; RECON" style="swimlane;startSize=30;html=1;fillColor=#082f49;strokeColor=#38bdf8;fontColor=#38bdf8;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="140" width="360" height="980" as="geometry"/>
+        </mxCell>
+        <mxCell id="501" value="LANE 2: AI &amp; MULTI-MODAL FORENSICS" style="swimlane;startSize=30;html=1;fillColor=#1e1b4b;strokeColor=#818cf8;fontColor=#818cf8;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="140" width="380" height="980" as="geometry"/>
+        </mxCell>
+        <mxCell id="502" value="LANE 3: THREAT CORRELATION &amp; RISK" style="swimlane;startSize=30;html=1;fillColor=#3b0764;strokeColor=#a855f7;fontColor=#a855f7;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="820" y="140" width="380" height="980" as="geometry"/>
+        </mxCell>
+        <mxCell id="503" value="LANE 4: SOC OPERATIONS &amp; TAKEDOWN" style="swimlane;startSize=30;html=1;fillColor=#4c0519;strokeColor=#f43f5e;fontColor=#f43f5e;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="140" width="380" height="980" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="510" value="Poll CT Logs &amp; Ingest Targets" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#38bdf8;fontColor=#ffffff;" vertex="1" parent="500">
+          <mxGeometry x="40" y="80" width="280" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="511" value="Generate Punycode Permutations" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#38bdf8;fontColor=#ffffff;" vertex="1" parent="500">
+          <mxGeometry x="40" y="170" width="280" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="512" value="Execute DoH DNS &amp; RDAP Probes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#38bdf8;fontColor=#ffffff;" vertex="1" parent="500">
+          <mxGeometry x="40" y="260" width="280" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="520" value="Compute 64-bit DCT pHash &amp; dHash" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#818cf8;fontColor=#ffffff;" vertex="1" parent="501">
+          <mxGeometry x="40" y="350" width="300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="521" value="Strip Zero-Width &amp; Score NLP Urgency" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#818cf8;fontColor=#ffffff;" vertex="1" parent="501">
+          <mxGeometry x="40" y="440" width="300" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="530" value="Correlate Entities in Threat Graph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#a855f7;fontColor=#ffffff;" vertex="1" parent="502">
+          <mxGeometry x="40" y="530" width="300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="531" value="Compute Calibrated Risk &amp; Synergy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#f59e0b;fontColor=#ffffff;" vertex="1" parent="502">
+          <mxGeometry x="40" y="620" width="300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="532" value="Seal Artifacts in NIST Hash Chain" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#10b981;fontColor=#ffffff;" vertex="1" parent="502">
+          <mxGeometry x="40" y="710" width="300" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="540" value="Render HUD &amp; Cytoscape Canvas" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#38bdf8;fontColor=#ffffff;" vertex="1" parent="503">
+          <mxGeometry x="40" y="800" width="300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="541" value="Auto-Generate ICANN Notice &amp; STIX 2.1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4c0519;strokeColor=#f43f5e;fontColor=#ffffff;" vertex="1" parent="503">
+          <mxGeometry x="40" y="890" width="300" height="50" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

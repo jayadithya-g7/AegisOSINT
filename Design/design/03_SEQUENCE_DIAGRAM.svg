@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1760 1250" width="100%" height="100%" style="background:#090d16; font-family:'Segoe UI', Inter, -apple-system, sans-serif;">
+  <defs>
+    <linearGradient id="bgHeader3" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <filter id="shadow3" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <marker id="seqArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="seqReturn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981"/>
+    </marker>
+  </defs>
+
+  <!-- Title Banner -->
+  <rect x="40" y="30" width="1680" height="70" rx="10" fill="url(#bgHeader3)" filter="url(#shadow3)"/>
+  <text x="880" y="65" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="bold" letter-spacing="1">UML SEQUENCE DIAGRAM: END-TO-END MULTI-VECTOR INVESTIGATION LIFECYCLE</text>
+  <text x="880" y="88" text-anchor="middle" fill="#e0e7ff" font-size="13">Chronological Message Flow Across Distributed Probers, Forensic Analyzers, Knowledge Graph, NIST Custody Vault, and Takedown Dispatch</text>
+
+  <!-- LIFELINES & HEADERS -->
+  <!-- 1. Analyst -->
+  <rect x="50" y="130" width="140" height="50" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="120" y="160" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">:SOC Analyst</text>
+  <line x1="120" y1="180" x2="120" y2="1150" stroke="#334155" stroke-width="1.5" stroke-dasharray="5,5"/>
+
+  <!-- 2. UI Workbench -->
+  <rect x="230" y="130" width="150" height="50" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="305" y="160" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">:ThreatWorkbench</text>
+  <line x1="305" y1="180" x2="305" y2="1150" stroke="#334155" stroke-width="1.5" stroke-dasharray="5,5"/>
+
+  <!-- 3. Gateway / Orchestrator -->
+  <rect x="420" y="130" width="160" height="50" rx="8" fill="#1e293b" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="500" y="160" text-anchor="middle" fill="#818cf8" font-size="12" font-weight="bold">:InvestigationOrch</text>
+  <line x1="500" y1="180" x2="500" y2="1150" stroke="#334155" stroke-width="1.5" stroke-dasharray="5,5"/>
+
+  <!-- 4. Active Probers -->
+  <rect x="620" y="130" width="160" height="50" rx="8" fill="#1e293b" stroke="#06b6d4" stroke-width="1.5"/>
+  <text x="700" y="160" text-anchor="middle" fill="#06b6d4" font-size="12" font-weight="bold">:NetworkProbers</text>
+  <line x1="700" y1="180" x2="700" y2="1150" stroke="#334155" stroke-width="1.5" stroke-dasharray="5,5"/>
+
+  <!-- 5. Forensic Engines -->
+  <rect x="820" y="130" width="160" height="50" rx="8" fill="#1e293b" stroke="#06b6d4" stroke-width="1.5"/>
+  <text x="900" y="160" text-anchor="middle" fill="#06b6d4" font-size="12" font-weight="bold">:ForensicEngines</text>
+  <line x1="900" y1="180" x2="900" y2="1150" stroke="#334155" stroke-width="1.5" stroke-dasharray="5,5"/>
+
+  <!-- 6. Threat Graph -->
+  <rect x="1020" y="130" width="150" height="50" rx="8" fill="#1e293b" stroke="#a855f7" stroke-width="1.5"/>
+  <text x="1095" y="160" text-anchor="middle" fill="#a855f7" font-size="12" font-weight="bold">:ThreatGraph</text>
+  <line x1="1095" y1="180" x2="1095" y2="1150" stroke="#334155" stroke-width="1.5" stroke-dasharray="5,5"/>
+
+  <!-- 7. Risk Engine -->
+  <rect x="1210" y="130" width="150" height="50" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="1285" y="160" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="bold">:RiskEngine</text>
+  <line x1="1285" y1="180" x2="1285" y2="1150" stroke="#334155" stroke-width="1.5" stroke-dasharray="5,5"/>
+
+  <!-- 8. Evidence Vault (NIST) -->
+  <rect x="1400" y="130" width="150" height="50" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+  <text x="1475" y="160" text-anchor="middle" fill="#10b981" font-size="12" font-weight="bold">:EvidenceVault</text>
+  <line x1="1475" y1="180" x2="1475" y2="1150" stroke="#334155" stroke-width="1.5" stroke-dasharray="5,5"/>
+
+  <!-- 9. Remediation Studio -->
+  <rect x="1590" y="130" width="150" height="50" rx="8" fill="#1e293b" stroke="#f43f5e" stroke-width="1.5"/>
+  <text x="1665" y="160" text-anchor="middle" fill="#f43f5e" font-size="12" font-weight="bold">:TakedownStudio</text>
+  <line x1="1665" y1="180" x2="1665" y2="1150" stroke="#334155" stroke-width="1.5" stroke-dasharray="5,5"/>
+
+  <!-- ACTIVATION BOXES & MESSAGES -->
+  <!-- 1. Analyst -> UI -->
+  <line x1="120" y1="210" x2="305" y2="210" stroke="#38bdf8" stroke-width="1.8" marker-end="url(#seqArrow)"/>
+  <text x="212" y="202" text-anchor="middle" fill="#e0f2fe" font-size="11">1: Submit Target Domain &amp; Brand</text>
+
+  <!-- 2. UI -> Gateway -->
+  <line x1="305" y1="240" x2="500" y2="240" stroke="#38bdf8" stroke-width="1.8" marker-end="url(#seqArrow)"/>
+  <text x="402" y="232" text-anchor="middle" fill="#e0f2fe" font-size="11">2: POST /api/scan/deep</text>
+
+  <!-- 3. Gateway -> Probers -->
+  <line x1="500" y1="270" x2="700" y2="270" stroke="#06b6d4" stroke-width="1.8" marker-end="url(#seqArrow)"/>
+  <text x="600" y="262" text-anchor="middle" fill="#06b6d4" font-size="11">3: dispatch_probes(domain, brand)</text>
+
+  <!-- PARALLEL BLOCK 1: Active Probing -->
+  <rect x="610" y="290" width="370" height="150" rx="6" fill="#0f172a" stroke="#06b6d4" stroke-dasharray="4,4" fill-opacity="0.6"/>
+  <rect x="610" y="290" width="50" height="20" fill="#082f49"/>
+  <text x="635" y="304" text-anchor="middle" fill="#38bdf8" font-size="10" font-weight="bold">par</text>
+  
+  <line x1="700" y1="320" x2="740" y2="320" stroke="#06b6d4" stroke-width="1.5"/>
+  <line x1="740" y1="320" x2="740" y2="335" stroke="#06b6d4" stroke-width="1.5"/>
+  <line x1="740" y1="335" x2="700" y2="335" stroke="#06b6d4" stroke-width="1.5" marker-end="url(#seqArrow)"/>
+  <text x="750" y="332" fill="#94a3b8" font-size="10">4a: Resolve DoH DNS &amp; RDAP Whois</text>
+
+  <line x1="700" y1="360" x2="740" y2="360" stroke="#06b6d4" stroke-width="1.5"/>
+  <line x1="740" y1="360" x2="740" y2="375" stroke="#06b6d4" stroke-width="1.5"/>
+  <line x1="740" y1="375" x2="700" y2="375" stroke="#06b6d4" stroke-width="1.5" marker-end="url(#seqArrow)"/>
+  <text x="750" y="372" fill="#94a3b8" font-size="10">4b: Perform TLS Handshake &amp; Extract X.509</text>
+
+  <line x1="700" y1="400" x2="740" y2="400" stroke="#06b6d4" stroke-width="1.5"/>
+  <line x1="740" y1="400" x2="740" y2="415" stroke="#06b6d4" stroke-width="1.5"/>
+  <line x1="740" y1="415" x2="700" y2="415" stroke="#06b6d4" stroke-width="1.5" marker-end="url(#seqArrow)"/>
+  <text x="750" y="412" fill="#94a3b8" font-size="10">4c: Crawl HTML DOM &amp; Render Viewport Image</text>
+
+  <!-- Probers -> Gateway Return -->
+  <line x1="700" y1="460" x2="500" y2="460" stroke="#10b981" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#seqReturn)"/>
+  <text x="600" y="452" text-anchor="middle" fill="#10b981" font-size="11">5: Network Telemetry &amp; Raw Artifacts</text>
+
+  <!-- Gateway -> Forensics -->
+  <line x1="500" y1="490" x2="900" y2="490" stroke="#818cf8" stroke-width="1.8" marker-end="url(#seqArrow)"/>
+  <text x="700" y="482" text-anchor="middle" fill="#e0e7ff" font-size="11">6: execute_multimodal_forensics(telemetry)</text>
+
+  <!-- PARALLEL BLOCK 2: Forensic Analysis -->
+  <rect x="810" y="510" width="370" height="150" rx="6" fill="#0f172a" stroke="#818cf8" stroke-dasharray="4,4" fill-opacity="0.6"/>
+  <rect x="810" y="510" width="50" height="20" fill="#1e1b4b"/>
+  <text x="835" y="524" text-anchor="middle" fill="#818cf8" font-size="10" font-weight="bold">par</text>
+
+  <line x1="900" y1="540" x2="940" y2="540" stroke="#818cf8" stroke-width="1.5"/>
+  <line x1="940" y1="540" x2="940" y2="555" stroke="#818cf8" stroke-width="1.5"/>
+  <line x1="940" y1="555" x2="900" y2="555" stroke="#818cf8" stroke-width="1.5" marker-end="url(#seqArrow)"/>
+  <text x="950" y="552" fill="#94a3b8" font-size="10">7a: Compute 64-bit pHash &amp; CIELAB Distance</text>
+
+  <line x1="900" y1="580" x2="940" y2="580" stroke="#818cf8" stroke-width="1.5"/>
+  <line x1="940" y1="580" x2="940" y2="595" stroke="#818cf8" stroke-width="1.5"/>
+  <line x1="940" y1="595" x2="900" y2="595" stroke="#818cf8" stroke-width="1.5" marker-end="url(#seqArrow)"/>
+  <text x="950" y="592" fill="#94a3b8" font-size="10">7b: Strip Zero-Width Spaces &amp; Match Urgency NLP</text>
+
+  <line x1="900" y1="620" x2="940" y2="620" stroke="#818cf8" stroke-width="1.5"/>
+  <line x1="940" y1="620" x2="940" y2="635" stroke="#818cf8" stroke-width="1.5"/>
+  <line x1="940" y1="635" x2="900" y2="635" stroke="#818cf8" stroke-width="1.5" marker-end="url(#seqArrow)"/>
+  <text x="950" y="632" fill="#94a3b8" font-size="10">7c: Audit RFC 7208 SPF &amp; Form Action C2 Webhooks</text>
+
+  <!-- Forensics -> Gateway Return -->
+  <line x1="900" y1="680" x2="500" y2="680" stroke="#10b981" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#seqReturn)"/>
+  <text x="700" y="672" text-anchor="middle" fill="#10b981" font-size="11">8: Forensic Vector Scores {S_domain, S_visual, S_nlp, ...}</text>
+
+  <!-- Gateway -> ThreatGraph -->
+  <line x1="500" y1="710" x2="1095" y2="710" stroke="#a855f7" stroke-width="1.8" marker-end="url(#seqArrow)"/>
+  <text x="797" y="702" text-anchor="middle" fill="#a855f7" font-size="11">9: insert_entities_and_build_edges(features)</text>
+
+  <line x1="1095" y1="735" x2="1135" y2="735" stroke="#a855f7" stroke-width="1.5"/>
+  <line x1="1135" y1="735" x2="1135" y2="750" stroke="#a855f7" stroke-width="1.5"/>
+  <line x1="1135" y1="750" x2="1095" y2="750" stroke="#a855f7" stroke-width="1.5" marker-end="url(#seqArrow)"/>
+  <text x="1145" y="747" fill="#94a3b8" font-size="10">10: Compute Degree/Betweenness Centrality &amp; Communities</text>
+
+  <line x1="1095" y1="775" x2="500" y2="775" stroke="#10b981" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#seqReturn)"/>
+  <text x="797" y="767" text-anchor="middle" fill="#10b981" font-size="11">11: Graph Metrics &amp; Syndicate Cluster Identifiers</text>
+
+  <!-- Gateway -> RiskEngine -->
+  <line x1="500" y1="810" x2="1285" y2="810" stroke="#f59e0b" stroke-width="1.8" marker-end="url(#seqArrow)"/>
+  <text x="892" y="802" text-anchor="middle" fill="#f59e0b" font-size="11">12: calculate_composite_risk(vector_scores, graph_metrics)</text>
+
+  <line x1="1285" y1="835" x2="1325" y2="835" stroke="#f59e0b" stroke-width="1.5"/>
+  <line x1="1325" y1="835" x2="1325" y2="850" stroke="#f59e0b" stroke-width="1.5"/>
+  <line x1="1325" y1="850" x2="1285" y2="850" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#seqArrow)"/>
+  <text x="1335" y="847" fill="#94a3b8" font-size="10">13: Apply Linear Weights + Non-Linear Adversarial Synergy</text>
+
+  <line x1="1285" y1="875" x2="500" y2="875" stroke="#10b981" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#seqReturn)"/>
+  <text x="892" y="867" text-anchor="middle" fill="#10b981" font-size="11">14: Composite Risk Score (R=94, Tier=CRITICAL, XAI Attribution)</text>
+
+  <!-- Gateway -> EvidenceVault (NIST SP 800-86) -->
+  <line x1="500" y1="910" x2="1475" y2="910" stroke="#10b981" stroke-width="1.8" marker-end="url(#seqArrow)"/>
+  <text x="987" y="902" text-anchor="middle" fill="#10b981" font-size="11">15: seal_evidence_artifact(raw_bytes, target_uri, metadata)</text>
+
+  <line x1="1475" y1="935" x2="1515" y2="935" stroke="#10b981" stroke-width="1.5"/>
+  <line x1="1515" y1="935" x2="1515" y2="950" stroke="#10b981" stroke-width="1.5"/>
+  <line x1="1515" y1="950" x2="1475" y2="950" stroke="#10b981" stroke-width="1.5" marker-end="url(#seqArrow)"/>
+  <text x="1525" y="947" fill="#94a3b8" font-size="10">16: Compute SHA-256 + SHA3-512 &amp; HMAC-SHA256 Digital Seal</text>
+
+  <line x1="1475" y1="975" x2="500" y2="975" stroke="#10b981" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#seqReturn)"/>
+  <text x="987" y="967" text-anchor="middle" fill="#10b981" font-size="11">17: Sealed Block Receipt (Index #125, Previous Hash, Block Hash)</text>
+
+  <!-- ALTERNATIVE BLOCK: Automated Remediation -->
+  <rect x="440" y="1000" width="1280" height="90" rx="6" fill="#0f172a" stroke="#f43f5e" stroke-dasharray="4,4" fill-opacity="0.6"/>
+  <rect x="440" y="1000" width="50" height="20" fill="#4c0519"/>
+  <text x="465" y="1014" text-anchor="middle" fill="#f43f5e" font-size="10" font-weight="bold">alt</text>
+  <text x="500" y="1014" fill="#f43f5e" font-size="10">[Composite Risk Score &gt;= 80 or Tier == CRITICAL]</text>
+
+  <line x1="500" y1="1040" x2="1665" y2="1040" stroke="#f43f5e" stroke-width="1.8" marker-end="url(#seqArrow)"/>
+  <text x="1082" y="1032" text-anchor="middle" fill="#f43f5e" font-size="11">18: generate_icann_abuse_notice &amp; compile_stix21_bundle(incident)</text>
+
+  <line x1="1665" y1="1070" x2="500" y2="1070" stroke="#10b981" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#seqReturn)"/>
+  <text x="1082" y="1062" text-anchor="middle" fill="#10b981" font-size="11">19: Formatted ICANN RAA §3.18 Abuse Dossier &amp; STIX 2.1 Threat Intel</text>
+
+  <!-- Final Return to UI and Analyst -->
+  <line x1="500" y1="1110" x2="305" y2="1110" stroke="#10b981" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#seqReturn)"/>
+  <text x="402" y="1102" text-anchor="middle" fill="#10b981" font-size="11">20: 200 OK (Full Dossier, Cytoscape JSON, Custody Receipts)</text>
+
+  <line x1="305" y1="1140" x2="120" y2="1140" stroke="#10b981" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#seqReturn)"/>
+  <text x="212" y="1132" text-anchor="middle" fill="#10b981" font-size="11">21: Render HUD, Interactive Graph Canvas &amp; Actionable Takedown</text>
+</svg>

@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1350" width="100%" height="100%" style="background:#090d16; font-family:'Segoe UI', Inter, -apple-system, sans-serif;">
+  <defs>
+    <linearGradient id="bgHeader4" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <filter id="shadow4" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <marker id="actArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+  </defs>
+
+  <!-- Title Banner -->
+  <rect x="40" y="30" width="1520" height="70" rx="10" fill="url(#bgHeader4)" filter="url(#shadow4)"/>
+  <text x="800" y="65" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="bold" letter-spacing="1">UML ACTIVITY &amp; ACTION FLOW DIAGRAM: INVESTIGATION PIPELINE</text>
+  <text x="800" y="88" text-anchor="middle" fill="#e0e7ff" font-size="13">Control Flow Modeling Ingestion Forks, Parallel Multi-Vector Probing, Graph Correlation, Risk Decisions, and Custody Joins</text>
+
+  <!-- START NODE -->
+  <circle cx="800" cy="140" r="16" fill="#38bdf8" stroke="#ffffff" stroke-width="3"/>
+  
+  <line x1="800" y1="156" x2="800" y2="185" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+
+  <!-- Action 1: Ingestion -->
+  <rect x="620" y="185" width="360" height="46" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow4)"/>
+  <text x="800" y="213" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Ingest Target URI / Domain &amp; Brand Reference</text>
+
+  <line x1="800" y1="231" x2="800" y2="260" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+
+  <!-- Action 2: Sanitization -->
+  <rect x="600" y="260" width="400" height="46" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow4)"/>
+  <text x="800" y="288" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Sanitize Domain (Strip control bytes, normalize IDN Punycode)</text>
+
+  <line x1="800" y1="306" x2="800" y2="340" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+
+  <!-- FORK BAR (Thick black/indigo bar) -->
+  <rect x="100" y="340" width="1400" height="12" rx="4" fill="#6366f1"/>
+  <text x="1510" y="350" fill="#818cf8" font-size="11" font-weight="bold">&lt;&lt;fork&gt;&gt;</text>
+
+  <!-- FORK BRANCHES (6 Parallel Paths) -->
+  <!-- Branch 1: DNS & RDAP -->
+  <line x1="200" y1="352" x2="200" y2="390" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+  <rect x="90" y="390" width="220" height="70" rx="8" fill="#082f49" stroke="#0ea5e9" stroke-width="1.5" filter="url(#shadow4)"/>
+  <text x="200" y="418" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Resolve DoH DNS &amp;</text>
+  <text x="200" y="434" text-anchor="middle" fill="#7dd3fc" font-size="10">RDAP Whois Metadata</text>
+  <line x1="200" y1="460" x2="200" y2="530" stroke="#38bdf8" stroke-width="2"/>
+
+  <!-- Branch 2: TLS X.509 -->
+  <line x1="440" y1="352" x2="440" y2="390" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+  <rect x="330" y="390" width="220" height="70" rx="8" fill="#082f49" stroke="#0ea5e9" stroke-width="1.5" filter="url(#shadow4)"/>
+  <text x="440" y="418" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Perform TLS Handshake &amp;</text>
+  <text x="440" y="434" text-anchor="middle" fill="#7dd3fc" font-size="10">Extract X.509 Certificate</text>
+  <line x1="440" y1="460" x2="440" y2="530" stroke="#38bdf8" stroke-width="2"/>
+
+  <!-- Branch 3: Visual Screenshot & pHash -->
+  <line x1="680" y1="352" x2="680" y2="390" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+  <rect x="570" y="390" width="220" height="70" rx="8" fill="#1e1b4b" stroke="#6366f1" stroke-width="1.5" filter="url(#shadow4)"/>
+  <text x="680" y="418" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Capture Viewport &amp;</text>
+  <text x="680" y="434" text-anchor="middle" fill="#a5b4fc" font-size="10">Compute 64-bit DCT pHash</text>
+  <line x1="680" y1="460" x2="680" y2="530" stroke="#38bdf8" stroke-width="2"/>
+
+  <!-- Branch 4: Form Action & C2 Webhooks -->
+  <line x1="920" y1="352" x2="920" y2="390" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+  <rect x="810" y="390" width="220" height="70" rx="8" fill="#1e1b4b" stroke="#6366f1" stroke-width="1.5" filter="url(#shadow4)"/>
+  <text x="920" y="418" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Inspect Form Actions &amp;</text>
+  <text x="920" y="434" text-anchor="middle" fill="#a5b4fc" font-size="10">Detect Telegram/Discord C2</text>
+  <line x1="920" y1="460" x2="920" y2="530" stroke="#38bdf8" stroke-width="2"/>
+
+  <!-- Branch 5: RFC 7208 SPF / RFC 7489 DMARC -->
+  <line x1="1160" y1="352" x2="1160" y2="390" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+  <rect x="1050" y="390" width="220" height="70" rx="8" fill="#082f49" stroke="#0ea5e9" stroke-width="1.5" filter="url(#shadow4)"/>
+  <text x="1160" y="418" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Audit Email Protocols</text>
+  <text x="1160" y="434" text-anchor="middle" fill="#7dd3fc" font-size="10">(RFC 7208 SPF / DMARC)</text>
+  <line x1="1160" y1="460" x2="1160" y2="530" stroke="#38bdf8" stroke-width="2"/>
+
+  <!-- Branch 6: Social Recon & Phone E.164 -->
+  <line x1="1400" y1="352" x2="1400" y2="390" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+  <rect x="1290" y="390" width="220" height="70" rx="8" fill="#082f49" stroke="#0ea5e9" stroke-width="1.5" filter="url(#shadow4)"/>
+  <text x="1400" y="418" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Social Handle Recon &amp;</text>
+  <text x="1400" y="434" text-anchor="middle" fill="#7dd3fc" font-size="10">E.164 Carrier Spoof Check</text>
+  <line x1="1400" y1="460" x2="1400" y2="530" stroke="#38bdf8" stroke-width="2"/>
+
+  <!-- JOIN BAR (Thick black/indigo bar) -->
+  <rect x="100" y="530" width="1400" height="12" rx="4" fill="#6366f1"/>
+  <text x="1510" y="540" fill="#818cf8" font-size="11" font-weight="bold">&lt;&lt;join&gt;&gt;</text>
+
+  <line x1="800" y1="542" x2="800" y2="575" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+
+  <!-- Action 3: Threat Graph Correlation -->
+  <rect x="580" y="575" width="440" height="50" rx="8" fill="#3b0764" stroke="#a855f7" stroke-width="1.8" filter="url(#shadow4)"/>
+  <text x="800" y="605" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Correlate Entities into Heterogeneous Threat Graph</text>
+
+  <line x1="800" y1="625" x2="800" y2="655" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+
+  <!-- Action 4: Centrality Analysis -->
+  <rect x="580" y="655" width="440" height="50" rx="8" fill="#3b0764" stroke="#a855f7" stroke-width="1.8" filter="url(#shadow4)"/>
+  <text x="800" y="685" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Compute Degree / Betweenness Centrality &amp; Syndicate Clusters</text>
+
+  <line x1="800" y1="705" x2="800" y2="735" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+
+  <!-- Action 5: Calibrated Risk Engine -->
+  <rect x="560" y="735" width="480" height="50" rx="8" fill="#451a03" stroke="#f59e0b" stroke-width="1.8" filter="url(#shadow4)"/>
+  <text x="800" y="765" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Compute Calibrated Risk Score &amp; Apply Synergy Multipliers</text>
+
+  <line x1="800" y1="785" x2="800" y2="815" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+
+  <!-- Action 6: NIST SP 800-86 Evidence Sealing -->
+  <rect x="560" y="815" width="480" height="50" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="1.8" filter="url(#shadow4)"/>
+  <text x="800" y="845" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Seal Artifacts into NIST SP 800-86 Immutable Hash Chain</text>
+
+  <line x1="800" y1="865" x2="800" y2="900" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+
+  <!-- DECISION DIAMOND: Risk >= 60? -->
+  <polygon points="800,900 900,945 800,990 700,945" fill="#1e293b" stroke="#f59e0b" stroke-width="2" filter="url(#shadow4)"/>
+  <text x="800" y="942" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="bold">Risk Score &gt;= 60</text>
+  <text x="800" y="955" text-anchor="middle" fill="#94a3b8" font-size="10">(Actionable Threat?)</text>
+
+  <!-- Decision Branch 1: [Yes / Actionable High or Critical] (Right) -->
+  <line x1="900" y1="945" x2="1140" y2="945" stroke="#f43f5e" stroke-width="2" marker-end="url(#actArrow)"/>
+  <text x="960" y="935" fill="#f43f5e" font-size="11" font-weight="bold">[Yes: High/Critical]</text>
+
+  <rect x="1140" y="915" width="360" height="60" rx="8" fill="#4c0519" stroke="#f43f5e" stroke-width="1.8" filter="url(#shadow4)"/>
+  <text x="1320" y="940" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Auto-Generate ICANN RAA §3.18 Notice &amp;</text>
+  <text x="1320" y="956" text-anchor="middle" fill="#fda4af" font-size="10">STIX 2.1 Threat Intel Bundle</text>
+
+  <line x1="1320" y1="975" x2="1320" y2="1080" stroke="#f43f5e" stroke-width="2"/>
+  <line x1="1320" y1="1080" x2="830" y2="1080" stroke="#f43f5e" stroke-width="2" marker-end="url(#actArrow)"/>
+
+  <!-- Decision Branch 2: [No / Low or Benign] (Down) -->
+  <line x1="800" y1="990" x2="800" y2="1025" stroke="#10b981" stroke-width="2" marker-end="url(#actArrow)"/>
+  <text x="815" y="1010" fill="#10b981" font-size="11" font-weight="bold">[No: Benign/Low]</text>
+
+  <rect x="620" y="1025" width="360" height="40" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="1.5" filter="url(#shadow4)"/>
+  <text x="800" y="1050" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Archive Telemetry &amp; Enroll in 24h Watchlist</text>
+
+  <!-- MERGE NODE -->
+  <polygon points="800,1070 825,1080 800,1090 775,1080" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+
+  <line x1="800" y1="1090" x2="800" y2="1120" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+
+  <!-- Action 7: Render UI HUD -->
+  <rect x="600" y="1120" width="400" height="46" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow4)"/>
+  <text x="800" y="1148" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Render Cytoscape Threat Canvas &amp; XAI Attribution</text>
+
+  <line x1="800" y1="1166" x2="800" y2="1200" stroke="#38bdf8" stroke-width="2" marker-end="url(#actArrow)"/>
+
+  <!-- FINAL NODE (Circle with inner solid circle) -->
+  <circle cx="800" cy="1220" r="18" fill="#0f172a" stroke="#38bdf8" stroke-width="2.5"/>
+  <circle cx="800" cy="1220" r="10" fill="#38bdf8"/>
+</svg>

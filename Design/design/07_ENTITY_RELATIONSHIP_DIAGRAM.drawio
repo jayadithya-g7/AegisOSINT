@@ -1,0 +1,36 @@
+<mxfile host="app.diagrams.net" modified="2026-10-15T00:00:00.000Z" agent="AegisOSINT" version="21.0.0" type="device">
+  <diagram id="diag_erd" name="Entity-Relationship Diagram">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="1350" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="600" value="BRANDS&#xa;PK brand_id : UUID&#xa;brand_name : VARCHAR(128)&#xa;official_domain : VARCHAR(255)&#xa;reference_logo_hash : CHAR(16)&#xa;monitored_since : TIMESTAMP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#38bdf8;fontColor=#ffffff;align=left;spacingLeft=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="160" width="280" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="601" value="SUSPICIOUS_DOMAINS&#xa;PK domain_id : UUID&#xa;FK brand_id : UUID&#xa;domain_name : VARCHAR(255)&#xa;idn_punycode : VARCHAR(255)&#xa;tld : VARCHAR(32)&#xa;registrar_name : VARCHAR(128)&#xa;is_live : BOOLEAN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#f59e0b;fontColor=#ffffff;align=left;spacingLeft=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="160" width="300" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="602" value="DNS_RECORDS&#xa;PK record_id : UUID&#xa;FK domain_id : UUID&#xa;record_type : VARCHAR(16)&#xa;record_value : VARCHAR(512)&#xa;ttl : INTEGER" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0ea5e9;fontColor=#ffffff;align=left;spacingLeft=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="820" y="160" width="260" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="603" value="VISUAL_ARTIFACTS&#xa;PK artifact_id : UUID&#xa;FK domain_id : UUID&#xa;screenshot_vault_uri : VARCHAR(512)&#xa;phash_64_hex : CHAR(16)&#xa;similarity_pct : FLOAT" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#818cf8;fontColor=#ffffff;align=left;spacingLeft=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="420" width="280" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="604" value="EVIDENCE_CUSTODY_BLOCKS (NIST)&#xa;PK block_id : UUID&#xa;sequence_num : BIGINT&#xa;FK domain_id : UUID&#xa;artifact_sha256 : CHAR(64)&#xa;previous_block_hash : CHAR(64)&#xa;block_hash : CHAR(64)&#xa;hmac_seal : CHAR(64)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#10b981;fontColor=#ffffff;align=left;spacingLeft=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="420" width="340" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="605" value="INCIDENT_TRIAGE&#xa;PK incident_id : VARCHAR(64)&#xa;FK brand_id : UUID&#xa;FK primary_domain_id : UUID&#xa;composite_risk_score : FLOAT&#xa;threat_tier : VARCHAR(32)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#f43f5e;fontColor=#ffffff;align=left;spacingLeft=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="420" width="280" height="150" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="610" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#38bdf8;fontColor=#38bdf8;" edge="1" parent="1" source="600" target="601"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="611" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#0ea5e9;fontColor=#0ea5e9;" edge="1" parent="1" source="601" target="602"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="612" value="1 : 1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#818cf8;fontColor=#818cf8;" edge="1" parent="1" source="601" target="603"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="613" value="1 : N (Custody)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#10b981;fontColor=#10b981;strokeWidth=2;" edge="1" parent="1" source="601" target="604"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="614" value="1 : 1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#f43f5e;fontColor=#f43f5e;" edge="1" parent="1" source="601" target="605"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

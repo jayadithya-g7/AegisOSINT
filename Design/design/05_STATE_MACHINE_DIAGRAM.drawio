@@ -1,0 +1,45 @@
+<mxfile host="app.diagrams.net" modified="2026-10-15T00:00:00.000Z" agent="AegisOSINT" version="21.0.0" type="device">
+  <diagram id="diag_state" name="UML State Machine Diagram">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1250" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="400" value="" style="ellipse;html=1;shape=startState;fillColor=#38bdf8;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="80" y="180" width="30" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="401" value="DORMANT_BASELINE&#xa;entry / monitor_brand_assets()&#xa;do / poll_ct_logs()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#38bdf8;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="160" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="402" value="SIGNAL_DISCOVERED&#xa;entry / queue_target_domain()&#xa;do / sanitize_idn_punycode()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#818cf8;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="160" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="403" value="ACTIVE_RECONNAISSANCE&#xa;(DNS, RDAP, TLS X.509, DOM)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#082f49;strokeColor=#0ea5e9;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="160" width="280" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="404" value="MULTIMODAL_FORENSICS&#xa;(pHash, Urgency NLP, SPF/DMARC)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e1b4b;strokeColor=#6366f1;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="290" width="280" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="405" value="GRAPH_CORRELATING&#xa;entry / update_threat_graph()&#xa;do / compute_centrality()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3b0764;strokeColor=#a855f7;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="290" width="240" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="406" value="RISK_EVALUATING&#xa;entry / linear_weights()&#xa;do / apply_synergy_bonuses()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#451a03;strokeColor=#f59e0b;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="420" width="240" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="407" value="EVIDENCE_CUSTODY_SEALING&#xa;entry / dual_hash(SHA256, SHA3)&#xa;do / append_ledger_block()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#064e3b;strokeColor=#10b981;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="420" width="280" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="408" value="ACTIONABLE_CRITICAL&#xa;[Score &gt;= 80]&#xa;do / auto_generate_takedown()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4c0519;strokeColor=#f43f5e;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="550" width="280" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="409" value="TAKEDOWN_SUBMITTED&#xa;do / poll_dns_suspension()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#f43f5e;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="680" width="280" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="410" value="" style="ellipse;html=1;shape=endState;fillColor=#0f172a;strokeColor=#10b981;" vertex="1" parent="1">
+          <mxGeometry x="885" y="810" width="30" height="30" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

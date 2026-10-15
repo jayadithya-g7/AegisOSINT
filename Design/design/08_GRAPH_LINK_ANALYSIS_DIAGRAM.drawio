@@ -1,0 +1,45 @@
+<mxfile host="app.diagrams.net" modified="2026-10-15T00:00:00.000Z" agent="AegisOSINT" version="21.0.0" type="device">
+  <diagram id="diag_graph" name="Graph Link Analysis Diagram">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="1350" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="700" value="TARGET BRAND&#xa;PayPal, Inc.&#xa;(paypal.com)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#064e3b;strokeColor=#10b981;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="720" y="560" width="160" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="701" value="THREAT ACTOR&#xa;APT-PhishGroup-88" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillColor=#4c0519;strokeColor=#f43f5e;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="720" y="180" width="160" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="702" value="LOOKALIKE DOMAIN 1&#xa;paypa1-security-update.com&#xa;Risk: 96 (CRITICAL)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#f43f5e;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="440" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="703" value="LOOKALIKE DOMAIN 2&#xa;paypal-verify-account.top&#xa;Risk: 92 (CRITICAL)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#f43f5e;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="720" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="704" value="COMBOSQUAT DOMAIN 3&#xa;secure-paypal-login.xyz&#xa;Risk: 84 (HIGH)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#f59e0b;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="580" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="705" value="SHARED BULLETPROOF IP&#xa;185.220.101.5&#xa;(Degree: 5)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#a855f7;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="580" width="180" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="706" value="NAMESERVER HUB&#xa;ns1.bulletproof-dns.org&#xa;(Betweenness: 0.84)" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#14b8a6;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="700" y="380" width="200" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="707" value="C2 EXFILTRATION&#xa;Telegram Bot Webhook" style="triangle;whiteSpace=wrap;html=1;fillColor=#4c0519;strokeColor=#ec4899;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="820" width="180" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="710" value="TARGETS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#f43f5e;fontColor=#f43f5e;strokeWidth=2;" edge="1" parent="1" source="702" target="700"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="711" value="TARGETS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#f43f5e;fontColor=#f43f5e;strokeWidth=2;" edge="1" parent="1" source="703" target="700"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="712" value="TARGETS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#f59e0b;fontColor=#f59e0b;strokeWidth=2;" edge="1" parent="1" source="704" target="700"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="713" value="RESOLVES_TO" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#a855f7;fontColor=#a855f7;" edge="1" parent="1" source="702" target="705"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="714" value="RESOLVES_TO" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#a855f7;fontColor=#a855f7;" edge="1" parent="1" source="703" target="705"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="715" value="USES_NAMESERVER" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#14b8a6;fontColor=#14b8a6;" edge="1" parent="1" source="702" target="706"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="716" value="CONTROLS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#f43f5e;fontColor=#f43f5e;dashed=1;" edge="1" parent="1" source="701" target="706"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="717" value="EXFILTRATES_TO_C2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#ec4899;fontColor=#ec4899;strokeWidth=2;" edge="1" parent="1" source="704" target="707"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

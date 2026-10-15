@@ -1,0 +1,220 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1200" width="100%" height="100%" style="background:#090d16; font-family:'Segoe UI', Inter, -apple-system, sans-serif;">
+  <defs>
+    <linearGradient id="bgHeader2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <filter id="shadow2" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <marker id="assocArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="compDiamond" viewBox="0 0 12 12" refX="1" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 6 L 6 1 L 11 6 L 6 11 z" fill="#38bdf8" stroke="#38bdf8"/>
+    </marker>
+    <marker id="aggDiamond" viewBox="0 0 12 12" refX="1" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 6 L 6 1 L 11 6 L 6 11 z" fill="#0f172a" stroke="#818cf8" stroke-width="1.5"/>
+    </marker>
+  </defs>
+
+  <!-- Title Banner -->
+  <rect x="40" y="30" width="1620" height="70" rx="10" fill="url(#bgHeader2)" filter="url(#shadow2)"/>
+  <text x="850" y="65" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="bold" letter-spacing="1">UML CLASS DIAGRAM: OBJECT-ORIENTED DOMAIN &amp; FORENSIC ARCHITECTURE</text>
+  <text x="850" y="88" text-anchor="middle" fill="#e0e7ff" font-size="13">Detailed Class Specifications, Member Visibility (+ / - / #), Method Signatures, Composition, and Dependency Hierarchies</text>
+
+  <!-- Package 1: Ingestion & Recon (Top-Left) -->
+  <rect x="50" y="130" width="480" height="490" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+  <rect x="50" y="130" width="220" height="30" rx="6" fill="#1e293b"/>
+  <text x="65" y="150" fill="#38bdf8" font-size="12" font-weight="bold">PACKAGE: ingestion</text>
+
+  <!-- Class: BrandProfile -->
+  <g transform="translate(70, 180)">
+    <rect x="0" y="0" width="440" height="150" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow2)"/>
+    <rect x="0" y="0" width="440" height="30" rx="6" fill="#082f49"/>
+    <text x="220" y="20" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">&lt;&lt;entity&gt;&gt; BrandProfile</text>
+    <text x="15" y="50" fill="#cbd5e1" font-size="11">+ brand_id: UUID</text>
+    <text x="15" y="66" fill="#cbd5e1" font-size="11">+ brand_name: str</text>
+    <text x="15" y="82" fill="#cbd5e1" font-size="11">+ official_domains: List[str]</text>
+    <text x="15" y="98" fill="#cbd5e1" font-size="11">+ reference_logo_hashes: List[str]</text>
+    <line x1="0" y1="106" x2="440" y2="106" stroke="#334155"/>
+    <text x="15" y="124" fill="#38bdf8" font-size="11">+ register_domain(domain: str): bool</text>
+    <text x="15" y="140" fill="#38bdf8" font-size="11">+ add_reference_logo(img_bytes: bytes): str</text>
+  </g>
+
+  <!-- Class: DomainProber -->
+  <g transform="translate(70, 360)">
+    <rect x="0" y="0" width="440" height="230" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow2)"/>
+    <rect x="0" y="0" width="440" height="30" rx="6" fill="#082f49"/>
+    <text x="220" y="20" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">DomainProber</text>
+    <text x="15" y="50" fill="#cbd5e1" font-size="11">- doh_resolvers: List[str]</text>
+    <text x="15" y="66" fill="#cbd5e1" font-size="11">- request_timeout: float = 8.0</text>
+    <text x="15" y="82" fill="#cbd5e1" font-size="11">- idna_codec: str = "punycode"</text>
+    <line x1="0" y1="90" x2="440" y2="90" stroke="#334155"/>
+    <text x="15" y="108" fill="#38bdf8" font-size="11">+ clean_domain_string(raw: str): str</text>
+    <text x="15" y="124" fill="#38bdf8" font-size="11">+ generate_permutations(domain: str): List[str]</text>
+    <text x="15" y="140" fill="#38bdf8" font-size="11">+ resolve_doh_dns(domain: str): Dict[str, List[str]]</text>
+    <text x="15" y="156" fill="#38bdf8" font-size="11">+ query_rdap_whois(domain: str): Dict[str, Any]</text>
+    <text x="15" y="172" fill="#38bdf8" font-size="11">+ extract_ssl_x509(host: str, port: int): Dict[str, Any]</text>
+    <text x="15" y="188" fill="#38bdf8" font-size="11">+ probe_ct_logs(domain: str): List[str]</text>
+    <text x="15" y="204" fill="#38bdf8" font-size="11">+ check_drop_catch_status(domain: str): bool</text>
+    <text x="15" y="220" fill="#38bdf8" font-size="11">+ evaluate_domain_risk(perm: str, base: str): float</text>
+  </g>
+
+  <!-- Package 2: Multi-Modal Forensics (Top-Center) -->
+  <rect x="560" y="130" width="560" height="490" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+  <rect x="560" y="130" width="220" height="30" rx="6" fill="#1e293b"/>
+  <text x="575" y="150" fill="#818cf8" font-size="12" font-weight="bold">PACKAGE: forensics</text>
+
+  <!-- Class: VisualSimilarity -->
+  <g transform="translate(580, 180)">
+    <rect x="0" y="0" width="520" height="150" rx="6" fill="#1e293b" stroke="#818cf8" stroke-width="1.5" filter="url(#shadow2)"/>
+    <rect x="0" y="0" width="520" height="30" rx="6" fill="#1e1b4b"/>
+    <text x="260" y="20" text-anchor="middle" fill="#818cf8" font-size="12" font-weight="bold">VisualSimilarityEngine</text>
+    <text x="15" y="50" fill="#cbd5e1" font-size="11">- hash_size: int = 8 (64-bit)</text>
+    <text x="15" y="66" fill="#cbd5e1" font-size="11">- color_bins: int = 64</text>
+    <line x1="0" y1="74" x2="520" y2="74" stroke="#334155"/>
+    <text x="15" y="92" fill="#818cf8" font-size="11">+ compute_phash_64(img: Image): str</text>
+    <text x="15" y="108" fill="#818cf8" font-size="11">+ compute_dhash(img: Image): str</text>
+    <text x="15" y="124" fill="#818cf8" font-size="11">+ hamming_distance(h1: str, h2: str): int</text>
+    <text x="15" y="140" fill="#818cf8" font-size="11">+ match_cielab_histograms(img1: Image, img2: Image): float</text>
+  </g>
+
+  <!-- Class: ContentInspector & EmailAuditor -->
+  <g transform="translate(580, 360)">
+    <rect x="0" y="0" width="520" height="230" rx="6" fill="#1e293b" stroke="#818cf8" stroke-width="1.5" filter="url(#shadow2)"/>
+    <rect x="0" y="0" width="520" height="30" rx="6" fill="#1e1b4b"/>
+    <text x="260" y="20" text-anchor="middle" fill="#818cf8" font-size="12" font-weight="bold">ContentAndProtocolAuditor</text>
+    <text x="15" y="50" fill="#cbd5e1" font-size="11">- urgency_lexicon: Set[str]</text>
+    <text x="15" y="66" fill="#cbd5e1" font-size="11">- credential_regex: List[Pattern]</text>
+    <text x="15" y="82" fill="#cbd5e1" font-size="11">- form_action_blacklist: Set[str]</text>
+    <line x1="0" y1="90" x2="520" y2="90" stroke="#334155"/>
+    <text x="15" y="108" fill="#818cf8" font-size="11">+ strip_zero_width_spaces(text: str): str</text>
+    <text x="15" y="124" fill="#818cf8" font-size="11">+ extract_urgency_score(body: str): float</text>
+    <text x="15" y="140" fill="#818cf8" font-size="11">+ audit_form_actions_c2(html_dom: str): Dict[str, Any]</text>
+    <text x="15" y="156" fill="#818cf8" font-size="11">+ parse_rfc7208_spf(txt_records: List[str]): Dict[str, Any]</text>
+    <text x="15" y="172" fill="#818cf8" font-size="11">+ parse_rfc7489_dmarc(dmarc_record: str): Dict[str, Any]</text>
+    <text x="15" y="188" fill="#818cf8" font-size="11">+ audit_bimi_vmc(bimi_record: str): bool</text>
+    <text x="15" y="204" fill="#818cf8" font-size="11">+ normalize_e164_phone(phone_raw: str): str</text>
+    <text x="15" y="220" fill="#818cf8" font-size="11">+ calculate_social_impersonation(profile: Dict): float</text>
+  </g>
+
+  <!-- Package 3: Threat Knowledge Graph (Top-Right) -->
+  <rect x="1150" y="130" width="500" height="490" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+  <rect x="1150" y="130" width="220" height="30" rx="6" fill="#1e293b"/>
+  <text x="1165" y="150" fill="#a855f7" font-size="12" font-weight="bold">PACKAGE: correlation</text>
+
+  <!-- Class: ThreatGraph -->
+  <g transform="translate(1170, 180)">
+    <rect x="0" y="0" width="460" height="220" rx="6" fill="#1e293b" stroke="#a855f7" stroke-width="1.5" filter="url(#shadow2)"/>
+    <rect x="0" y="0" width="460" height="30" rx="6" fill="#3b0764"/>
+    <text x="230" y="20" text-anchor="middle" fill="#a855f7" font-size="12" font-weight="bold">HeterogeneousThreatGraph</text>
+    <text x="15" y="50" fill="#cbd5e1" font-size="11">- nodes: Dict[str, EntityNode]</text>
+    <text x="15" y="66" fill="#cbd5e1" font-size="11">- edges: List[RelationEdge]</text>
+    <text x="15" y="82" fill="#cbd5e1" font-size="11">- graph_engine: NetworkX.Graph</text>
+    <line x1="0" y1="90" x2="460" y2="90" stroke="#334155"/>
+    <text x="15" y="108" fill="#a855f7" font-size="11">+ insert_entity(id: str, type: str, props: Dict): EntityNode</text>
+    <text x="15" y="124" fill="#a855f7" font-size="11">+ insert_relation(src: str, dst: str, rel: str, w: float): bool</text>
+    <text x="15" y="140" fill="#a855f7" font-size="11">+ compute_degree_centrality(): Dict[str, float]</text>
+    <text x="15" y="156" fill="#a855f7" font-size="11">+ compute_betweenness_centrality(): Dict[str, float]</text>
+    <text x="15" y="172" fill="#a855f7" font-size="11">+ compute_pagerank(alpha: float = 0.85): Dict[str, float]</text>
+    <text x="15" y="188" fill="#a855f7" font-size="11">+ isolate_syndicate_clusters(): List[Set[str]]</text>
+    <text x="15" y="204" fill="#a855f7" font-size="11">+ export_cytoscape_json(): Dict[str, Any]</text>
+  </g>
+
+  <!-- Class: EntityNode & RelationEdge -->
+  <g transform="translate(1170, 430)">
+    <rect x="0" y="0" width="220" height="160" rx="6" fill="#1e293b" stroke="#a855f7" stroke-width="1.5" filter="url(#shadow2)"/>
+    <rect x="0" y="0" width="220" height="28" rx="6" fill="#3b0764"/>
+    <text x="110" y="19" text-anchor="middle" fill="#a855f7" font-size="11" font-weight="bold">EntityNode</text>
+    <text x="12" y="46" fill="#cbd5e1" font-size="10">+ node_id: str</text>
+    <text x="12" y="62" fill="#cbd5e1" font-size="10">+ entity_type: str</text>
+    <text x="12" y="78" fill="#cbd5e1" font-size="10">+ label: str</text>
+    <text x="12" y="94" fill="#cbd5e1" font-size="10">+ risk_score: float</text>
+    <text x="12" y="110" fill="#cbd5e1" font-size="10">+ properties: Dict</text>
+    <line x1="0" y1="118" x2="220" y2="118" stroke="#334155"/>
+    <text x="12" y="136" fill="#a855f7" font-size="10">+ get_degree(): int</text>
+    <text x="12" y="150" fill="#a855f7" font-size="10">+ to_dict(): Dict</text>
+
+    <rect x="240" y="0" width="220" height="160" rx="6" fill="#1e293b" stroke="#a855f7" stroke-width="1.5" filter="url(#shadow2)"/>
+    <rect x="240" y="0" width="220" height="28" rx="6" fill="#3b0764"/>
+    <text x="350" y="19" text-anchor="middle" fill="#a855f7" font-size="11" font-weight="bold">RelationEdge</text>
+    <text x="252" y="46" fill="#cbd5e1" font-size="10">+ source_id: str</text>
+    <text x="252" y="62" fill="#cbd5e1" font-size="10">+ target_id: str</text>
+    <text x="252" y="78" fill="#cbd5e1" font-size="10">+ relation_type: str</text>
+    <text x="252" y="94" fill="#cbd5e1" font-size="10">+ weight: float</text>
+    <text x="252" y="110" fill="#cbd5e1" font-size="10">+ discovered_at: str</text>
+    <line x1="240" y1="118" x2="460" y2="118" stroke="#334155"/>
+    <text x="252" y="136" fill="#a855f7" font-size="10">+ is_directed(): bool</text>
+    <text x="252" y="150" fill="#a855f7" font-size="10">+ to_dict(): Dict</text>
+  </g>
+
+  <!-- Package 4: Risk Scoring & Custody (Bottom) -->
+  <rect x="50" y="650" width="1600" height="490" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+  <rect x="50" y="650" width="260" height="30" rx="6" fill="#1e293b"/>
+  <text x="65" y="670" fill="#f59e0b" font-size="12" font-weight="bold">PACKAGE: risk_scoring_and_custody</text>
+
+  <!-- Class: CalibratedRiskEngine -->
+  <g transform="translate(70, 700)">
+    <rect x="0" y="0" width="480" height="230" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5" filter="url(#shadow2)"/>
+    <rect x="0" y="0" width="480" height="30" rx="6" fill="#451a03"/>
+    <text x="240" y="20" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="bold">CalibratedRiskEngine</text>
+    <text x="15" y="50" fill="#cbd5e1" font-size="11">- weights: Dict[str, float] = {w_domain: 0.25, ...}</text>
+    <text x="15" y="66" fill="#cbd5e1" font-size="11">- synergy_thresholds: Dict[str, float]</text>
+    <text x="15" y="82" fill="#cbd5e1" font-size="11">- max_clamped_score: float = 100.0</text>
+    <line x1="0" y1="90" x2="480" y2="90" stroke="#334155"/>
+    <text x="15" y="108" fill="#f59e0b" font-size="11">+ calculate_composite_risk(vector_scores: Dict): float</text>
+    <text x="15" y="124" fill="#f59e0b" font-size="11">+ evaluate_adversarial_synergy(scores: Dict): float</text>
+    <text x="15" y="140" fill="#f59e0b" font-size="11">+ derive_threat_tier(score: float): ThreatTier</text>
+    <text x="15" y="156" fill="#f59e0b" font-size="11">+ generate_xai_attribution(scores: Dict): Dict[str, float]</text>
+    <text x="15" y="172" fill="#f59e0b" font-size="11">+ recommend_action(tier: ThreatTier): RemediationAction</text>
+  </g>
+
+  <!-- Class: EvidenceLocker & EvidenceBlock (NIST SP 800-86) -->
+  <g transform="translate(580, 700)">
+    <rect x="0" y="0" width="520" height="230" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="1.5" filter="url(#shadow2)"/>
+    <rect x="0" y="0" width="520" height="30" rx="6" fill="#064e3b"/>
+    <text x="260" y="20" text-anchor="middle" fill="#10b981" font-size="12" font-weight="bold">NISTEvidenceLocker (SP 800-86)</text>
+    <text x="15" y="50" fill="#cbd5e1" font-size="11">- ledger_file: Path = "chain_of_custody_ledger.json"</text>
+    <text x="15" y="66" fill="#cbd5e1" font-size="11">- vault_dir: Path = "evidence_vault/"</text>
+    <text x="15" y="82" fill="#cbd5e1" font-size="11">- hmac_secret_key: bytes</text>
+    <line x1="0" y1="90" x2="520" y2="90" stroke="#334155"/>
+    <text x="15" y="108" fill="#10b981" font-size="11">+ seal_evidence_artifact(raw_data: bytes, uri: str, type: str): EvidenceBlock</text>
+    <text x="15" y="124" fill="#10b981" font-size="11">+ compute_dual_hashes(data: bytes): Tuple[str, str]</text>
+    <text x="15" y="140" fill="#10b981" font-size="11">+ append_to_hash_chain(block: EvidenceBlock): bool</text>
+    <text x="15" y="156" fill="#10b981" font-size="11">+ verify_chain_integrity(): Tuple[bool, int, str]</text>
+    <text x="15" y="172" fill="#10b981" font-size="11">+ generate_hmac_digital_seal(block: EvidenceBlock): str</text>
+    <text x="15" y="188" fill="#10b981" font-size="11">+ export_evidence_receipt(evidence_id: UUID): Dict[str, Any]</text>
+  </g>
+
+  <!-- Class: TakedownStudio -->
+  <g transform="translate(1130, 700)">
+    <rect x="0" y="0" width="500" height="230" rx="6" fill="#1e293b" stroke="#f43f5e" stroke-width="1.5" filter="url(#shadow2)"/>
+    <rect x="0" y="0" width="500" height="30" rx="6" fill="#4c0519"/>
+    <text x="250" y="20" text-anchor="middle" fill="#f43f5e" font-size="12" font-weight="bold">RemediationAndTakedownStudio</text>
+    <text x="15" y="50" fill="#cbd5e1" font-size="11">- icann_raa_template: str = "ICANN RAA §3.18"</text>
+    <text x="15" y="66" fill="#cbd5e1" font-size="11">- stix_version: str = "2.1"</text>
+    <text x="15" y="82" fill="#cbd5e1" font-size="11">- misp_distribution: int = 3</text>
+    <line x1="0" y1="90" x2="500" y2="90" stroke="#334155"/>
+    <text x="15" y="108" fill="#f43f5e" font-size="11">+ generate_icann_abuse_notice(incident: Dict): str</text>
+    <text x="15" y="124" fill="#f43f5e" font-size="11">+ generate_hosting_cease_and_desist(asn_info: Dict): str</text>
+    <text x="15" y="140" fill="#f43f5e" font-size="11">+ compile_stix21_bundle(incident: Dict): Dict[str, Any]</text>
+    <text x="15" y="156" fill="#f43f5e" font-size="11">+ export_misp_event_json(incident: Dict): Dict[str, Any]</text>
+    <text x="15" y="172" fill="#f43f5e" font-size="11">+ assemble_forensic_dossier(incident_id: str): Path</text>
+  </g>
+
+  <!-- Class Diagram Legend -->
+  <rect x="70" y="970" width="1560" height="130" rx="8" fill="#1e293b" stroke="#334155"/>
+  <text x="95" y="995" fill="#e2e8f0" font-size="12" font-weight="bold">UML CLASS NOTATION &amp; RELATIONSHIP KEY:</text>
+  <path d="M 95 1030 L 140 1030" stroke="#38bdf8" stroke-width="2" marker-start="url(#compDiamond)"/>
+  <text x="150" y="1034" fill="#cbd5e1" font-size="11">Composition (Strong ownership, lifetime dependency)</text>
+  <path d="M 600 1030 L 645 1030" stroke="#818cf8" stroke-width="2" marker-start="url(#aggDiamond)"/>
+  <text x="655" y="1034" fill="#cbd5e1" font-size="11">Aggregation (Shared reference, independent lifetime)</text>
+  <path d="M 1150 1030 L 1195 1030" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#assocArrow)"/>
+  <text x="1205" y="1034" fill="#cbd5e1" font-size="11">Dependency / Method Invocation (&lt;&lt;uses&gt;&gt;)</text>
+  <text x="95" y="1075" fill="#38bdf8" font-size="11">+ Public Member</text>
+  <text x="250" y="1075" fill="#f59e0b" font-size="11">- Private Member</text>
+  <text x="400" y="1075" fill="#10b981" font-size="11"># Protected Member</text>
+  <text x="600" y="1075" fill="#94a3b8" font-size="11">Class Methods: name(param: Type): ReturnType</text>
+  <text x="1050" y="1075" fill="#cbd5e1" font-size="11">NIST SP 800-86 Cryptographic Invariant: H(B_i) = SHA256(H(B_i-1) || Data)</text>
+</svg>
