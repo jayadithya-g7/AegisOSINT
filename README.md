@@ -65,6 +65,50 @@ AegisOSINT is organized into 7 modular tiers spanning data ingestion, forensic p
 
 ---
 
+<img width="1351" height="896" alt="image" src="https://github.com/user-attachments/assets/6c5d9260-9a83-49e2-a858-11ab22835666" />
+
+
+<img width="1351" height="896" alt="image" src="https://github.com/user-attachments/assets/10ce2827-a6ac-4544-9c5d-b43cdc8dd9d8" />
+
+<img width="1488" height="658" alt="image" src="https://github.com/user-attachments/assets/81da935c-3fad-49ab-93fb-b907b603c884" />
+
+<img width="1568" height="755" alt="image" src="https://github.com/user-attachments/assets/c0657ffd-8642-4952-bcaa-ba48acdfb276" />
+
+<img width="1568" height="659" alt="image" src="https://github.com/user-attachments/assets/1ca52147-65b4-4684-bfc1-84539af5472d" />
+
+<img width="1287" height="952" alt="image" src="https://github.com/user-attachments/assets/fe5383ca-0e23-49d1-9e3e-277b564a0d86" />
+
+<img width="1372" height="893" alt="image" src="https://github.com/user-attachments/assets/39fcbf81-9c33-4bd8-8a96-28f26ed91be0" />
+
+<img width="1008" height="852" alt="image" src="https://github.com/user-attachments/assets/12411ebe-9c80-479e-9823-b75406fdc519" />
+
+<img width="1372" height="880" alt="image" src="https://github.com/user-attachments/assets/202aefd5-6f59-4f44-b66c-b8bab1d0209d" />
+
+<img width="1400" height="843" alt="image" src="https://github.com/user-attachments/assets/ff625464-63b1-42e2-9276-5ecda9c543a1" />
+
+<img width="1176" height="1011" alt="image" src="https://github.com/user-attachments/assets/92210f95-fe97-46c1-b4a6-aa7392e01967" />
+
+<img width="1372" height="873" alt="image" src="https://github.com/user-attachments/assets/8f319fb8-0db0-4353-83ad-93d45bf91be0" />
+
+<img width="1400" height="861" alt="image" src="https://github.com/user-attachments/assets/42065d2b-b00d-4908-be8c-d355bf0f6a9d" />
+
+<img width="1316" height="901" alt="image" src="https://github.com/user-attachments/assets/8c050c39-dba6-4fab-9807-95137068ca40" />
+
+<img width="1024" height="1176" alt="image" src="https://github.com/user-attachments/assets/fe473639-b223-4431-a45f-b35ec5cdc14b" />
+
+<img width="1008" height="1194" alt="image" src="https://github.com/user-attachments/assets/afadd9f0-9ec1-4b6c-9f1d-c01d2abfa3aa" />
+
+<img width="1148" height="1050" alt="image" src="https://github.com/user-attachments/assets/c7390cf4-7620-4ca0-8410-e7dc069c2839" />
+
+<img width="1204" height="868" alt="image" src="https://github.com/user-attachments/assets/48dc93cb-3947-4dc0-929b-757c000d02a5" />
+
+<img width="1372" height="883" alt="image" src="https://github.com/user-attachments/assets/e5fc1e94-7f98-4726-b46c-0ebd0cdc4b7b" />
+
+<img width="1800" height="616" alt="image" src="https://github.com/user-attachments/assets/df07d6f4-6034-48fe-9085-8f58ebd8c9ac" />
+
+<img width="1254" height="1398" alt="image" src="https://github.com/user-attachments/assets/45dc360a-4188-4e36-9ce8-8f7cbec7c972" />
+
+
 ## 📚 Academic Literature Survey & Comparative Matrix
 
 The system is grounded in a rigorous academic survey of **12 foundational peer-reviewed papers** from leading cybersecurity venues (*ACM CCS, USENIX Security, IEEE S&P, IEEE TIFS, NDSS, Computers & Security*):
