@@ -2103,3 +2103,21 @@ Engineered and delivered the comprehensive, publication-grade enterprise system 
    - **Section 11: Academic Bibliography & Standards References**: 18 formal academic and standards citations (IEEE, USENIX, ACM, NIST, IETF RFCs, OASIS).
 
 2. [**`Design/README.md`**](file:///E:/osint-cia-2/Design/README.md): Updated index referencing the new master report and diagram suite.
+
+================================================================================
+TURN 29 | USER PROMPT
+================================================================================
+restart the server
+
+--------------------------------------------------------------------------------
+TURN 29 | ASSISTANT RESPONSE(S)
+--------------------------------------------------------------------------------
+
+[ASSISTANT RESPONSE (Step 2100)]:
+The AegisOSINT server has been restarted and is running in the background.
+
+### Server Status & Access Points:
+- **Interactive CTI Workbench UI**: [http://127.0.0.1:8080](http://127.0.0.1:8080)
+- **FastAPI OpenAPI Documentation**: [http://127.0.0.1:8080/docs](http://127.0.0.1:8080/docs)
+- **Health Verification**: Verified `/api/cases` returning `HTTP 200 OK`.
+- **Runtime Process**: Uvicorn ASGI server running on `127.0.0.1:8080`.
